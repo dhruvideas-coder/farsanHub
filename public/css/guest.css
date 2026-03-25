@@ -1,0 +1,18 @@
+
+@charset "utf-8";
+
+@import 'assets/css/animated.css';
+@import 'assets/css/icons.css';
+@import 'assets/css/style.css';
+@import 'assets/iconfonts/font-awesome/css/font-awesome.css';
+@import 'assets/iconfonts/materialdesignicons/materialdesignicons.css';
+@import 'assets/plugins/bootstrap/css/bootstrap.css';
+@import 'assets/css/skin-modes.css';
+@import 'assets/scss/_variables.scss';
+@import 'assets/plugins/bootstrap/css/bootstrap.min.css';
+@import 'assets/plugins/bootstrap/css/bootstrap-grid.css';
+@import 'assets/plugins/bootstrap/css/bootstrap-reboot.css';
+@import 'assets/plugins/bootstrap/css/bootstrap-utilities.css';
+@import 'assets/css/snackbar.css';
+@import '../css/admin.css';
+@import '../css/responsive.css';
