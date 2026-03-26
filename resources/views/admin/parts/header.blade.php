@@ -32,12 +32,12 @@
         </div>
         @endif --}}
 
-        <div class="dropdown d-flex profile-1 flex-grow-1 justify-content-end">
+        <div class="dropdown d-flex profile-1 justify-content-end">
             <a href="{{ route('admin.dashboard') }}" data-bs-toggle="dropdown"
-                class="leading-none nav-link pe-0 d-flex align-items-center justify-content-end animate w-100">
+                class="leading-none nav-link pe-0 d-flex align-items-center justify-content-end animate">
                 <img src="{{ asset('images/logo.png') }}" alt="profile-user"
-                    class="avatar profile-user brround cover-image flex-shrink-0">
-                <div class="p-1 text-center d-flex d-lg-none-max overflow-hidden">
+                    class="avatar profile-user brround cover-image flex-shrink-0 order-2 order-lg-1">
+                <div class="p-1 text-center d-flex overflow-hidden order-1 order-lg-2">
                     <h6 class="mb-0 ms-1 text-truncate" id="profile-heading">
                         {{ auth()->user()->name }}
                         <i class="user-angle ms-1 fa fa-angle-down"></i>

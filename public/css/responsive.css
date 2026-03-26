@@ -228,9 +228,7 @@
     }
 
     .header-actions .profile-1 {
-        flex: 1;
-        min-width: 0;
-        max-width: 50%;
+        flex: 0 0 auto;
     }
 
     /* ── Header: profile dropdown on mobile ── */
@@ -340,9 +338,10 @@
    ADMIN: Header — extra small screens (< 400px)
    ───────────────────────────────────────────────────────────── */
 @media (max-width: 399.98px) {
-    /* Hide username on very small screens — avatar only */
+    /* Keep username visible on very small screens */
     .profile-1 .nav-link .p-1 {
-        display: none !important;
+        display: flex !important;
+        min-width: 0;
     }
 
     .profile-user {
