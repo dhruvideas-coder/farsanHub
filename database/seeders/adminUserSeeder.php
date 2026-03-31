@@ -16,11 +16,18 @@ class adminUserSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
-            'name' => 'Admin',
-            'email' => 'hitesh@gmail.com',
-            'password' => Hash::make('12345678'),
-            'is_admin' => 1,
-        ]);
+        $users = [
+            ['name' => 'Dhruv Patel',   'email' => 'dhruvideas@gmail.com'],
+            ['name' => 'Hitesh Patel',   'email' => 'hiteshpatel2073@gmail.com'],
+        ];
+
+        foreach ($users as $user) {
+            User::create([
+                'name'     => $user['name'],
+                'email'    => $user['email'],
+                'password' => Hash::make('Admin@911'),
+                'is_admin' => true,
+            ]);
+        }
     }
 }
