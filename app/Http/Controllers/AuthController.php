@@ -38,7 +38,8 @@ class AuthController extends Controller
             $request->session()->regenerate();
             
             if (Auth::user()->isAdmin()) {
-                return redirect()->route('admin.dashboard');
+                // return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.order.create');
             }
 
             return redirect()->route('login')->with('error', 'You do not have admin access.');
@@ -115,8 +116,9 @@ class AuthController extends Controller
 
             Auth::login($user);
             request()->session()->regenerate();
-
-            return redirect()->route('admin.dashboard');
+            
+            // return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.order.create');
         } catch (\Exception $e) {
             Log::error('Google OAuth login failed', ['error' => $e->getMessage()]);
             return redirect()->route('login')->with('error', 'Google login failed. Please try again.');
