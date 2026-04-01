@@ -53,8 +53,6 @@
                                             id="shop_address" name="shop_address"
                                             placeholder="Type to search address..."
                                             value="{{ old('shop_address', $customer->shop_address) }}" autocomplete="off">
-                                        <div id="nominatim-results" class="list-group shadow"
-                                             style="display:none; position:absolute; top:100%; left:0; width:100%; z-index:1055; max-height:200px; overflow-y:auto;"></div>
                                     </div>
                                     {{-- Action row: [Pick on Map + badge] LEFT · [Clear] RIGHT --}}
                                     <div class="d-flex align-items-center justify-content-between mt-2 gap-1">
@@ -172,18 +170,21 @@
         </div>
     </div>
 
-{{-- Map Picker Modal --}}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+{{-- Google Maps script with Places library --}}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places"></script>
+
 <style>
     .map-picker-close { line-height:1; padding:4px 8px; }
-    #map-picker { height:350px; }
+    #map-picker { height:400px; width: 100%; }
+    .pac-container { z-index: 10000 !important; } {{-- Ensure autocomplete dropdown is above modal --}}
     @media (max-width:575.98px) {
-        #map-picker { height:220px; }
-        #map-search-input { font-size:14px; }
+        #map-picker { height:300px; }
     }
 </style>
+
+{{-- Map Picker Modal --}}
 <div class="modal fade" id="mapPickerModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header py-2 d-flex align-items-center">
                 <h6 class="modal-title mb-0"><i class="fa fa-map-marker me-2 text-danger"></i>Pick Location on Map</h6>
@@ -194,21 +195,17 @@
             <div class="modal-body p-0">
                 <div class="p-3 border-bottom position-relative">
                     <div class="input-group">
-                        <input type="text" id="map-search-input" class="form-control" placeholder="Search address on map...">
-                        <button class="btn btn-secondary" id="btn-map-search" type="button">
-                            <i class="fa fa-search"></i>
-                        </button>
+                        <span class="input-group-text bg-white"><i class="fa fa-search text-muted"></i></span>
+                        <input type="text" id="map-search-input" class="form-control border-start-0" placeholder="Search address on map...">
                     </div>
-                    <div id="map-search-results" class="list-group shadow"
-                         style="display:none; position:absolute; z-index:9999; left:1rem; right:1rem; max-height:180px; overflow-y:auto;"></div>
                 </div>
                 <div id="map-picker-loader" class="text-center p-4">
                     <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2 text-muted small">Loading map...</p>
+                    <p class="mt-2 text-muted small">Loading Map...</p>
                 </div>
                 <div id="map-picker" style="display:none;"></div>
                 <div class="px-3 py-2 bg-light border-top text-muted d-flex justify-content-between align-items-center" style="font-size:12px;">
-                    <span><i class="fa fa-hand-pointer-o me-1 text-primary"></i>Tap on map to place marker &mdash; or search above</span>
+                    <span><i class="fa fa-hand-pointer-o me-1 text-primary"></i>Drag marker to adjust &mdash; or search above</span>
                     <span id="picker-coord-display" class="text-success fw-bold"></span>
                 </div>
             </div>
@@ -224,188 +221,205 @@
     </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function() {
-    let pickerMap = null, pickerMarker = null, pickerLat = null, pickerLng = null;
-    let pickerAddress = '';
+    let map, marker, autocomplete, mapAutocomplete;
+    let selectedLat = null, selectedLng = null, selectedAddress = '';
 
-    // ─── placePickerMarker at IIFE scope so it's accessible everywhere ──
-    function placePickerMarker(lat, lng, reverseGeocode) {
-        if (!pickerMap) return;
-        pickerLat = lat; pickerLng = lng;
-        if (pickerMarker) pickerMap.removeLayer(pickerMarker);
-        pickerMarker = L.marker([lat, lng], { draggable: true }).addTo(pickerMap);
-        pickerMarker.on('dragend', function(e) {
-            const pos = e.target.getLatLng();
-            placePickerMarker(pos.lat, pos.lng, true);
+    // Initialize the Address Autocomplete for the main form input
+    function initMainAutocomplete() {
+        const addressInput = document.getElementById('shop_address');
+        if (!addressInput) return;
+
+        autocomplete = new google.maps.places.Autocomplete(addressInput, {
+            componentRestrictions: { country: 'in' },
+            fields: ['address_components', 'geometry', 'formatted_address']
         });
-        document.getElementById('picker-coord-display').textContent = lat.toFixed(5) + ', ' + lng.toFixed(5);
-        document.getElementById('btn-use-location').disabled = false;
 
-        if (reverseGeocode) {
-            fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng, {
-                headers: { 'Accept-Language': 'en' }
-            }).then(r => r.json()).then(data => {
-                const full = data.display_name || '';
-                pickerAddress = shortAddr(full);
-                if (pickerMarker) pickerMarker.bindPopup(full).openPopup();
-                document.getElementById('map-search-input').value = pickerAddress;
-            }).catch(() => {});
-        }
-    }
-
-    // ─── Nominatim live search on address input ──────────────────────
-    let nominatimTimer;
-    document.getElementById('shop_address').addEventListener('input', function() {
-        clearTimeout(nominatimTimer);
-        const val = this.value.trim();
-        if (val.length < 4) { document.getElementById('nominatim-results').style.display = 'none'; return; }
-        nominatimTimer = setTimeout(() => nominatimSearch(val, 'nominatim-results', applyNominatimResult), 700);
-    });
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('#nominatim-results') && e.target.id !== 'shop_address') {
-            document.getElementById('nominatim-results').style.display = 'none';
-        }
-    });
-
-    function nominatimSearch(q, resultsDivId, onSelect) {
-        const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=5&addressdetails=1&q=' + encodeURIComponent(q);
-        fetch(url, { headers: { 'Accept-Language': 'en' } })
-            .then(r => r.json())
-            .then(data => {
-                const div = document.getElementById(resultsDivId);
-                div.innerHTML = '';
-                if (!data.length) { div.style.display = 'none'; return; }
-                data.forEach(item => {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'list-group-item list-group-item-action small py-2';
-                    btn.innerHTML = '<i class="fa fa-map-marker text-danger me-2"></i>' + item.display_name;
-                    btn.addEventListener('click', () => onSelect(item));
-                    div.appendChild(btn);
+        autocomplete.addListener('place_changed', function() {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                return;
+            }
+            
+            applyLocationData(place);
+        });
+        
+        // Prevent form submission on enter (common issue with autocomplete)
+        addressInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const containers = document.querySelectorAll('.pac-container');
+                let visible = false;
+                containers.forEach(container => {
+                    if (container.offsetParent !== null) visible = true;
                 });
-                div.style.display = 'block';
-            }).catch(() => {});
+                if (visible) {
+                    e.preventDefault();
+                }
+            }
+        });
     }
 
-    function shortAddr(displayName) {
-        const parts = displayName.split(',').map(s => s.trim()).filter(Boolean);
-        return parts.slice(0, 3).join(', ');
-    }
+    function applyLocationData(place) {
+        document.getElementById('shop_address').value = place.formatted_address;
+        document.getElementById('latitude').value = place.geometry.location.lat().toFixed(6);
+        document.getElementById('longitude').value = place.geometry.location.lng().toFixed(6);
+        
+        // Extract city if possible
+        let city = '';
+        for (const component of place.address_components) {
+            const types = component.types;
+            if (types.includes('locality')) {
+                city = component.long_name;
+                break;
+            } else if (types.includes('administrative_area_level_2')) {
+                city = component.long_name;
+            }
+        }
+        if (city) {
+            document.getElementById('city').value = city;
+        }
 
-    function applyNominatimResult(item) {
-        document.getElementById('shop_address').value = shortAddr(item.display_name);
-        document.getElementById('latitude').value  = parseFloat(item.lat).toFixed(6);
-        document.getElementById('longitude').value = parseFloat(item.lon).toFixed(6);
-        const a = item.address || {};
-        const city = a.city || a.town || a.village || a.county || '';
-        if (city) document.getElementById('city').value = city;
-        document.getElementById('nominatim-results').style.display = 'none';
         showLocationBadge();
     }
 
     function showLocationBadge() {
         document.getElementById('location-set-badge').classList.remove('d-none');
-        document.getElementById('btn-clear-location').style.display = '';
+        document.getElementById('btn-clear-location').style.display = 'block';
     }
+
     function hideLocationBadge() {
         document.getElementById('location-set-badge').classList.add('d-none');
         document.getElementById('btn-clear-location').style.display = 'none';
     }
 
     document.getElementById('btn-clear-location').addEventListener('click', function() {
-        document.getElementById('latitude').value   = '';
-        document.getElementById('longitude').value  = '';
+        document.getElementById('latitude').value = '';
+        document.getElementById('longitude').value = '';
         document.getElementById('shop_address').value = '';
         hideLocationBadge();
     });
 
-    // ─── Map Picker Modal ────────────────────────────────────────────
+    // Initialize Map Picker
     const mapPickerModal = document.getElementById('mapPickerModal');
-
+    
     mapPickerModal.addEventListener('shown.bs.modal', function() {
-        if (pickerMap) { pickerMap.remove(); pickerMap = null; pickerMarker = null; }
-
         const existingLat = parseFloat(document.getElementById('latitude').value);
         const existingLng = parseFloat(document.getElementById('longitude').value);
         const hasExisting = !isNaN(existingLat) && !isNaN(existingLng);
 
-        document.getElementById('map-picker-loader').style.display = 'block';
-        document.getElementById('map-picker').style.display = 'none';
-        document.getElementById('btn-use-location').disabled = !hasExisting;
-        document.getElementById('picker-coord-display').textContent = hasExisting
-            ? existingLat.toFixed(5) + ', ' + existingLng.toFixed(5) : '';
-
-        if (hasExisting) { pickerLat = existingLat; pickerLng = existingLng; }
-
-        function initPickerMap(lat, lng) {
-            pickerMap = L.map('map-picker').setView([lat, lng], hasExisting ? 16 : 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(pickerMap);
-
-            if (hasExisting) placePickerMarker(existingLat, existingLng, false);
-
-            pickerMap.on('click', function(e) {
-                placePickerMarker(e.latlng.lat, e.latlng.lng, true);
-            });
-
-            pickerMap.whenReady(function() {
-                document.getElementById('map-picker-loader').style.display = 'none';
-                document.getElementById('map-picker').style.display = 'block';
-                pickerMap.invalidateSize();
-            });
-        }
-
+        let center = { lat: 23.0225, lng: 72.5714 }; // Default to Ahmedabad
         if (hasExisting) {
-            initPickerMap(existingLat, existingLng);
-        } else if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                pos => initPickerMap(pos.coords.latitude, pos.coords.longitude),
-                ()  => initPickerMap(23.0225, 72.5714),
-                { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-            );
+            center = { lat: existingLat, lng: existingLng };
+        }
+
+        document.getElementById('map-picker-loader').style.display = 'none';
+        document.getElementById('map-picker').style.display = 'block';
+
+        if (!map) {
+            map = new google.maps.Map(document.getElementById('map-picker'), {
+                zoom: 15,
+                center: center,
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false
+            });
+
+            marker = new google.maps.Marker({
+                position: center,
+                map: map,
+                draggable: true,
+                animation: google.maps.Animation.DROP
+            });
+
+            // Sync marker position with coordinates display
+            const updateCoords = () => {
+                const pos = marker.getPosition();
+                selectedLat = pos.lat();
+                selectedLng = pos.lng();
+                document.getElementById('picker-coord-display').textContent = 
+                    selectedLat.toFixed(5) + ', ' + selectedLng.toFixed(5);
+                document.getElementById('btn-use-location').disabled = false;
+            };
+
+            marker.addListener('dragend', updateCoords);
+            map.addListener('click', (e) => {
+                marker.setPosition(e.latLng);
+                updateCoords();
+            });
+
+            // Autocomplete for map modal
+            const mapSearchInput = document.getElementById('map-search-input');
+            mapAutocomplete = new google.maps.places.Autocomplete(mapSearchInput, {
+                componentRestrictions: { country: 'in' },
+                fields: ['geometry', 'formatted_address']
+            });
+
+            mapAutocomplete.addListener('place_changed', function() {
+                const place = mapAutocomplete.getPlace();
+                if (!place.geometry) return;
+
+                map.setCenter(place.geometry.location);
+                marker.setPosition(place.geometry.location);
+                selectedLat = place.geometry.location.lat();
+                selectedLng = place.geometry.location.lng();
+                selectedAddress = place.formatted_address;
+                updateCoords();
+            });
+
+            if (hasExisting) updateCoords();
         } else {
-            initPickerMap(23.0225, 72.5714);
+            map.setCenter(center);
+            marker.setPosition(center);
+            google.maps.event.trigger(map, 'resize');
         }
     });
 
-    mapPickerModal.addEventListener('hidden.bs.modal', function() {
-        if (pickerMap) { pickerMap.remove(); pickerMap = null; pickerMarker = null; }
-        pickerLat = null; pickerLng = null; pickerAddress = '';
-        document.getElementById('map-search-results').style.display = 'none';
-    });
-
-    // ─── Search inside map modal ─────────────────────────────────────
-    document.getElementById('btn-map-search').addEventListener('click', function() {
-        const q = document.getElementById('map-search-input').value.trim();
-        if (!q) return;
-        nominatimSearch(q, 'map-search-results', function(item) {
-            const lat = parseFloat(item.lat), lng = parseFloat(item.lon);
-            pickerAddress = item.display_name;
-            document.getElementById('map-search-input').value = item.display_name;
-            document.getElementById('map-search-results').style.display = 'none';
-            if (pickerMap) pickerMap.setView([lat, lng], 16);
-            placePickerMarker(lat, lng, false); // direct call — no synthetic fire needed
-        });
-    });
-    document.getElementById('map-search-input').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') { e.preventDefault(); document.getElementById('btn-map-search').click(); }
-    });
-
-    // ─── Use location ────────────────────────────────────────────────
     document.getElementById('btn-use-location').addEventListener('click', function() {
-        if (pickerLat === null || pickerLng === null) return;
-        document.getElementById('latitude').value  = pickerLat.toFixed(6);
-        document.getElementById('longitude').value = pickerLng.toFixed(6);
-        if (pickerAddress) document.getElementById('shop_address').value = pickerAddress;
+        if (selectedLat === null || selectedLng === null) return;
+        
+        document.getElementById('latitude').value = selectedLat.toFixed(6);
+        document.getElementById('longitude').value = selectedLng.toFixed(6);
+        
+        // Use geocoder to get address if it wasn't selected from autocomplete
+        if (!selectedAddress || selectedAddress === '') {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: { lat: selectedLat, lng: selectedLng } }, (results, status) => {
+                if (status === 'OK' && results[0]) {
+                    document.getElementById('shop_address').value = results[0].formatted_address;
+                    // Extract city
+                    for (const component of results[0].address_components) {
+                        if (component.types.includes('locality')) {
+                            document.getElementById('city').value = component.long_name;
+                            break;
+                        }
+                    }
+                }
+            });
+        } else {
+            document.getElementById('shop_address').value = selectedAddress;
+        }
+
         showLocationBadge();
         bootstrap.Modal.getInstance(mapPickerModal).hide();
     });
+
+    // Safe initialization wrapper
+    function safeInit() {
+        if (typeof google === 'object' && typeof google.maps === 'object' && typeof google.maps.places === 'object') {
+            initMainAutocomplete();
+            if (document.getElementById('latitude').value && document.getElementById('longitude').value) {
+                showLocationBadge();
+            }
+        } else {
+            setTimeout(safeInit, 200);
+        }
+    }
+    
+    safeInit();
 })();
 </script>
+
 
 <script>
 function previewImage(input, previewId) {

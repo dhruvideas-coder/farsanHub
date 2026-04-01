@@ -70,7 +70,6 @@
 </div>
 
 {{-- Share Modal --}}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <div class="modal fade" id="shareModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -169,7 +168,7 @@
 </script>
 @endif
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
@@ -182,6 +181,7 @@ $(document).ready(function() {
 
     // ─── Share modal ──────────────────────────────────────────────
     let shareMap = null;
+    let shareMarker = null;
 
     $(document).on('click', '.share-customer-btn', function() {
         const d = $(this).data();
@@ -196,7 +196,7 @@ $(document).ready(function() {
         $('#share-map').toggle(hasCoord);
         $('#share-map-nocoord').toggleClass('d-none', hasCoord);
         if (hasCoord) {
-            $('#btn-open-maps').attr('href', 'https://maps.google.com/?q=' + lat + ',' + lng).removeClass('d-none');
+            $('#btn-open-maps').attr('href', 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng).removeClass('d-none');
         } else {
             $('#btn-open-maps').addClass('d-none');
         }
@@ -212,22 +212,26 @@ $(document).ready(function() {
         const hasCoord = !isNaN(lat) && !isNaN(lng);
 
         if (hasCoord) {
-            if (shareMap) { shareMap.remove(); shareMap = null; }
-            shareMap = L.map('share-map').setView([lat, lng], 16);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(shareMap);
-            L.marker([lat, lng])
-                .addTo(shareMap)
-                .bindPopup('<b>' + (d.shop || d.name || '') + '</b><br>' + (d.address || ''))
-                .openPopup();
-            shareMap.invalidateSize();
+            const center = { lat: lat, lng: lng };
+            if (!shareMap) {
+                shareMap = new google.maps.Map(document.getElementById('share-map'), {
+                    zoom: 16,
+                    center: center,
+                    mapTypeControl: false,
+                    streetViewControl: false,
+                    fullscreenControl: false
+                });
+                shareMarker = new google.maps.Marker({
+                    position: center,
+                    map: shareMap,
+                    title: d.shop || d.name || ''
+                });
+            } else {
+                shareMap.setCenter(center);
+                shareMarker.setPosition(center);
+                google.maps.event.trigger(shareMap, 'resize');
+            }
         }
-    });
-
-    $('#shareModal').on('hidden.bs.modal', function() {
-        if (shareMap) { shareMap.remove(); shareMap = null; }
     });
 
     $('#btn-whatsapp-share').on('click', function() {
@@ -240,7 +244,7 @@ $(document).ready(function() {
                 + '👤 Owner: ' + (d.name || '-') + '\n'
                 + '📍 Address: ' + addr + '\n'
                 + '📞 ' + phone;
-        if (hasCoord) msg += '\n🗺️ Location: https://maps.google.com/?q=' + lat + ',' + lng;
+        if (hasCoord) msg += '\n🗺️ Location: https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
         window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
     });
 
@@ -254,7 +258,7 @@ $(document).ready(function() {
                  + 'Owner: ' + (d.name || '-') + '\n'
                  + 'Address: ' + addr + '\n'
                  + 'Phone: ' + phone;
-        if (hasCoord) text += '\nLocation: https://maps.google.com/?q=' + lat + ',' + lng;
+        if (hasCoord) text += '\nLocation: https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
 
         function showCopied() {
             $('#btn-copy-details').html('<i class="fa fa-check me-1"></i>Copied!').addClass('btn-success').removeClass('btn-secondary');

@@ -39,7 +39,7 @@
                                 <i class="fa fa-map-marker me-2 text-danger mt-1 flex-shrink-0"></i>
                                 <span class="fw-bolder">
                                     @if($customer->latitude && $customer->longitude)
-                                        <a href="https://www.openstreetmap.org/?mlat={{ $customer->latitude }}&mlon={{ $customer->longitude }}&zoom=16"
+                                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ $customer->latitude }},{{ $customer->longitude }}"
                                            target="_blank" class="text-secondary text-decoration-none"
                                            title="{{ $rawAddr }}">
                                             {{ $shortAddr }}

@@ -224,7 +224,7 @@ class CustomerController extends Controller
         }
     }
 
-    public function leafletMap()
+    public function customerMap()
     {
         $customers = Customer::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
 
@@ -232,14 +232,14 @@ class CustomerController extends Controller
         foreach ($customers as $customer) {
             if (!empty($customer->latitude) && !empty($customer->longitude)) {
                 $locations[] = [
-                    'lat'   => $customer->latitude,
-                    'lng'   => $customer->longitude,
+                    'lat'   => (float)$customer->latitude,
+                    'lng'   => (float)$customer->longitude,
                     'label' => $customer->customer_name,
                 ];
             }
         }
 
-        return view('admin.leaflet-map', compact('locations'));
+        return view('admin.customer-map', compact('locations'));
     }
 
     /**

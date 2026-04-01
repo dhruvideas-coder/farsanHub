@@ -51,7 +51,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::delete('product', [App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('product.destroy');
     Route::delete('order', [App\Http\Controllers\Admin\OrderController::class, 'destroy'])->name('order.destroy');
 
-    Route::get('leaflet-map', [App\Http\Controllers\Admin\CustomerController::class, 'leafletMap'])->name('leaflet-map');
+    Route::get('customer-map', [App\Http\Controllers\Admin\CustomerController::class, 'customerMap'])->name('customer-map');
 
 
     Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
