@@ -128,4 +128,5 @@ return [
     'price' => 'Price',
 
     'contact_form_submitted' => 'Your message has been sent successfully!',
+    'duplicate_order_confirm' => 'An order for this product and customer already exists on this date. Do you want to assign the same order again?',
 ];

@@ -70,6 +70,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::resource('product', App\Http\Controllers\Admin\ProductController::class)->except('destroy');
 
     // Order Routes
+    Route::get('order/check-duplicate', [App\Http\Controllers\Admin\OrderController::class, 'checkDuplicateOrder'])->name('order.check-duplicate');
     Route::get('order/products-by-customer', [App\Http\Controllers\Admin\OrderController::class, 'getProductsByCustomer'])->name('order.products-by-customer');
     Route::resource('order', App\Http\Controllers\Admin\OrderController::class)->except('destroy');
 

@@ -87,6 +87,26 @@ class OrderController extends Controller
         
         return response()->json($products);
     }
+
+    public function checkDuplicateOrder(Request $request)
+    {
+        try {
+            $customerId = $request->customer_id;
+            $productId = $request->product_id;
+            $orderDate = $request->order_date;
+
+            $exists = Order::where('customer_id', $customerId)
+                ->where('product_id', $productId)
+                ->whereDate('order_date', $orderDate)
+                ->where('user_id', auth()->id())
+                ->exists();
+
+            return response()->json(['exists' => $exists]);
+        } catch (\Exception $e) {
+            Log::error('OrderController@checkDuplicateOrder error: ' . $e->getMessage() . ' Line: ' . $e->getLine() . ' File: ' . $e->getFile());
+            return response()->json(['exists' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
     
     private function getEffectivePrice($productId, $customerId)
     {

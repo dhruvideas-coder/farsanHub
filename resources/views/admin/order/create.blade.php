@@ -145,6 +145,7 @@
 
         $(document).ready(function() {
             var oldProduct = '{{ old('product') }}';
+            var permissionGranted = false;
 
             $('#customer').change(function() {
                 var customerId = $(this).val();
@@ -153,12 +154,15 @@
                 $('#qty-unit-label').text('—');
                 $('#qty-unit-badge').text('—');
                 $('#total-summary').hide();
+                permissionGranted = false; // Reset permission on change
 
                 if (customerId) {
                     $.ajax({
                         url: "{{ route('admin.order.products-by-customer') }}",
                         type: "GET",
-                        data: { customer_id: customerId },
+                        data: {
+                            customer_id: customerId
+                        },
                         success: function(data) {
                             $.each(data, function(index, product) {
                                 productSelect.append(
@@ -183,15 +187,61 @@
                 $('#customer').trigger('change');
             }
 
-            $('#product').on('change', function () {
-                var unit = $(this).find('option:selected').attr('data-unit') || '—';
+            $('#product, #order_date').on('change', function() {
+                permissionGranted = false; // Reset permission if product or date changes
+                var unit = $('#product').find('option:selected').attr('data-unit') || '—';
                 $('#qty-unit-label').text(unit);
                 $('#qty-unit-badge').text(unit);
                 updateTotal();
             });
 
-            $('#order_quantity').on('input', function () {
+            $('#order_quantity').on('input', function() {
                 updateTotal();
+            });
+
+            $('form').on('submit', function(e) {
+                var form = this;
+                var customerId = $('#customer').val();
+                var productId = $('#product').val();
+                var orderDate = $('#order_date').val();
+
+                if (customerId && productId && orderDate && !permissionGranted) {
+                    e.preventDefault(); // Stop form submission to check for duplicate
+
+                    $.ajax({
+                        url: "{{ route('admin.order.check-duplicate') }}",
+                        type: "GET",
+                        data: {
+                            customer_id: customerId,
+                            product_id: productId,
+                            order_date: orderDate
+                        },
+                        success: function(response) {
+                            if (response.exists) {
+                                Swal.fire({
+                                    text: "{{ @trans('portal.duplicate_order_confirm') }}",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: "{{ @trans('portal.save') }}",
+                                    cancelButtonText: "{{ @trans('portal.cancel') }}",
+                                    reverseButtons: true
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        permissionGranted = true;
+                                        form.submit();
+                                    }
+                                });
+                            } else {
+                                permissionGranted = true;
+                                form.submit();
+                            }
+                        },
+                        error: function() {
+                            // If error, just submit to let backend validation/logic handle it
+                            form.submit();
+                        }
+                    });
+                }
             });
         });
     </script>
