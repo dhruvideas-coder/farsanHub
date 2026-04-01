@@ -103,11 +103,15 @@
   <div class="container">
     <a class="navbar-brand d-flex align-items-center gap-2" href="#home">
       <div class="logo-icon" aria-hidden="true">
-       <img src="{{ asset('images/logo.png') }}" alt="logo" width="42" height="42">
+             <img src="{{ asset('images/logo.png') }}" alt="logo" width="42" height="42">
+      <!-- <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="21" cy="21" r="21" fill="#FF9933"/>
+          <text x="21" y="27" text-anchor="middle" font-size="20" font-family="serif" fill="white">ભ</text>
+        </svg> -->
       </div>
       <div>
         <span class="brand-name" data-en="Bhramani Khandavi House" data-gu="બ્રાહ્માણી ખાંડવી હાઉસ">Bhramani Khandavi House</span>
-        <small class="brand-sub d-block" data-en="Authentic Gujarati Farsan" data-gu="અસલી ગુજરાતી ફરસાણ">Authentic Gujarati Farsan</small>
+        <small class="brand-sub d-block" data-en="Authentic Gujarati Farsan" data-gu="ભક્તિથી ભરપુર સ્વાદ">Authentic Gujarati Farsan</small>
       </div>
     </a>
 
@@ -220,13 +224,13 @@
     <div class="row align-items-center g-5">
       <div class="col-lg-5" data-aos="fade-right">
         <div class="about-image-grid">
-          <div class="about-img-main">
+          <div class="about-img-main">  
             <picture>
               <source srcset="{{ asset('images/shop.webp') }}" type="image/webp">
               <img src="{{ asset('images/shop.png') }}" alt="Bhramani Khandavi House shop front" loading="lazy" class="rounded-4 w-100"
                 onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect fill=%22%23FF993311%22 width=%22400%22 height=%22300%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 font-size=%2260%22>🏪</text></svg>'" />
             </picture>
-          </div>
+            </div>
           <div class="about-img-badge">
             <i class="bi bi-award-fill"></i>
             <span data-en="Since Years" data-gu="વર્ષોથી">Since Years</span>
@@ -491,7 +495,7 @@
     <div class="gallery-grid" role="list" aria-label="Food gallery">
       @php
         $galleryItems = [
-          ['file' => 'farsan/khandvi.png',  'emoji' => '🥗',  'en' => 'Khandavi',  'gu' => 'ખાંડવી',  'large' => true],
+                    ['file' => 'farsan/khandvi.png',  'emoji' => '🥗',  'en' => 'Khandavi',  'gu' => 'ખાંડવી',  'large' => true],
           ['file' => 'farsan/samosa.png',    'emoji' => '🥟',  'en' => 'Samosa',    'gu' => 'સામોસા',   'large' => false],
           ['file' => 'farsan/khaman.png',    'emoji' => '🍰',  'en' => 'Khaman',    'gu' => 'ખમણ',     'large' => false],
           ['file' => 'farsan/dhokla.jpg',    'emoji' => '🟡',  'en' => 'Dhokla',    'gu' => 'ઢોકળા',   'large' => false],
@@ -741,6 +745,10 @@
 
         <div class="col-lg-4 col-md-6">
           <div class="footer-brand d-flex align-items-center gap-2 mb-3">
+            <!-- <svg width="38" height="38" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="21" cy="21" r="21" fill="#FF9933"/>
+              <text x="21" y="27" text-anchor="middle" font-size="20" font-family="serif" fill="white">ભ</text>
+            </svg> -->
             <img src="{{ asset('images/logo.png') }}" alt="logo" width="38" height="38">
             <div>
               <span class="footer-brand-name"

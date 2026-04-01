@@ -51,7 +51,7 @@
                                class="btn btn-sm" style="background:#FFF7EE; color:#d97706; border:1px solid #fde68a; padding:4px 10px;">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <a class="btn btn-sm" style="background:#fff0f0; color:#ef4444; border:1px solid #fecaca; padding:4px 10px; cursor:pointer;"
+                            <a class="btn btn-sm order-delete-btn" style="background:#fff0f0; color:#ef4444; border:1px solid #fecaca; padding:4px 10px; cursor:pointer;"
                                data-bs-toggle="modal" data-bs-target="#order-delete"
                                data-order-id="{{ $order->id }}">
                                 <i class="fa fa-trash-o"></i>

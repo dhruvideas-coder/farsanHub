@@ -173,8 +173,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('.close-btn').click(function() { $('.modal').modal('hide'); });
-    $('.user-delete-btn').click(function() { $('#customer_id').val($(this).data('customer-id')); });
+    $(document).on('click', '.close-btn', function() { $('.modal').modal('hide'); });
+    $(document).on('click', '.user-delete-btn', function() { $('#customer_id').val($(this).data('customer-id')); });
     $(document).on('click', '.clickable-image', function() {
         $('#popupImage').attr('src', $(this).data('image'));
         $('#imageModal').modal('show');

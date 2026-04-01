@@ -128,8 +128,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
     $(document).ready(function() {
-        $('.close-btn').click(function() { $('.modal').modal('hide'); });
-        $('.order-delete-btn').click(function() { $('#order_id').val($(this).data('order-id')); });
+        $(document).on('click', '.close-btn', function() { $('.modal').modal('hide'); });
+        $(document).on('click', '.order-delete-btn', function() { $('#order_id').val($(this).data('order-id')); });
     });
 
     function checkDatesAndReload() {

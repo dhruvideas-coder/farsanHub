@@ -57,7 +57,7 @@
 
 
 <!-- change status Modal  -->
-<div class="modal fade" id="user-delete" tabindex="-1" role="dialog" aria-labelledby="AddmodelLabel" aria-hidden="true">
+<div class="modal fade" id="user-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Cancel</button>
                     <input type="submit" class="btn btn-primary" value="Confirm">
                 </div>
             </form>
@@ -116,16 +116,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.close-btn').click(function() {
-            // e.preventDefault();
+        $(document).on('click', '.close-btn', function() {
             $('.modal').modal('hide');
         })
-        $("#editTechnician").click(function() {
-            // e.preventDefault();
+        $(document).on('click', '#editTechnician', function() {
             $('#user-delete').modal('show');
         });
 
-        $('.user-delete-btn').click(function() {
+        $(document).on('click', '.user-delete-btn', function() {
             var DataId = $(this).data('expense-id');
             $('#expense_id').val(DataId);
 
