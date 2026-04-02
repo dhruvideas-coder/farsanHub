@@ -359,49 +359,63 @@
 
             if (hasExisting) {
                 updateCoords();
-            } else {
-                // Try to get current location automatically if no existing coordinates
-                getCurrentLocation();
             }
         } else {
             if (hasExisting) {
                 map.setCenter(center);
                 marker.setPosition(center);
                 updateCoords();
-            } else {
-                getCurrentLocation();
             }
         }
     });
 
     function getCurrentLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const pos = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    if (map && marker) {
-                        map.setCenter(pos);
-                        marker.setPosition(pos);
-                        const posLat = pos.lat;
-                        const posLng = pos.lng;
-                        selectedLat = posLat;
-                        selectedLng = posLng;
-                        document.getElementById('picker-coord-display').textContent = 
-                            selectedLat.toFixed(5) + ', ' + selectedLng.toFixed(5);
-                        document.getElementById('btn-use-location').disabled = false;
-                        
-                        // Clear any previous selection that was from autocomplete
-                        selectedAddress = '';
-                    }
-                },
-                () => {
-                    console.log("Geolocation service failed.");
-                }
-            );
+        if (!navigator.geolocation) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Geolocation is not supported by your browser or requires HTTPS.'
+            });
+            return;
         }
+
+        const options = {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        };
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                if (map && marker) {
+                    map.setCenter(pos);
+                    marker.setPosition(pos);
+                    selectedLat = pos.lat;
+                    selectedLng = pos.lng;
+                    document.getElementById('picker-coord-display').textContent = 
+                        selectedLat.toFixed(5) + ', ' + selectedLng.toFixed(5);
+                    document.getElementById('btn-use-location').disabled = false;
+                    selectedAddress = '';
+                }
+            },
+            (error) => {
+                let msg = 'Unable to retrieve location.';
+                if (error.code === 1) msg = 'Location permission denied. Please enable it in browser settings.';
+                else if (error.code === 2) msg = 'Location unavailable or GPS disabled.';
+                else if (error.code === 3) msg = 'Request timed out. Please try again.';
+                
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Location Error',
+                    text: msg
+                });
+            },
+            options
+        );
     }
 
     document.getElementById('btn-get-current-location').addEventListener('click', getCurrentLocation);

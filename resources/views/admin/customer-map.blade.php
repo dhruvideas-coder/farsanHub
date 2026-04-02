@@ -29,6 +29,26 @@
             transition: all 0.3s ease;
         }
         .back-btn:hover { background: #f8f9fa; transform: translateY(-2px); }
+        .location-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 20px;
+            z-index: 1000;
+            background: #4285F4;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .location-btn:hover { background: #3367D6; transform: scale(1.1); }
+        .location-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
@@ -39,6 +59,11 @@
     </a>
 
     <div id="map"></div>
+    <button class="location-btn" id="btn-my-location" title="My Location">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path></svg>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}"></script>
     <script>
@@ -102,38 +127,66 @@
             }
 
             // Current Location logic
-            if (navigator.geolocation) {
-                const currentLocationMarker = new google.maps.Marker({
-                    map: map,
-                    icon: {
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 8,
-                        fillColor: "#4285F4",
-                        fillOpacity: 1,
-                        strokeColor: "white",
-                        strokeWeight: 2,
-                    },
-                    title: "Your Location"
-                });
+            let userMarker = null;
+
+            function showMyLocation() {
+                if (!navigator.geolocation) {
+                    Swal.fire({ icon: 'error', title: 'Oops...', text: 'Geolocation is not supported or requires https.' });
+                    return;
+                }
 
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
-                        const pos = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        };
-                        currentLocationMarker.setPosition(pos);
-                        
-                        // If no locations were present, center on user
-                        if (locations.length === 0) {
-                            map.setCenter(pos);
-                            map.setZoom(15);
+                        const pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                        if (!userMarker) {
+                            userMarker = new google.maps.Marker({
+                                map: map,
+                                icon: {
+                                    path: google.maps.SymbolPath.CIRCLE,
+                                    scale: 8,
+                                    fillColor: "#4285F4",
+                                    fillOpacity: 1,
+                                    strokeColor: "white",
+                                    strokeWeight: 2,
+                                },
+                                title: "Your Location"
+                            });
                         }
+                        userMarker.setPosition(pos);
+                        map.panTo(pos);
+                        map.setZoom(15);
                     },
-                    () => {
-                        console.log("Geolocation service failed.");
-                        currentLocationMarker.setMap(null);
-                    }
+                    (error) => {
+                        let msg = 'Unable to get location.';
+                        if (error.code === 1) msg = 'Please enable location permission.';
+                        Swal.fire({ icon: 'warning', title: 'Location Error', text: msg });
+                    },
+                    { enableHighAccuracy: true, timeout: 10000 }
+                );
+            }
+
+            document.getElementById('btn-my-location').addEventListener('click', showMyLocation);
+
+            // Auto-check on load (silent fail if no permission)
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                        userMarker = new google.maps.Marker({
+                            position: pos,
+                            map: map,
+                            icon: {
+                                path: google.maps.SymbolPath.CIRCLE,
+                                scale: 8,
+                                fillColor: "#4285F4",
+                                fillOpacity: 1,
+                                strokeColor: "white",
+                                strokeWeight: 2,
+                            }
+                        });
+                    },
+                    null,
+                    { enableHighAccuracy: true, timeout: 5000 }
                 );
             }
         }
