@@ -188,7 +188,10 @@
         <div class="modal-content border-0 shadow">
             <div class="modal-header py-2 d-flex align-items-center">
                 <h6 class="modal-title mb-0"><i class="fa fa-map-marker me-2 text-danger"></i>Pick Location on Map</h6>
-                <button type="button" class="btn btn-sm btn-outline-secondary map-picker-close ms-auto" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-sm btn-info me-2 ms-auto d-flex align-items-center gap-1" id="btn-get-current-location">
+                    <i class="fa fa-crosshairs"></i> My Location
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary map-picker-close" data-bs-dismiss="modal">
                     <i class="fa fa-times"></i>
                 </button>
             </div>
@@ -367,13 +370,54 @@
                 updateCoords();
             });
 
-            if (hasExisting) updateCoords();
+            if (hasExisting) {
+                updateCoords();
+            } else {
+                // Try to get current location automatically if no existing coordinates
+                getCurrentLocation();
+            }
         } else {
-            map.setCenter(center);
-            marker.setPosition(center);
-            google.maps.event.trigger(map, 'resize');
+            if (hasExisting) {
+                map.setCenter(center);
+                marker.setPosition(center);
+                updateCoords();
+            } else {
+                getCurrentLocation();
+            }
         }
     });
+
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    if (map && marker) {
+                        map.setCenter(pos);
+                        marker.setPosition(pos);
+                        const posLat = pos.lat;
+                        const posLng = pos.lng;
+                        selectedLat = posLat;
+                        selectedLng = posLng;
+                        document.getElementById('picker-coord-display').textContent = 
+                            selectedLat.toFixed(5) + ', ' + selectedLng.toFixed(5);
+                        document.getElementById('btn-use-location').disabled = false;
+                        
+                        // Clear any previous selection that was from autocomplete
+                        selectedAddress = '';
+                    }
+                },
+                () => {
+                    console.log("Geolocation service failed.");
+                }
+            );
+        }
+    }
+
+    document.getElementById('btn-get-current-location').addEventListener('click', getCurrentLocation);
 
     document.getElementById('btn-use-location').addEventListener('click', function() {
         if (selectedLat === null || selectedLng === null) return;

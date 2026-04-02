@@ -226,6 +226,29 @@ $(document).ready(function() {
                     map: shareMap,
                     title: d.shop || d.name || ''
                 });
+                // Add current location blue dot to share map
+                if (navigator.geolocation) {
+                    const userMarker = new google.maps.Marker({
+                        map: shareMap,
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 8,
+                            fillColor: "#4285F4",
+                            fillOpacity: 1,
+                            strokeColor: "white",
+                            strokeWeight: 2,
+                        },
+                        title: "Your Location"
+                    });
+
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                        const userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                        userMarker.setPosition(userPos);
+                        
+                        // Optionally expand bounds to show both if needed, 
+                        // but usually focusing on customer is priority
+                    }, () => userMarker.setMap(null));
+                }
             } else {
                 shareMap.setCenter(center);
                 shareMarker.setPosition(center);

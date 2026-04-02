@@ -97,7 +97,44 @@
             if (locations.length > 1) {
                 map.fitBounds(bounds);
             } else if (locations.length === 1) {
+                map.setCenter(mapCenter);
                 map.setZoom(15);
+            }
+
+            // Current Location logic
+            if (navigator.geolocation) {
+                const currentLocationMarker = new google.maps.Marker({
+                    map: map,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 8,
+                        fillColor: "#4285F4",
+                        fillOpacity: 1,
+                        strokeColor: "white",
+                        strokeWeight: 2,
+                    },
+                    title: "Your Location"
+                });
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        currentLocationMarker.setPosition(pos);
+                        
+                        // If no locations were present, center on user
+                        if (locations.length === 0) {
+                            map.setCenter(pos);
+                            map.setZoom(15);
+                        }
+                    },
+                    () => {
+                        console.log("Geolocation service failed.");
+                        currentLocationMarker.setMap(null);
+                    }
+                );
             }
         }
 
