@@ -24,10 +24,32 @@ class AdminController extends Controller
 
     public function dashboard(Request $request)
     {
-        $uid    = auth()->id();
-        $filter = $request->get('filter', 'today');
+        $data = $this->getDashboardData($request);
 
-        // ── BUILD DATE RANGE ─────────────────────────────────────────
+        if ($request->ajax()) {
+            return response()->json($data);
+        }
+
+        return view('admin.dashboard', $data);
+    }
+
+    private function getDashboardData(Request $request)
+    {
+        $uid       = auth()->id();
+        $filter    = $request->get('filter', 'today');
+        $productId = $request->get('product_id');
+
+        // ── GLOBAL STATS (All-time) ──────────────────────────────────
+        $totalCustomers = Customer::where('user_id', $uid)->count();
+        $totalProducts  = Product::where('user_id', $uid)->count();
+        $allTimeOrders  = Order::where('user_id', $uid)->count();
+        $allTimeRevenue = Order::where('user_id', $uid)
+            ->selectRaw('SUM(order_quantity * order_price) as total')
+            ->value('total') ?? 0;
+        
+        $products = Product::where('user_id', $uid)->orderBy('product_name')->get(['id', 'product_name', 'unit']);
+
+        // ── BUILD DATE RANGE FOR FILTER ──────────────────────────────
         switch ($filter) {
             case 'yesterday':
                 $startDate   = Carbon::yesterday()->startOfDay();
@@ -72,33 +94,30 @@ class AdminController extends Controller
         $pStart = $prevStart->toDateString();
         $pEnd   = $prevEnd->toDateString();
 
-        // ── STAT CARDS (customers & products are always all-time) ────
-        $totalCustomers = Customer::where('user_id', $uid)->count();
-        $totalProducts  = Product::where('user_id', $uid)->count();
-        $products       = Product::where('user_id', $uid)->orderBy('product_name')->get(['id', 'product_name', 'unit']);
-
-        $totalOrders = Order::where('user_id', $uid)
+        // ── FILTERED STATS (For selected period & product) ───────────
+        $periodOrdersQuery = Order::where('user_id', $uid)
             ->whereRaw('COALESCE(order_date, DATE(created_at)) BETWEEN ? AND ?', [$start, $end])
-            ->count();
+            ->when($productId, fn($q) => $q->where('product_id', $productId));
 
-        $totalExpenses = Expense::where('user_id', $uid)
-            ->whereBetween('date', [$start, $end])
-            ->sum('amount');
+        $periodOrders = (clone $periodOrdersQuery)->count();
 
-        // ── CURRENT PERIOD vs PREVIOUS PERIOD ───────────────────────
-        $thisMonthOrders = $totalOrders;
-
-        $lastMonthOrders = Order::where('user_id', $uid)
-            ->whereRaw('COALESCE(order_date, DATE(created_at)) BETWEEN ? AND ?', [$pStart, $pEnd])
-            ->count();
-
-        $thisMonthRevenue = Order::where('user_id', $uid)
-            ->whereRaw('COALESCE(order_date, DATE(created_at)) BETWEEN ? AND ?', [$start, $end])
+        $periodRevenue = (clone $periodOrdersQuery)
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
-        $lastMonthRevenue = Order::where('user_id', $uid)
+        // Expenses are usually not product-linked, but we keep them filtered by date
+        $periodExpenses = Expense::where('user_id', $uid)
+            ->whereBetween('date', [$start, $end])
+            ->sum('amount');
+
+        // Previous period for trend calculation
+        $prevPeriodQuery = Order::where('user_id', $uid)
             ->whereRaw('COALESCE(order_date, DATE(created_at)) BETWEEN ? AND ?', [$pStart, $pEnd])
+            ->when($productId, fn($q) => $q->where('product_id', $productId));
+
+        $prevPeriodOrders = (clone $prevPeriodQuery)->count();
+
+        $prevPeriodRevenue = (clone $prevPeriodQuery)
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
@@ -122,20 +141,21 @@ class AdminController extends Controller
         $chartRevenue  = $monthlyData->pluck('revenue')->map(fn($v) => round($v, 2));
         $chartQuantity = $monthlyData->pluck('quantity');
 
-        // ── TOP 5 PRODUCTS (filtered) ────────────────────────────────
+        // ── TOP 5 PRODUCTS (filtered by date) ────────────────────────
         $topProducts = Order::where('orders.user_id', $uid)
             ->join('products', 'orders.product_id', '=', 'products.id')
             ->whereRaw('COALESCE(orders.order_date, DATE(orders.created_at)) BETWEEN ? AND ?', [$start, $end])
-            ->selectRaw('products.product_name, SUM(orders.order_quantity) as total_qty, products.unit')
-            ->groupBy('products.product_name', 'products.unit')
+            ->selectRaw('products.id, products.product_name, SUM(orders.order_quantity) as total_qty, products.unit')
+            ->groupBy('products.id', 'products.product_name', 'products.unit')
             ->orderByDesc('total_qty')
             ->limit(5)
             ->get();
 
-        // ── TOP 5 CUSTOMERS (filtered) ───────────────────────────────
+        // ── TOP 5 CUSTOMERS (filtered by date & product) ─────────────
         $topCustomers = Order::where('orders.user_id', $uid)
             ->join('customers', 'orders.customer_id', '=', 'customers.id')
             ->whereRaw('COALESCE(orders.order_date, DATE(orders.created_at)) BETWEEN ? AND ?', [$start, $end])
+            ->when($productId, fn($q) => $q->where('product_id', $productId))
             ->selectRaw('customers.customer_name, customers.shop_name,
                          COUNT(*) as order_count,
                          SUM(orders.order_quantity * orders.order_price) as total_amount,
@@ -145,11 +165,12 @@ class AdminController extends Controller
             ->limit(5)
             ->get();
 
-        // ── RECENT 8 ORDERS (filtered) ───────────────────────────────
+        // ── RECENT 8 ORDERS (filtered by date & product) ─────────────
         $recentOrders = Order::where('orders.user_id', $uid)
             ->join('products', 'orders.product_id', '=', 'products.id')
             ->join('customers', 'orders.customer_id', '=', 'customers.id')
             ->whereRaw('COALESCE(orders.order_date, DATE(orders.created_at)) BETWEEN ? AND ?', [$start, $end])
+            ->when($productId, fn($q) => $q->where('product_id', $productId))
             ->select(
                 'orders.id',
                 'orders.order_quantity',
@@ -165,54 +186,38 @@ class AdminController extends Controller
             ->limit(8)
             ->get()
             ->each(function ($o) {
-                $o->calculated_total = $o->order_quantity * $o->order_price;
+                $o->calculated_total = (float)($o->order_quantity * $o->order_price);
                 $o->display_date = date('d M Y', strtotime($o->order_date ?: $o->created_at));
             });
 
-        return view('admin.dashboard', compact(
-            'totalCustomers', 'totalOrders', 'totalProducts', 'totalExpenses',
-            'thisMonthOrders', 'lastMonthOrders', 'thisMonthRevenue', 'lastMonthRevenue',
-            'chartLabels', 'chartOrders', 'chartRevenue', 'chartQuantity',
-            'topProducts', 'topCustomers', 'recentOrders',
-            'filter', 'filterLabel', 'products'
-        ));
-    }
-
-    public function ordersCount(Request $request)
-    {
-        $uid       = auth()->id();
-        $filter    = $request->get('filter', 'today');
-        $productId = $request->get('product_id');
-
-        switch ($filter) {
-            case 'yesterday':
-                $start = Carbon::yesterday()->toDateString();
-                $end   = Carbon::yesterday()->toDateString();
-                break;
-            case 'current_week':
-                $start = Carbon::now()->startOfWeek()->toDateString();
-                $end   = Carbon::now()->endOfWeek()->toDateString();
-                break;
-            case 'current_month':
-                $start = Carbon::now()->startOfMonth()->toDateString();
-                $end   = Carbon::now()->endOfMonth()->toDateString();
-                break;
-            case 'current_year':
-                $start = Carbon::now()->startOfYear()->toDateString();
-                $end   = Carbon::now()->endOfYear()->toDateString();
-                break;
-            default:
-                $start = Carbon::today()->toDateString();
-                $end   = Carbon::today()->toDateString();
-                break;
-        }
-
-        $count = Order::where('user_id', $uid)
-            ->whereRaw('COALESCE(order_date, DATE(created_at)) BETWEEN ? AND ?', [$start, $end])
-            ->when($productId, fn($q) => $q->where('product_id', $productId))
-            ->count();
-
-        return response()->json(['count' => $count]);
+        return [
+            /* --- GLOBAL SECTION --- */
+            'global' => [
+                'totalCustomers' => $totalCustomers,
+                'totalProducts'  => $totalProducts,
+                'allTimeOrders'  => $allTimeOrders,
+                'allTimeRevenue' => (float)$allTimeRevenue,
+                'chartLabels'    => $chartLabels,
+                'chartOrders'    => $chartOrders,
+                'chartRevenue'   => $chartRevenue,
+                'chartQuantity'  => $chartQuantity,
+                'products'       => $products,
+            ],
+            /* --- PERIOD SECTION --- */
+            'period' => [
+                'filter'           => $filter,
+                'filterLabel'      => $filterLabel,
+                'productId'        => $productId,
+                'ordersCount'      => $periodOrders,
+                'revenue'          => (float)$periodRevenue,
+                'expenses'         => (float)$periodExpenses,
+                'prevOrdersCount'  => $prevPeriodOrders,
+                'prevRevenue'      => (float)$prevPeriodRevenue,
+                'recentOrders'     => $recentOrders,
+                'topProducts'      => $topProducts,
+                'topCustomers'     => $topCustomers,
+            ]
+        ];
     }
 
     // change password
