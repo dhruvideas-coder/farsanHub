@@ -34,6 +34,9 @@ class OrderController extends Controller
             if ($request->customer_id) {
                 $query->where('orders.customer_id', $request->customer_id);
             }
+            if ($request->product_id) {
+                $query->where('orders.product_id', $request->product_id);
+            }
             if ($request->type) {
                 $query->where('orders.type', $request->type);
             }
@@ -52,10 +55,15 @@ class OrderController extends Controller
                 ->orderBy('customer_name')
                 ->get();
 
+            $products = Product::select('id', 'product_name', 'unit')
+                ->where('user_id', auth()->id())
+                ->orderBy('product_name')
+                ->get();
+
             if ($request->ajax()) {
                 return view('admin.order.view', ['orders' => $orders]);
             }
-            return view('admin.order.index', compact('orders', 'limit', 'search', 'customers'));
+            return view('admin.order.index', compact('orders', 'limit', 'search', 'customers', 'products'));
         } catch (\Exception $e) {
             Log::error('OrderController@index error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Something went wrong while fetching orders.');

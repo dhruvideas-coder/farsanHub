@@ -353,7 +353,7 @@
             <div class="card table-card p-4 border-0 shadow-sm" style="background:#fff;">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="section-label mb-0" style="color:#1c1917;">Activity Log — <span id="ordersSectionLabel">{{ $period['filterLabel'] }}</span></div>
-                    <a href="{{ route('admin.order.index') }}" class="btn btn-sm btn-outline-secondary px-3 py-1" style="font-size:10px; font-weight:700; border-radius:20px;">EXPORT CSV</a>
+                    <a href="{{ route('admin.order.index') }}" class="btn btn-sm btn-outline-secondary px-3 py-1" style="font-size:10px; font-weight:700; border-radius:20px;">View More</a>
                 </div>
                 <div class="table-responsive">
                     <table class="dash-table">
