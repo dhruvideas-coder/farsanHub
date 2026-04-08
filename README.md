@@ -27,7 +27,7 @@
 17. [Key Dependencies (composer.json)](#17-key-dependencies-composerjson)
 18. [Environment Configuration](#18-environment-configuration)
 19. [Module Feature Summary](#19-module-feature-summary)
-20. [Security Architecture](#20-security-architecture)
+20. [Security Architecture](#20-security-architecture) *(includes Auto-Logout §20.7, Login Block §20.8)*
 21. [Performance Optimizations](#21-performance-optimizations)
 22. [Changelog](#22-changelog)
 
@@ -844,14 +844,55 @@ resources/views/
 |---|---|
 | Admin-only access | `is_admin = true` flag checked by `AdminMiddleware` on every admin route |
 | Session regeneration | Session ID regenerated on every login (both email and Google) and logout |
-| Brute-force protection (email) | Login route: `throttle:5,1` — max 5 attempts per minute per IP |
+| Brute-force protection (email) | `RateLimiter` in `AuthController` — max 5 failed attempts per email+IP; blocked for 1 hour |
 | Brute-force protection (Google) | OAuth routes: `throttle:10,1` — max 10 requests per minute per IP |
+| Auto-logout on inactivity | Admin session auto-logs out after 5 minutes of no activity (see §20.7) |
 | Password hashing | All passwords stored using bcrypt via `Hash::make()` |
 | Current password verify | Change password requires current password confirmation |
 | Google: no auto-registration | Google OAuth **cannot create new accounts** — user email must already exist with `is_admin = true` |
 | Google: account linking | `google_id` is linked to existing account on first Google login — verified by matching email |
 | Google: error logging | OAuth failures are logged via `Log::error()` without exposing error details to the user |
 | Credentials storage | Google Client ID/Secret stored only in `.env` — never committed to version control |
+
+### 20.7 Auto-Logout on Inactivity
+
+Implemented in `resources/views/layouts/app.blade.php` (applies to all admin pages).
+
+**Behaviour:**
+
+| Event | What happens |
+|---|---|
+| No user activity for 5 minutes | Warning popup appears with a 30-second countdown |
+| User clicks anywhere / confirms during countdown | Timer fully resets; popup closes |
+| Countdown reaches 0 | A hidden form is auto-submitted — `POST /logout` with CSRF token |
+
+**Activity events tracked:** `mousemove`, `mousedown`, `keydown`, `touchstart`, `scroll`, `click`
+
+**Implementation details:**
+- Uses SweetAlert2 (already loaded globally) for the warning dialog
+- Countdown ticks via `setInterval` every second — live display updates the `<strong>` element inside the popup
+- Logout is performed via a real POST form to keep CSRF protection intact
+- No backend session changes required — fully frontend-driven
+
+### 20.8 Login Brute-Force Protection (1-Hour Block)
+
+Implemented in `AuthController::login()` using Laravel's `RateLimiter` facade. No database migration needed — uses the application's cache backend.
+
+**Rate-limiter key:** `login|{email}|{ip}` — tracks failures per email+IP pair so different users on the same network are not affected by each other.
+
+**Behaviour:**
+
+| Attempt | Message shown |
+|---|---|
+| 1st–4th failure | "X attempt(s) remaining before your account is blocked for 1 hour." |
+| 5th failure | "Too many failed login attempts. Your account is temporarily blocked for 1 hour." |
+| Blocked & retrying | "Please try again in X minutes/hours." (exact remaining time) |
+| Successful login | Failure counter is cleared via `RateLimiter::clear()` |
+
+**Configuration:**
+- Max attempts: **5**
+- Block duration: **3600 seconds (1 hour)** from the first failed attempt
+- Counter reset: automatically on successful login
 
 ### 20.2 Authorization (Ownership Checks)
 
@@ -940,6 +981,11 @@ php artisan optimize:clear
 ---
 
 ## 22. Changelog
+
+### v1.6 — April 2026
+- **SECURITY: Auto-logout on inactivity** — Admin panel auto-logs out after 5 minutes of no user activity; a SweetAlert2 warning popup appears with a 30-second countdown before logout; any user interaction (click, keypress, scroll, etc.) resets the timer; logout is performed via a CSRF-safe `POST /logout` form submission (`resources/views/layouts/app.blade.php`)
+- **SECURITY: Login brute-force block** — After 5 consecutive failed login attempts for the same email+IP, the account is blocked for 1 hour; remaining attempts are shown after each failure; block duration is displayed with exact minutes/hours remaining; counter clears automatically on successful login (`AuthController::login()` using `RateLimiter`)
+- **REMOVED: `throttle:5,1` on login route** — replaced by the smarter per-email+IP failure counter above
 
 ### v1.5 — March 2026
 - **REMOVED: Purchase Orders module** — replaced by `type` column on `orders` table

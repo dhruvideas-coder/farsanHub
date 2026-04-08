@@ -23,7 +23,7 @@ Route::get('/admin', [App\Http\Controllers\AuthController::class, 'showLogin'])-
 Route::get('/', function () {
     return view('webpage');
 })->name('home');
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.post');
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
 // Google OAuth Routes

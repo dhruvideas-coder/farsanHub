@@ -110,6 +110,98 @@
         }
     </script>
 
+    <!-- Auto-logout after 5 minutes of inactivity -->
+    <script>
+        (function () {
+            const IDLE_TIMEOUT   = 5 * 60;   // 5 minutes in seconds
+            const WARN_COUNTDOWN = 30;        // seconds shown in popup
+
+            let idleSeconds  = 0;
+            let countingDown = false;
+            let countdown    = WARN_COUNTDOWN;
+            let tickInterval = null;
+            let warnShown    = false;
+
+            // ── activity reset ────────────────────────────────────────────
+            function resetIdle() {
+                idleSeconds = 0;
+                if (countingDown) {
+                    countingDown = false;
+                    warnShown    = false;
+                    countdown    = WARN_COUNTDOWN;
+                    Swal.close();
+                }
+            }
+
+            ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click']
+                .forEach(function (evt) {
+                    document.addEventListener(evt, resetIdle, { passive: true });
+                });
+
+            // ── logout helper (POST to /logout) ───────────────────────────
+            function doLogout() {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("logout") }}';
+                const csrf = document.createElement('input');
+                csrf.type  = 'hidden';
+                csrf.name  = '_token';
+                csrf.value = '{{ csrf_token() }}';
+                form.appendChild(csrf);
+                document.body.appendChild(form);
+                form.submit();
+            }
+
+            // ── show warning popup ────────────────────────────────────────
+            function showWarning() {
+                warnShown    = true;
+                countingDown = true;
+                countdown    = WARN_COUNTDOWN;
+
+                Swal.fire({
+                    title              : 'Are you still there?',
+                    html               : 'You will be logged out in <strong id="swal-countdown">' + countdown + '</strong> seconds.<br>Click anywhere to stay logged in.',
+                    icon               : 'warning',
+                    showConfirmButton  : true,
+                    confirmButtonText  : 'Stay Logged In',
+                    confirmButtonColor : '#0d6efd',
+                    allowOutsideClick  : true,
+                    allowEscapeKey     : false,
+                    didOpen: function () {
+                        // clicking confirm button counts as activity
+                        document.querySelector('.swal2-confirm').addEventListener('click', resetIdle);
+                        // clicking outside the popup counts as activity
+                        document.querySelector('.swal2-container').addEventListener('click', resetIdle);
+                    }
+                }).then(function (result) {
+                    if (result.isConfirmed) resetIdle();
+                });
+            }
+
+            // ── main tick (every second) ──────────────────────────────────
+            tickInterval = setInterval(function () {
+                idleSeconds++;
+
+                if (idleSeconds >= IDLE_TIMEOUT && !warnShown) {
+                    showWarning();
+                }
+
+                if (countingDown) {
+                    countdown--;
+
+                    const el = document.getElementById('swal-countdown');
+                    if (el) el.textContent = countdown;
+
+                    if (countdown <= 0) {
+                        clearInterval(tickInterval);
+                        Swal.close();
+                        doLogout();
+                    }
+                }
+            }, 1000);
+        })();
+    </script>
+
 </body>
 
 </html>

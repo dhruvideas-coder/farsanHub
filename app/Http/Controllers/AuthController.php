@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -21,39 +22,75 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
+    /**
+     * Unique rate-limiter key per email + IP.
+     */
+    private function loginRateLimiterKey(Request $request): string
+    {
+        return 'login|' . strtolower($request->input('email')) . '|' . $request->ip();
+    }
+
     public function login(Request $request)
     {
         try {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ],[
-            'email.required' => __('validation.required_email'),
-            'email.email' => __('validation.string_email'),
-            'password.required' => __('validation.required_password'),
-        ]);
+            $credentials = $request->validate([
+                'email'    => 'required|email',
+                'password' => 'required',
+            ], [
+                'email.required'    => __('validation.required_email'),
+                'email.email'       => __('validation.string_email'),
+                'password.required' => __('validation.required_password'),
+            ]);
 
-        
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            
-            if (Auth::user()->isAdmin()) {
-                // return redirect()->route('admin.dashboard');
-                return redirect()->route('admin.order.create');
+            $key = $this->loginRateLimiterKey($request);
+
+            // ── Check if this email+IP is currently blocked ──────────────
+            if (RateLimiter::tooManyAttempts($key, 5)) {
+                $seconds  = RateLimiter::availableIn($key);
+                $minutes  = ceil($seconds / 60);
+                $timeText = $minutes >= 60
+                    ? ceil($minutes / 60) . ' hour(s)'
+                    : $minutes . ' minute(s)';
+
+                return back()->withErrors([
+                    'email' => "Too many failed login attempts. Your account is temporarily blocked. Please try again in {$timeText}.",
+                ])->withInput($request->only('email'));
             }
 
-            return redirect()->route('login')->with('error', 'You do not have admin access.');
-        }
+            // ── Attempt login ─────────────────────────────────────────────
+            if (Auth::attempt($credentials)) {
+                RateLimiter::clear($key); // reset on success
+                $request->session()->regenerate();
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->withInput($request->only('email'));
-    } catch (\Exception $e) {
+                if (Auth::user()->isAdmin()) {
+                    return redirect()->route('admin.order.create');
+                }
+
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'You do not have admin access.');
+            }
+
+            // ── Failed: record the attempt (1 hour decay) ─────────────────
+            RateLimiter::hit($key, 3600);
+
+            $attempts  = RateLimiter::attempts($key);
+            $remaining = 5 - $attempts;
+
+            if ($remaining > 0) {
+                $message = "The provided credentials do not match our records. {$remaining} attempt(s) remaining before your account is blocked for 1 hour.";
+            } else {
+                $message = 'Too many failed login attempts. Your account is temporarily blocked for 1 hour.';
+            }
+
             return back()->withErrors([
-            'error' => 'An error occurred during login. Please try again later.',
-        ])->withInput($request->only('email')); 
+                'email' => $message,
+            ])->withInput($request->only('email'));
+
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'error' => 'An error occurred during login. Please try again later.',
+            ])->withInput($request->only('email'));
         }
-   
     }
 
     public function register(Request $request)
