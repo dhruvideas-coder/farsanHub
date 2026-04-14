@@ -236,7 +236,10 @@
                 <div class="summary-cell-label">Customers</div>
             </td>
             <td class="summary-cell" style="border-right:none;">
-                <div class="summary-cell-value">{{ rtrim(rtrim(number_format($totalOrderQuantity, 4), '0'), '.') }}</div>
+                <div class="summary-cell-value">
+                    {{ rtrim(rtrim(number_format($totalKg ?? 0, 4), '0'), '.') }} <span style="font-size:9px; font-weight:600;">kg</span><br>
+                    {{ rtrim(rtrim(number_format($totalNang ?? 0, 4), '0'), '.') }} <span style="font-size:9px; font-weight:600;">Nang</span>
+                </div>
                 <div class="summary-cell-label">Total Quantity</div>
             </td>
             <td class="summary-cell" style="border-radius:0 4px 4px 0;">
@@ -295,7 +298,10 @@
         <tfoot>
             <tr>
                 <td colspan="4" class="ft-label">Grand Total</td>
-                <td class="ft-qty">{{ rtrim(rtrim(number_format($totalOrderQuantity, 4), '0'), '.') }}</td>
+                <td class="ft-qty">
+                    {{ rtrim(rtrim(number_format($totalKg ?? 0, 4), '0'), '.') }} kg<br>
+                    {{ rtrim(rtrim(number_format($totalNang ?? 0, 4), '0'), '.') }} Nang
+                </td>
                 <td></td>
                 <td class="ft-amt">&#8377; {{ number_format($totalOrderAmount, 2) }}</td>
                 <td></td>
@@ -322,7 +328,10 @@
                     </tr>
                     <tr>
                         <td class="t-label">Total Quantity</td>
-                        <td class="t-value">{{ rtrim(rtrim(number_format($totalOrderQuantity, 4), '0'), '.') }}</td>
+                        <td class="t-value">
+                            {{ rtrim(rtrim(number_format($totalKg ?? 0, 4), '0'), '.') }} kg<br>
+                            {{ rtrim(rtrim(number_format($totalNang ?? 0, 4), '0'), '.') }} Nang
+                        </td>
                     </tr>
                     <tr>
                         <td class="t-label">Grand Total Amount</td>

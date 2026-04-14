@@ -142,6 +142,8 @@ class ReportController extends Controller
 
                 $totalOrderAmount = 0;
                 $totalOrderQuantity = 0;
+                $totalKg = 0;
+                $totalNang = 0;
                 $monthName = null;
                 $customerInfo = null;
 
@@ -153,6 +155,13 @@ class ReportController extends Controller
                     $order->calculated_total = $order->order_quantity * $order->order_price;
                     $totalOrderAmount += $order->calculated_total;
                     $totalOrderQuantity += $order->order_quantity;
+
+                    $unit = strtolower($order->unit ?? 'kg');
+                    if ($unit === 'nang') {
+                        $totalNang += $order->order_quantity;
+                    } else {
+                        $totalKg += $order->order_quantity;
+                    }
                 }
 
                 // Fetch customer details if a specific customer is selected
@@ -175,6 +184,8 @@ class ReportController extends Controller
                     'monthYear' => $monthYear,
                     'totalOrderAmount' => $totalOrderAmount,
                     'totalOrderQuantity' => $totalOrderQuantity,
+                    'totalKg' => $totalKg,
+                    'totalNang' => $totalNang,
                     'reportDate' => $reportDate,
                     'logoPath' => $logoPath,
                     'customerInfo' => $customerInfo,

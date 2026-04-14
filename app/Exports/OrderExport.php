@@ -19,7 +19,9 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
     protected $customerId;
     protected $monthYear;
     protected $totalOrderAmount = 0;
-    protected $totalOrderQuantity = 0; // New property for total quantity
+    protected $totalOrderQuantity = 0;
+    protected $totalKg = 0;
+    protected $totalNang = 0;
     protected $rowCount = 0;
 
     public function __construct($customerId = null, $monthYear = null)
@@ -37,6 +39,7 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
                 'orders.*',
                 'products.product_name',
                 'products.product_base_price',
+                'products.unit',
                 'customers.customer_name',
                 'customers.shop_name'
             );
@@ -68,17 +71,24 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
         Log::info('Orders record count: ' . $this->rowCount);
 
         $srNo = 1;
-        return $orders->map(function ($item) use (&$srNo) { 
+        return $orders->map(function ($item) use (&$srNo) {
             $totalAmount = $item->order_quantity * $item->order_price;
             $this->totalOrderAmount += $totalAmount;
-            $this->totalOrderQuantity += $item->order_quantity; 
-            
+            $this->totalOrderQuantity += $item->order_quantity;
+
+            $unit = strtolower($item->unit ?? 'kg');
+            if ($unit === 'nang') {
+                $this->totalNang += $item->order_quantity;
+            } else {
+                $this->totalKg += $item->order_quantity;
+            }
+
             return [
-                'sr_no' => $srNo++, 
+                'sr_no' => $srNo++,
                 'customer_name' => $item->customer_name ?? '-',
                 'shop_name' => $item->shop_name ?? '-',
                 'product_name' => $item->product_name ?? '-',
-                'order_quantity' => ($item->order_quantity ?? '0') . ' KG',
+                'order_quantity' => ($item->order_quantity ?? '0') . ' ' . ($item->unit ?? 'kg'),
                 'order_price' => '₹ ' . $item->order_price ?? '',
                 'total_amount' => '₹ ' . $totalAmount,
                 'date' => $item->order_date ? date('d-m-Y', strtotime($item->order_date)) : ($item->created_at ? date('d-m-Y', strtotime($item->created_at)) : '-'),
@@ -112,7 +122,7 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
     public function columnFormats(): array
     {
         return [
-            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1, 
+            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
             'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
         ];
     }
@@ -125,7 +135,7 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
 
                 // Add Grand Total row
                 $event->sheet->setCellValue('A' . $totalRow, 'Grand Total');
-                $event->sheet->setCellValue('E' . $totalRow, $this->totalOrderQuantity . ' KG');
+                $event->sheet->setCellValue('E' . $totalRow, $this->totalKg . ' kg, ' . $this->totalNang . ' Nang');
                 $event->sheet->setCellValue('G' . $totalRow, '₹ ' . $this->totalOrderAmount); 
 
                 $event->sheet->mergeCells('A' . $totalRow . ':D' . $totalRow);

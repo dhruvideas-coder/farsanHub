@@ -1,4 +1,4 @@
-<div class="table-responsive mb-2">
+﻿<div class="table-responsive mb-2">
 <table class="table table-hover align-middle mb-0" id="logs-table" style="min-width:600px;">
     <thead style="background:#FFF7EE;">
         <tr>
@@ -20,7 +20,7 @@
                 </td>
             </tr>
         @else
-            @forelse($orders as $index => $order)
+            @foreach($orders as $index => $order)
                 <tr>
                     <td style="font-size:13px; color:#78716c; font-weight:600;">{{ $orders->firstItem() + $index }}</td>
                     <td class="text-center">
@@ -60,12 +60,21 @@
                     </td>
                 </tr>
             @endforeach
+            @php
+                $totalKg = $orders->filter(fn($o) => strtolower($o->unit ?? 'kg') === 'kg')->sum('order_quantity');
+                $totalNang = $orders->filter(fn($o) => strtolower($o->unit ?? '') === 'nang')->sum('order_quantity');
+            @endphp
             <tr style="background:#FFF7EE; font-weight:700;">
                 <td colspan="4" class="text-end" style="font-size:13px; color:#92400e;">Total:</td>
                 <td class="text-center">
-                    <span class="badge rounded-pill" style="background:#FF9933; color:#fff; font-size:12px; font-weight:700;">
-                        {{ rtrim(rtrim(number_format($orders->sum('order_quantity'), 4), '0'), '.') }}
-                    </span>
+                    <div class="d-inline-flex flex-column align-items-center gap-1">
+                        <span class="badge rounded-pill" style="background:#FF9933; color:#fff; font-size:12px; font-weight:700;">
+                            {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} kg
+                        </span>
+                        <span class="badge rounded-pill" style="background:#FF9933; color:#fff; font-size:12px; font-weight:700;">
+                            {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} Nang
+                        </span>
+                    </div>
                 </td>
                 <td class="text-end" style="font-size:14px; color:#FF9933; white-space:nowrap;">
                     ₹{{ number_format($orders->sum(function ($order) { return $order->order_quantity * $order->order_price; }), 2) }}

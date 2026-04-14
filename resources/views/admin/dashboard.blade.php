@@ -219,23 +219,29 @@
                 </div>
             </div>
         </div>
-        {{-- Total Orders --}}
+        {{-- Total Sales --}}
         <div class="col-6 col-md-3">
             <div class="card dash-card p-3 border-0" style="background:#fff; height:100%;">
-                <div class="stat-label">All-time Orders</div>
+                <div class="stat-label">Total Sales</div>
                 <div class="d-flex justify-content-between align-items-end mt-1">
-                    <div class="stat-value">{{ number_format($global['allTimeOrders']) }}</div>
-                    <div class="icon-box" style="width:32px; height:32px; background:#fff7ed; font-size:14px; color:#d97706;"><i class="fa fa-shopping-cart"></i></div>
+                    <div>
+                        <div class="stat-value" style="color:#10b981;">₹{{ number_format($global['allTimeSellRevenue'] / 1000, 1) }}k</div>
+                        <div class="trend neutral">{{ number_format($global['allTimeSellOrders']) }} Sell Orders</div>
+                    </div>
+                    <div class="icon-box" style="width:32px; height:32px; background:#ecfdf5; font-size:14px; color:#10b981;"><i class="fa fa-arrow-trend-up"></i></div>
                 </div>
             </div>
         </div>
-        {{-- Total Revenue --}}
+        {{-- Total Purchases --}}
         <div class="col-6 col-md-3">
             <div class="card dash-card p-3 border-0" style="background:#fff; height:100%;">
-                <div class="stat-label">Global Revenue</div>
+                <div class="stat-label">Total Purchases</div>
                 <div class="d-flex justify-content-between align-items-end mt-1">
-                    <div class="stat-value" style="color:#db2777;">₹{{ number_format($global['allTimeRevenue'] / 1000, 1) }}k</div>
-                    <div class="icon-box" style="width:32px; height:32px; background:#fdf2f8; font-size:14px; color:#db2777;"><i class="fa fa-money"></i></div>
+                    <div>
+                        <div class="stat-value" style="color:#ef4444;">₹{{ number_format($global['allTimePurchaseRevenue'] / 1000, 1) }}k</div>
+                        <div class="trend neutral">{{ number_format($global['allTimePurchaseOrders']) }} Purchase Orders</div>
+                    </div>
+                    <div class="icon-box" style="width:32px; height:32px; background:#fef2f2; font-size:14px; color:#ef4444;"><i class="fa fa-arrow-trend-down"></i></div>
                 </div>
             </div>
         </div>
@@ -250,10 +256,10 @@
             </div>
             <div class="d-flex gap-3">
                 <div class="d-flex align-items-center gap-1" style="font-size:11px; font-weight:600; color:#44403c;">
-                    <span style="width:10px; height:10px; background:#d97706; border-radius:2px;"></span> Revenue
+                    <span style="width:10px; height:10px; background:#10b981; border-radius:2px;"></span> Sell
                 </div>
                 <div class="d-flex align-items-center gap-1" style="font-size:11px; font-weight:600; color:#44403c;">
-                    <span style="width:10px; height:10px; background:#3b82f6; border-radius:2px;"></span> Orders
+                    <span style="width:10px; height:10px; background:#ef4444; border-radius:2px;"></span> Purchase
                 </div>
             </div>
         </div>
@@ -301,38 +307,41 @@
 
     {{-- Period Stat Row --}}
     <div class="row g-3 mb-4">
-        {{-- Period Orders --}}
+        {{-- Period Sales --}}
         <div class="col-12 col-md-4">
-            <div class="card dash-card p-3 border border-amber shadow-sm" style="background:#fff; border-left-width:4px !important;">
-                <div class="d-flex justify-content-between">
-                    <div class="stat-label">Orders Count</div>
-                    <!-- <div class="icon-box" style="width:24px; height:24px; background:#fff7ed; font-size:10px; color:#d97706; border-radius:6px;"><i class="fa fa-shopping-basket"></i></div> -->
+            <div class="card dash-card p-3 border border-success shadow-sm" style="background:#fff; border-left-width:4px !important;">
+                <div class="stat-label text-success">Period Sales</div>
+                <div class="d-flex align-items-center justify-content-between mt-2">
+                    <div class="stat-value" id="sellRevenueVal" style="color:#10b981;">₹ {{ number_format($period['sellRevenue'], 0) }}</div>
+                    <div class="trend neutral" id="sellOrdersCountVal" style="font-weight:600;">{{ number_format($period['sellOrdersCount']) }} orders</div>
                 </div>
-                <div class="stat-value" id="ordersCountVal">{{ number_format($period['ordersCount']) }}</div>
                 @php
-                    $odDiff = $period['ordersCount'] - $period['prevOrdersCount'];
-                    $odTrend = $odDiff > 0 ? 'up' : ($odDiff < 0 ? 'down' : 'neutral');
+                    $sRevDiff = $period['sellRevenue'] - $period['prevSellRevenue'];
+                    $sRevTrend = $sRevDiff > 0 ? 'up' : ($sRevDiff < 0 ? 'down' : 'neutral');
+                    $sRevPct = $period['prevSellRevenue'] > 0 ? round(abs($sRevDiff) / $period['prevSellRevenue'] * 100, 1) : 0;
                 @endphp
-                <div id="orderTrendContainer" class="trend {{ $odTrend }} d-flex align-items-center gap-1 mt-2">
-                    <i class="fa {{ $odDiff > 0 ? 'fa-arrow-up' : ($odDiff < 0 ? 'fa-arrow-down' : 'fa-minus') }}"></i>
-                    <span id="orderTrendLabel">{{ $period['ordersCount'] }} orders</span>
-                    <span id="orderTrendDiff" style="font-size:10px; opacity:0.8;">({{ $odDiff >= 0 ? '+' : '' }}{{ $odDiff }} vs prev)</span>
+                <div id="sellTrendContainer" class="trend {{ $sRevTrend }} d-flex align-items-center gap-1 mt-2">
+                    <i class="fa {{ $sRevDiff > 0 ? 'fa-arrow-up' : ($sRevDiff < 0 ? 'fa-arrow-down' : 'fa-minus') }}"></i>
+                    <span id="sellTrendLabel">{{ $sRevPct }}% {{ $sRevDiff >= 0 ? 'more' : 'less' }} than prev period</span>
                 </div>
             </div>
         </div>
-        {{-- Period Revenue --}}
+        {{-- Period Purchases --}}
         <div class="col-12 col-md-4">
-            <div class="card dash-card p-3 border-0 shadow-sm" style="background:#fff;">
-                <div class="stat-label">Period Revenue</div>
-                <div class="stat-value" id="revenueVal">₹ {{ number_format($period['revenue'], 0) }}</div>
+            <div class="card dash-card p-3 border border-danger shadow-sm" style="background:#fff; border-left-width:4px !important;">
+                <div class="stat-label text-danger">Period Purchases</div>
+                <div class="d-flex align-items-center justify-content-between mt-2">
+                    <div class="stat-value" id="purchaseRevenueVal" style="color:#ef4444;">₹ {{ number_format($period['purchaseRevenue'], 0) }}</div>
+                    <div class="trend neutral" id="purchaseOrdersCountVal" style="font-weight:600;">{{ number_format($period['purchaseOrdersCount']) }} orders</div>
+                </div>
                 @php
-                    $rvDiff = $period['revenue'] - $period['prevRevenue'];
-                    $rvTrend = $rvDiff > 0 ? 'up' : ($rvDiff < 0 ? 'down' : 'neutral');
-                    $rvPct = $period['prevRevenue'] > 0 ? round(abs($rvDiff) / $period['prevRevenue'] * 100, 1) : 0;
+                    $pRevDiff = $period['purchaseRevenue'] - $period['prevPurchaseRevenue'];
+                    $pRevTrend = $pRevDiff > 0 ? 'up' : ($pRevDiff < 0 ? 'down' : 'neutral');
+                    $pRevPct = $period['prevPurchaseRevenue'] > 0 ? round(abs($pRevDiff) / $period['prevPurchaseRevenue'] * 100, 1) : 0;
                 @endphp
-                <div id="revenueTrendContainer" class="trend {{ $rvTrend }} d-flex align-items-center gap-1 mt-2">
-                    <i class="fa {{ $rvDiff > 0 ? 'fa-arrow-up' : ($rvDiff < 0 ? 'fa-arrow-down' : 'fa-minus') }}"></i>
-                    <span id="revenueTrendLabel">{{ $rvPct }}% {{ $rvDiff >= 0 ? 'more' : 'less' }} than prev period</span>
+                <div id="purchaseTrendContainer" class="trend {{ $pRevTrend }} d-flex align-items-center gap-1 mt-2">
+                    <i class="fa {{ $pRevDiff > 0 ? 'fa-arrow-up' : ($pRevDiff < 0 ? 'fa-arrow-down' : 'fa-minus') }}"></i>
+                    <span id="purchaseTrendLabel">{{ $pRevPct }}% {{ $pRevDiff >= 0 ? 'more' : 'less' }} than prev period</span>
                 </div>
             </div>
         </div>
@@ -340,8 +349,8 @@
         <div class="col-12 col-md-4">
             <div class="card dash-card p-3 border-0 shadow-sm" style="background:#fefce8; border: 1px dashed #fde047 !important;">
                 <div class="stat-label" style="color: #854d0e;">Period Expenses</div>
-                <div class="stat-value" id="expensesVal" style="color: #854d0e;">₹ {{ number_format($period['expenses'], 0) }}</div>
-                <div class="trend neutral mt-2" style="color: #a16207;"><i class="fa fa-info-circle"></i> View details in reports</div>
+                <div class="stat-value" id="expensesVal" style="color: #854d0e; margin-top:8px;">₹ {{ number_format($period['expenses'], 0) }}</div>
+                <div class="trend neutral mt-2" style="color: #a16207;"><i class="fa fa-info-circle"></i> General operational costs</div>
             </div>
         </div>
     </div>
@@ -372,7 +381,16 @@
                                     <div class="main-text">{{ $order->customer_name }}</div>
                                     <div class="sub-text">{{ $order->shop_name }}</div>
                                 </td>
-                                <td style="font-weight:600; color:#57534e;">{{ $order->product_name }}</td>
+                                <td>
+                                    <div style="font-weight:600; color:#57534e;">{{ $order->product_name }}</div>
+                                    <div style="font-size:10px; margin-top:2px;">
+                                        @if($order->type === 'sell')
+                                            <span class="badge bg-success" style="font-size:9px;">Sell</span>
+                                        @else
+                                            <span class="badge bg-danger" style="font-size:9px;">Purchase</span>
+                                        @endif
+                                    </div>
+                                </td>
                                 <td class="text-center">{{ number_format($order->order_quantity, 0) }} {{ $order->unit }}</td>
                                 <td class="text-end amt">₹ {{ number_format($order->calculated_total, 0) }}</td>
                             </tr>
@@ -396,7 +414,10 @@
                     <div class="cust-avatar" style="background:#fef3c7; color:#92400e;">{{ strtoupper(substr($c->customer_name, 0, 1)) }}</div>
                     <div>
                         <div class="cust-name">{{ $c->customer_name }}</div>
-                        <div class="cust-shop">{{ number_format($c->total_qty, 0) }} {{ $c->unit ?? 'KG' }} volume</div>
+                        <div class="cust-shop">
+                            {{ number_format($c->total_kg ?? 0, 0) }} kg /
+                            {{ number_format($c->total_nang ?? 0, 0) }} Nang
+                        </div>
                     </div>
                     <div class="cust-badge">{{ $c->order_count }}</div>
                 </div>
@@ -415,13 +436,17 @@
                 <div id="topProductsLegend">
                     @foreach($period['topProducts'] as $i => $p)
                     <div class="prod-row">
-                        <div class="prod-label">
+                        <div class="prod-label align-items-end">
                             <span style="font-size:11px;">{{ $p->product_name }}</span>
-                            <span style="font-size:10px; color:#d97706; font-weight:700;">{{ number_format($p->total_qty, 0) }} {{ $p->unit }}</span>
+                            <div style="text-align: right;">
+                                <span style="font-size:9.5px; color:#10b981; font-weight:700;" title="Sell">Sell: {{ number_format($p->total_sell_qty, 0) }} {{ $p->unit }}</span>
+                                <span style="font-size:9.5px; color:#ef4444; font-weight:700; margin-left:3px;" title="Purchase">Purchase: {{ number_format($p->total_purchase_qty, 0) }} {{ $p->unit }}</span>
+                            </div>
                         </div>
-                        @php $maxQty = $period['topProducts']->max('total_qty'); $donutColors = ['#d97706','#3b82f6','#10b981','#8b5cf6','#ef4444']; @endphp
-                        <div class="prod-bar-wrap" style="height:6px;">
-                            <div class="prod-bar-fill" style="width:{{ $maxQty > 0 ? round($p->total_qty / $maxQty * 100) : 0 }}%; background:{{ $donutColors[$i % 5] }};"></div>
+                        @php $maxQty = $period['topProducts']->max('total_qty'); @endphp
+                        <div class="prod-bar-wrap" style="height:6px; display:flex;">
+                            <div style="width:{{ $maxQty > 0 ? round($p->total_sell_qty / $maxQty * 100) : 0 }}%; background:#10b981; height:100%;"></div>
+                            <div style="width:{{ $maxQty > 0 ? round($p->total_purchase_qty / $maxQty * 100) : 0 }}%; background:#ef4444; height:100%;"></div>
                         </div>
                     </div>
                     @endforeach
@@ -465,14 +490,13 @@
             data: {
                 labels: g.chartLabels,
                 datasets: [
-                    { label: 'Revenue (₹)', data: g.chartRevenue, borderColor: '#d97706', backgroundColor: revGrad, borderWidth: 2.5, fill: true, tension: .4, pointBackgroundColor: '#d97706', pointRadius: 4, yAxisID: 'yRev' },
-                    { label: 'Orders', data: g.chartOrders, borderColor: '#3b82f6', backgroundColor: 'transparent', borderWidth: 2, fill: false, tension: .4, pointBackgroundColor: '#3b82f6', pointRadius: 4, borderDash: [5,3], yAxisID: 'yOrd' }
+                    { label: 'Sell Revenue (₹)', data: g.chartSellRevenue, borderColor: '#10b981', backgroundColor: 'transparent', borderWidth: 2.5, tension: .4, pointBackgroundColor: '#10b981', pointRadius: 4, yAxisID: 'yRev' },
+                    { label: 'Purchase Revenue (₹)', data: g.chartPurchaseRevenue, borderColor: '#ef4444', backgroundColor: 'transparent', borderWidth: 2.5, tension: .4, pointBackgroundColor: '#ef4444', pointRadius: 4, yAxisID: 'yRev' },
                 ]
             },
             options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false } },
                 scales: { 
                     yRev: { position: 'left', grid: { color: '#f5f5f4' }, ticks: { font: { size: 10 }, callback: v => '₹' + (v >= 1000 ? (v/1000).toFixed(0)+'k' : v) } },
-                    yOrd: { position: 'right', grid: { drawOnChartArea: false }, ticks: { font: { size: 10 }, precision: 0 } },
                     x: { grid: { display: false }, ticks: { font: { size: 11 } } }
                 }
             }
@@ -525,30 +549,36 @@
                 document.getElementById('ordersSectionLabel').textContent = labelPrefix + p.filterLabel;
 
                 // Update Period Data
-                document.getElementById('ordersCountVal').textContent = Number(p.ordersCount).toLocaleString('en-IN');
-                document.getElementById('revenueVal').textContent = '₹ ' + Number(p.revenue).toLocaleString('en-IN');
+                document.getElementById('sellOrdersCountVal').textContent = Number(p.sellOrdersCount).toLocaleString('en-IN') + ' orders';
+                document.getElementById('sellRevenueVal').textContent = '₹ ' + Number(p.sellRevenue).toLocaleString('en-IN');
+                document.getElementById('purchaseOrdersCountVal').textContent = Number(p.purchaseOrdersCount).toLocaleString('en-IN') + ' orders';
+                document.getElementById('purchaseRevenueVal').textContent = '₹ ' + Number(p.purchaseRevenue).toLocaleString('en-IN');
                 document.getElementById('expensesVal').textContent = '₹ ' + Number(p.expenses).toLocaleString('en-IN');
 
                 // Update Trends
-                const odDiff = p.ordersCount - p.prevOrdersCount;
-                const odTrendCont = document.getElementById('orderTrendContainer');
-                odTrendCont.className = 'trend ' + (odDiff > 0 ? 'up' : (odDiff < 0 ? 'down' : 'neutral'));
-                odTrendCont.querySelector('i').className = 'fa ' + (odDiff > 0 ? 'fa-arrow-up' : (odDiff < 0 ? 'fa-arrow-down' : 'fa-minus'));
-                document.getElementById('orderTrendLabel').textContent = p.ordersCount + ' orders';
-                document.getElementById('orderTrendDiff').textContent = `(${odDiff >= 0 ? '+' : ''}${odDiff} vs prev)`;
+                const sRevDiff = p.sellRevenue - p.prevSellRevenue;
+                const sRevTrendCont = document.getElementById('sellTrendContainer');
+                const sRevPct = p.prevSellRevenue > 0 ? Math.round(Math.abs(sRevDiff) / p.prevSellRevenue * 100 * 10) / 10 : 0;
+                sRevTrendCont.className = 'trend ' + (sRevDiff > 0 ? 'up' : (sRevDiff < 0 ? 'down' : 'neutral')) + ' d-flex align-items-center gap-1 mt-2';
+                sRevTrendCont.querySelector('i').className = 'fa ' + (sRevDiff > 0 ? 'fa-arrow-up' : (sRevDiff < 0 ? 'fa-arrow-down' : 'fa-minus'));
+                document.getElementById('sellTrendLabel').textContent = `${sRevPct}% ${sRevDiff >= 0 ? 'more' : 'less'} than prev period`;
 
-                const rvDiff = p.revenue - p.prevRevenue;
-                const rvTrendCont = document.getElementById('revenueTrendContainer');
-                const rvPct = p.prevRevenue > 0 ? Math.round(Math.abs(rvDiff) / p.prevRevenue * 100 * 10) / 10 : 0;
-                rvTrendCont.className = 'trend ' + (rvDiff > 0 ? 'up' : (rvDiff < 0 ? 'down' : 'neutral'));
-                rvTrendCont.querySelector('i').className = 'fa ' + (rvDiff > 0 ? 'fa-arrow-up' : (rvDiff < 0 ? 'fa-arrow-down' : 'fa-minus'));
-                document.getElementById('revenueTrendLabel').textContent = `${rvPct}% ${rvDiff >= 0 ? 'more' : 'less'} than prev period`;
+                const pRevDiff = p.purchaseRevenue - p.prevPurchaseRevenue;
+                const pRevTrendCont = document.getElementById('purchaseTrendContainer');
+                const pRevPct = p.prevPurchaseRevenue > 0 ? Math.round(Math.abs(pRevDiff) / p.prevPurchaseRevenue * 100 * 10) / 10 : 0;
+                pRevTrendCont.className = 'trend ' + (pRevDiff > 0 ? 'up' : (pRevDiff < 0 ? 'down' : 'neutral')) + ' d-flex align-items-center gap-1 mt-2';
+                pRevTrendCont.querySelector('i').className = 'fa ' + (pRevDiff > 0 ? 'fa-arrow-up' : (pRevDiff < 0 ? 'fa-arrow-down' : 'fa-minus'));
+                document.getElementById('purchaseTrendLabel').textContent = `${pRevPct}% ${pRevDiff >= 0 ? 'more' : 'less'} than prev period`;
 
                 // Update Tables & Lists
                 document.getElementById('recentOrdersBody').innerHTML = p.recentOrders.length ? p.recentOrders.map(o => `
                     <tr>
                         <td><div class="main-text">${o.customer_name}</div><div class="sub-text">${o.shop_name}</div></td>
-                        <td style="font-weight:600; color:#57534e;">${o.product_name}</td>
+                        <td><div style="font-weight:600; color:#57534e;">${o.product_name}</div>
+                            <div style="font-size:10px; margin-top:2px;">
+                                ${o.type === 'sell' ? '<span class="badge bg-success" style="font-size:9px;">Sell</span>' : '<span class="badge bg-danger" style="font-size:9px;">Purchase</span>'}
+                            </div>
+                        </td>
                         <td class="text-center">${Number(o.order_quantity).toLocaleString('en-IN')} ${o.unit}</td>
                         <td class="text-end amt">₹ ${Number(o.calculated_total).toLocaleString('en-IN')}</td>
                     </tr>
@@ -557,19 +587,25 @@
                 document.getElementById('topCustomersContainer').innerHTML = p.topCustomers.length ? p.topCustomers.map(c => `
                     <div class="cust-row">
                         <div class="cust-avatar" style="background:#fef3c7; color:#92400e;">${c.customer_name.charAt(0).toUpperCase()}</div>
-                        <div><div class="cust-name">${c.customer_name}</div><div class="cust-shop">${Number(c.total_qty).toLocaleString('en-IN')} volume</div></div>
+                        <div><div class="cust-name">${c.customer_name}</div><div class="cust-shop">${Number(c.total_kg || 0).toLocaleString('en-IN')} kg / ${Number(c.total_nang || 0).toLocaleString('en-IN')} Nang volume</div></div>
                         <div class="cust-badge">${c.order_count}</div>
                     </div>
                 `).join('') : '<div style="color:#a8a29e; font-size:12px; text-align:center; padding:20px 0;">N/A</div>';
 
-                // Product Chart & Bar fills (Only update if no specific product is selected, or let it show context)
-                // If a product is selected, the "Top Products" usually becomes just 1 item or irrelevant.
-                // We'll update it anyway to keep it consistent with the backend query.
+                // Product Chart & Bar fills
                 const maxQty = Math.max(...p.topProducts.map(x => x.total_qty), 1);
                 document.getElementById('topProductsLegend').innerHTML = p.topProducts.map((pr, i) => `
                     <div class="prod-row">
-                        <div class="prod-label"><span>${pr.product_name}</span><span style="color:#d97706; font-weight:700;">${Number(pr.total_qty).toLocaleString('en-IN')} ${pr.unit}</span></div>
-                        <div class="prod-bar-wrap" style="height:6px;"><div class="prod-bar-fill" style="width:${(pr.total_qty/maxQty*100)}%; background:${donutColors[i%5]};"></div></div>
+                        <div class="prod-label align-items-end"><span>${pr.product_name}</span>
+                            <div style="text-align: right;">
+                                <span style="font-size:9.5px; color:#10b981; font-weight:700;" title="Sell">Sell: ${Number(pr.total_sell_qty).toLocaleString('en-IN')} ${pr.unit}</span>
+                                <span style="font-size:9.5px; color:#ef4444; font-weight:700; margin-left:3px;" title="Purchase">Purchase: ${Number(pr.total_purchase_qty).toLocaleString('en-IN')} ${pr.unit}</span>
+                            </div>
+                        </div>
+                        <div class="prod-bar-wrap" style="height:6px; display:flex;">
+                            <div style="width:${(pr.total_sell_qty/maxQty*100)}%; background:#10b981; height:100%;"></div>
+                            <div style="width:${(pr.total_purchase_qty/maxQty*100)}%; background:#ef4444; height:100%;"></div>
+                        </div>
                     </div>`).join('');
 
                 // Update Chart

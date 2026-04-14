@@ -18,6 +18,8 @@ class PurchaseOrderExport implements FromCollection, WithHeadings, WithStyles, W
     protected $monthYear;
     protected $totalAmount   = 0;
     protected $totalQuantity = 0;
+    protected $totalKg = 0;
+    protected $totalNang = 0;
     protected $rowCount      = 0;
 
     public function __construct($customerId = null, $monthYear = null)
@@ -57,6 +59,13 @@ class PurchaseOrderExport implements FromCollection, WithHeadings, WithStyles, W
             $total = $item->order_quantity * $item->order_price;
             $this->totalAmount   += $total;
             $this->totalQuantity += $item->order_quantity;
+
+            $unit = strtolower($item->unit ?? 'kg');
+            if ($unit === 'nang') {
+                $this->totalNang += $item->order_quantity;
+            } else {
+                $this->totalKg += $item->order_quantity;
+            }
 
             return [
                 'sr_no'         => $srNo++,
@@ -99,7 +108,7 @@ class PurchaseOrderExport implements FromCollection, WithHeadings, WithStyles, W
                 $totalRow = $this->rowCount + 2;
 
                 $event->sheet->setCellValue('A' . $totalRow, 'Grand Total');
-                $event->sheet->setCellValue('E' . $totalRow, $this->totalQuantity);
+                $event->sheet->setCellValue('E' . $totalRow, $this->totalKg . ' kg, ' . $this->totalNang . ' Nang');
                 $event->sheet->setCellValue('G' . $totalRow, '₹ ' . $this->totalAmount);
                 $event->sheet->mergeCells('A' . $totalRow . ':D' . $totalRow);
 

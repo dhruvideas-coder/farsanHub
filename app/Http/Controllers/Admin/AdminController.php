@@ -42,8 +42,16 @@ class AdminController extends Controller
         // ── GLOBAL STATS (All-time) ──────────────────────────────────
         $totalCustomers = Customer::where('user_id', $uid)->count();
         $totalProducts  = Product::where('user_id', $uid)->count();
-        $allTimeOrders  = Order::where('user_id', $uid)->count();
-        $allTimeRevenue = Order::where('user_id', $uid)
+        
+        $allTimeSellOrders  = Order::where('user_id', $uid)->where('type', 'sell')->count();
+        $allTimeSellRevenue = Order::where('user_id', $uid)
+            ->where('type', 'sell')
+            ->selectRaw('SUM(order_quantity * order_price) as total')
+            ->value('total') ?? 0;
+            
+        $allTimePurchaseOrders  = Order::where('user_id', $uid)->where('type', 'purchase')->count();
+        $allTimePurchaseRevenue = Order::where('user_id', $uid)
+            ->where('type', 'purchase')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
         
@@ -99,9 +107,15 @@ class AdminController extends Controller
             ->whereRaw('COALESCE(order_date, DATE(created_at)) BETWEEN ? AND ?', [$start, $end])
             ->when($productId, fn($q) => $q->where('product_id', $productId));
 
-        $periodOrders = (clone $periodOrdersQuery)->count();
+        // Period Sell
+        $periodSellOrders = (clone $periodOrdersQuery)->where('type', 'sell')->count();
+        $periodSellRevenue = (clone $periodOrdersQuery)->where('type', 'sell')
+            ->selectRaw('SUM(order_quantity * order_price) as total')
+            ->value('total') ?? 0;
 
-        $periodRevenue = (clone $periodOrdersQuery)
+        // Period Purchase
+        $periodPurchaseOrders = (clone $periodOrdersQuery)->where('type', 'purchase')->count();
+        $periodPurchaseRevenue = (clone $periodOrdersQuery)->where('type', 'purchase')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
@@ -115,9 +129,13 @@ class AdminController extends Controller
             ->whereRaw('COALESCE(order_date, DATE(created_at)) BETWEEN ? AND ?', [$pStart, $pEnd])
             ->when($productId, fn($q) => $q->where('product_id', $productId));
 
-        $prevPeriodOrders = (clone $prevPeriodQuery)->count();
+        $prevPeriodSellOrders = (clone $prevPeriodQuery)->where('type', 'sell')->count();
+        $prevPeriodSellRevenue = (clone $prevPeriodQuery)->where('type', 'sell')
+            ->selectRaw('SUM(order_quantity * order_price) as total')
+            ->value('total') ?? 0;
 
-        $prevPeriodRevenue = (clone $prevPeriodQuery)
+        $prevPeriodPurchaseOrders = (clone $prevPeriodQuery)->where('type', 'purchase')->count();
+        $prevPeriodPurchaseRevenue = (clone $prevPeriodQuery)->where('type', 'purchase')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
@@ -126,7 +144,8 @@ class AdminController extends Controller
             ->selectRaw("DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%Y-%m') as month,
                          DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%b %Y') as label,
                          COUNT(*) as order_count,
-                         SUM(order_quantity * order_price) as revenue,
+                         SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell_revenue,
+                         SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase_revenue,
                          SUM(order_quantity) as quantity")
             ->groupByRaw("DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%Y-%m'),
                           DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%b %Y')")
@@ -136,16 +155,20 @@ class AdminController extends Controller
             ->reverse()
             ->values();
 
-        $chartLabels   = $monthlyData->pluck('label');
-        $chartOrders   = $monthlyData->pluck('order_count');
-        $chartRevenue  = $monthlyData->pluck('revenue')->map(fn($v) => round($v, 2));
-        $chartQuantity = $monthlyData->pluck('quantity');
+        $chartLabels          = $monthlyData->pluck('label');
+        $chartOrders          = $monthlyData->pluck('order_count');
+        $chartSellRevenue     = $monthlyData->pluck('sell_revenue')->map(fn($v) => round($v, 2));
+        $chartPurchaseRevenue = $monthlyData->pluck('purchase_revenue')->map(fn($v) => round($v, 2));
+        $chartQuantity        = $monthlyData->pluck('quantity');
 
         // ── TOP 5 PRODUCTS (filtered by date) ────────────────────────
         $topProducts = Order::where('orders.user_id', $uid)
             ->join('products', 'orders.product_id', '=', 'products.id')
             ->whereRaw('COALESCE(orders.order_date, DATE(orders.created_at)) BETWEEN ? AND ?', [$start, $end])
-            ->selectRaw('products.id, products.product_name, SUM(orders.order_quantity) as total_qty, products.unit')
+            ->selectRaw('products.id, products.product_name, products.unit,
+                         SUM(orders.order_quantity) as total_qty,
+                         SUM(CASE WHEN orders.type = \'sell\' THEN orders.order_quantity ELSE 0 END) as total_sell_qty,
+                         SUM(CASE WHEN orders.type = \'purchase\' THEN orders.order_quantity ELSE 0 END) as total_purchase_qty')
             ->groupBy('products.id', 'products.product_name', 'products.unit')
             ->orderByDesc('total_qty')
             ->limit(5)
@@ -154,12 +177,15 @@ class AdminController extends Controller
         // ── TOP 5 CUSTOMERS (filtered by date & product) ─────────────
         $topCustomers = Order::where('orders.user_id', $uid)
             ->join('customers', 'orders.customer_id', '=', 'customers.id')
+            ->join('products', 'orders.product_id', '=', 'products.id')
             ->whereRaw('COALESCE(orders.order_date, DATE(orders.created_at)) BETWEEN ? AND ?', [$start, $end])
             ->when($productId, fn($q) => $q->where('product_id', $productId))
             ->selectRaw('customers.customer_name, customers.shop_name,
                          COUNT(*) as order_count,
                          SUM(orders.order_quantity * orders.order_price) as total_amount,
-                         SUM(orders.order_quantity) as total_qty')
+                         SUM(orders.order_quantity) as total_qty,
+                         SUM(CASE WHEN LOWER(COALESCE(products.unit, \'kg\')) = \'kg\' THEN orders.order_quantity ELSE 0 END) as total_kg,
+                         SUM(CASE WHEN LOWER(COALESCE(products.unit, \'kg\')) = \'nang\' THEN orders.order_quantity ELSE 0 END) as total_nang')
             ->groupBy('customers.customer_name', 'customers.shop_name')
             ->orderByDesc('order_count')
             ->limit(5)
@@ -177,6 +203,7 @@ class AdminController extends Controller
                 'orders.order_price',
                 'orders.order_date',
                 'orders.created_at',
+                'orders.type',
                 'products.product_name',
                 'products.unit',
                 'customers.customer_name',
@@ -193,26 +220,38 @@ class AdminController extends Controller
         return [
             /* --- GLOBAL SECTION --- */
             'global' => [
-                'totalCustomers' => $totalCustomers,
-                'totalProducts'  => $totalProducts,
-                'allTimeOrders'  => $allTimeOrders,
-                'allTimeRevenue' => (float)$allTimeRevenue,
-                'chartLabels'    => $chartLabels,
-                'chartOrders'    => $chartOrders,
-                'chartRevenue'   => $chartRevenue,
-                'chartQuantity'  => $chartQuantity,
-                'products'       => $products,
+                'totalCustomers'         => $totalCustomers,
+                'totalProducts'          => $totalProducts,
+                'allTimeSellOrders'      => $allTimeSellOrders,
+                'allTimeSellRevenue'     => (float)$allTimeSellRevenue,
+                'allTimePurchaseOrders'  => $allTimePurchaseOrders,
+                'allTimePurchaseRevenue' => (float)$allTimePurchaseRevenue,
+                
+                'chartLabels'          => $chartLabels,
+                'chartOrders'          => $chartOrders,
+                'chartSellRevenue'     => $chartSellRevenue,
+                'chartPurchaseRevenue' => $chartPurchaseRevenue,
+                'chartQuantity'        => $chartQuantity,
+                'products'             => $products,
             ],
             /* --- PERIOD SECTION --- */
             'period' => [
                 'filter'           => $filter,
                 'filterLabel'      => $filterLabel,
                 'productId'        => $productId,
-                'ordersCount'      => $periodOrders,
-                'revenue'          => (float)$periodRevenue,
+                
+                'sellOrdersCount'  => $periodSellOrders,
+                'sellRevenue'      => (float)$periodSellRevenue,
+                'prevSellOrdersCount' => $prevPeriodSellOrders,
+                'prevSellRevenue'  => (float)$prevPeriodSellRevenue,
+                
+                'purchaseOrdersCount' => $periodPurchaseOrders,
+                'purchaseRevenue'  => (float)$periodPurchaseRevenue,
+                'prevPurchaseOrdersCount' => $prevPeriodPurchaseOrders,
+                'prevPurchaseRevenue' => (float)$prevPeriodPurchaseRevenue,
+                
                 'expenses'         => (float)$periodExpenses,
-                'prevOrdersCount'  => $prevPeriodOrders,
-                'prevRevenue'      => (float)$prevPeriodRevenue,
+                
                 'recentOrders'     => $recentOrders,
                 'topProducts'      => $topProducts,
                 'topCustomers'     => $topCustomers,
