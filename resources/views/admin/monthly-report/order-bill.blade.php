@@ -3,160 +3,216 @@
 <head>
     <meta charset="utf-8">
     <title>Order Bill - {{ $monthYear }}</title>
+    <!-- Modern Google Font for Premium Look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
-            font-family: DejaVu Sans, sans-serif;
-            font-size: 11px;
-            color: #111;
-            line-height: 1.4;
-            background: #fbfbf6; /* Slight yellowish tint */
+            font-family: 'Outfit', DejaVu Sans, sans-serif;
+            font-size: 13px;
+            color: #000;
+            line-height: 1.5;
+            background: #fff;
         }
         .page {
             padding: 30px;
-            background: #fefef9;
         }
 
         /* Top Header */
-        .top-chant {
-            text-align: center;
-            color: #b08d55;
-            font-size: 12px;
-            margin-bottom: 5px;
+        table { width: 100%; border-collapse: collapse; }
+        td { vertical-align: top; }
+        
+        .header-table td {
+            padding-bottom: 15px;
         }
+
         .brand-title {
             text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #4a5c43;
+            font-size: 28px;
+            font-weight: 800;
+            color: #000;
             text-transform: uppercase;
-            font-style: italic;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             letter-spacing: 1px;
         }
 
         /* Business Info */
-        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 5px; }
-        .info-table td { font-size: 10px; color: #222; vertical-align: top; }
-        .info-left { width: 50%; }
-        .info-right { width: 50%; }
+        .info-table { margin-bottom: 20px; }
+        .info-table td { font-size: 14px; line-height: 1.5; color: #333; }
+        .info-left { width: 60%; }
+        .info-right { width: 40%; text-align: right; }
+        
+        .label {
+            font-weight: 700;
+            color: #000;
+        }
 
-        .divider { border-top: 2px solid #b08d55; margin: 10px 0; }
+        .divider { 
+            border-top: 1px solid #000; 
+            margin: 20px 0; 
+        }
 
         /* Party Info */
-        .party-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        .party-table td { vertical-align: top; font-size: 11px; }
-        .party-left { width: 60%; padding-right: 10px; }
+        .party-table { margin-bottom: 25px; }
+        .party-left { width: 60%; }
         .party-right { width: 40%; }
         
         .val-box {
-            display: inline-block;
-            border: 1px solid #b08d55;
-            border-radius: 5px;
-            padding: 3px 6px;
-            background: #f9faec;
-            margin-left: 5px;
-            min-width: 100px;
+            font-weight: 700;
+            color: #000;
+            font-size: 14px;
+            text-align: right;
         }
 
+        .party-label {
+            font-size: 16px;
+            font-weight: 800;
+            color: #000;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: block;
+        }
         .party-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .party-detail {
             font-size: 14px;
-            font-style: italic;
-            font-weight: bold;
-            color: #111;
+            color: #333;
+            margin-bottom: 4px;
+            margin-left: 15px;
         }
 
         /* Table */
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            border: 1px solid #7c9372;
-            border-radius: 5px; /* Dompdf doesn't heavily support table rounded borders well but helps */
+            margin-bottom: 30px;
+            border: 1px solid #000;
+        }
+        .items-table thead {
+            background: #f8f9fa;
         }
         .items-table th {
-            background: #cedebb;
-            color: #111;
-            padding: 8px;
+            padding: 12px;
             text-align: center;
-            font-size: 11px;
-            border: 1px solid #7c9372;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid #000;
+        }
+        .items-table th:first-child {
+            text-align: left;
         }
         .items-table td {
-            padding: 8px;
-            border: 1px solid #7c9372;
-            font-size: 11px;
+            padding: 10px 12px;
+            font-size: 14px;
             text-align: center;
+            border: 1px solid #000;
+            font-weight: 600;
+            color: #000;
         }
-        .items-table td.col-desc { text-align: left; }
+        .items-table td.col-desc { 
+            text-align: left; 
+            font-weight: 700;
+        }
         
-        /* Fixed height for items min view */
-        .items-row-content { 
-            height: 200px;
-            vertical-align: top;
+        .items-row-content td { 
+            height: 100px;
+            border-top: none;
+            border-bottom: none;
+        }
+
+        /* Footer Table inside items-table */
+        .items-table tfoot td {
+            background: #f8f9fa;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
         }
 
         /* Bottom section */
-        .bottom-table { width: 100%; border-collapse: collapse; margin-bottom: 50px; }
-        .bottom-table td { vertical-align: top; }
-        .qr-section { width: 35%; text-align: center; }
-        .details-section { width: 65%; padding-left: 20px; }
+        .bottom-table { width: 100%; margin-bottom: 40px; }
+        .qr-section { width: 35%; text-align: center; padding-right: 15px; }
+        .details-section { width: 65%; }
 
         .qr-title {
-            font-size: 12px;
-            margin-bottom: 5px;
-            color: #333;
+            font-size: 15px;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 10px;
+            text-transform: uppercase;
         }
         .qr-box {
-            width: 120px;
-            height: 120px;
-            border: 2px dashed #b08d55;
+            width: 160px;
+            height: 160px;
             margin: 0 auto;
-            text-align: center;
-            line-height: 120px;
-            color: #999;
-            font-size: 10px;
+            background: #ffffff;
+            padding: 5px;
+            border: 1px dashed #000;
+        }
+        .qr-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
-        .subtotal-cell {
-            background: #cedebb;
-            font-weight: bold;
-            text-align: right;
-            padding: 8px;
+        .bank-box {
+            border: 1px solid #000;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
-
-        .bank-box, .words-box, .total-box {
-            border: 1px solid #b08d55;
-            border-radius: 5px;
-            background: #fdfcee;
-            padding: 6px 10px;
-            margin-bottom: 10px;
-            font-size: 10px;
-        }
-        .bank-box p { margin: 2px 0; }
-        .bank-icon { color: #d69e2e; }
-
-        .total-box {
-            background: #cedebb;
-            font-weight: bold;
-            font-size: 12px;
-            display: flex; /* ignored by dompdf mostly */
-        }
+        .bank-box table { width: 100%; border-collapse: collapse; }
+        .bank-box table td { padding: 4px 0; font-weight: 600; color: #000; }
+        .bank-box table td:first-child { width: 30px; font-size: 14px; }
+        .bank-box-title { color: #555; width: 100px; font-weight: 700; }
         
-        .total-box-table { width:100%; border-collapse: collapse; }
-        .total-box-table td { font-size:12px; font-weight:bold; }
-        
+        .words-box {
+            border: 1px solid #000;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #000;
+            font-weight: 600;
+        }
+        .words-box em {
+            font-style: normal;
+            font-weight: 800;
+        }
+
+        .total-box-grand {
+            border: 1px solid #000;
+            background: #f8f9fa;
+            color: #000;
+            padding: 15px 20px;
+        }
+        .total-box-grand table { width: 100%; }
+        .total-box-grand td { font-size: 20px; font-weight: 800; vertical-align: middle; }
+
         /* Signatures */
-        .sign-table { width: 100%; border-collapse: collapse; margin-top: 40px; }
-        .sign-table td { width: 50%; padding-top: 40px; border-top: 1px solid #111; font-size: 11px; }
-        .sign-left { text-align: left; }
-        .sign-right { text-align: right; }
+        .sign-table { width: 100%; border-collapse: collapse; margin-top: 60px; }
+        .sign-table td { font-size: 14px; font-weight: 700; color: #000; padding-top: 10px; }
+        .sign-left { text-align: center; border-top: 1px solid #000; width: 250px; }
+        .sign-right { text-align: center; border-top: 1px solid #000; width: 250px;}
+
     </style>
 </head>
 <body>
 <div class="page">
-    <div class="top-chant">Om Shree Swami Shreeji Om</div>
+    <table class="header-table">
+        <tr>
+            <td style="text-align: left; font-size: 14px; font-weight: 700; text-transform: uppercase;">Jay Ma Bhramani</td>
+            <td style="text-align: center; font-size: 18px; font-weight: bold;">Invoice</td>
+            <td style="text-align: right; font-size: 14px; font-weight: 700; text-transform: uppercase;">Jay Shree Krishna</td>
+        </tr>
+    </table>
+
     <div class="brand-title">
         &#8764; BHRAMANI KHANDVI HOUSE &#8764;
     </div>
@@ -164,15 +220,18 @@
     <table class="info-table">
         <tr>
             <td class="info-left">
-                FSSAI Lic No.: 12345678901234<br>
-                Mobile: 9510036176<br><br>
-                Address: Shop No-06, Arkview Tower,<br>
-                near Hari Om Subhanpura Water Tank,<br>
-                Subhanpura, Vadodara, Gujarat – 390021
+                <div style="margin-bottom: 4px;"><span class="label">FSSAI Lic No.:</span> 12345678901234</div>
+                <div style="margin-top: 10px;">
+                    <span class="label">Address:</span><br>
+                    Shop No-06, Arkview Tower,<br>
+                    near Hari Om Subhanpura Water Tank,<br>
+                    Subhanpura, Vadodara, Gujarat – 390021
+                </div>
             </td>
-            <td class="info-right" style="vertical-align: bottom;">
-                Email: patelhitesh0723a@gmail.com<br>
-                Website: https://khandvihouse.com
+            <td class="info-right">
+                <div style="margin-bottom: 4px;"><span class="label">Email:</span> patelhitesh0723a@gmail.com</div>
+                <div style="margin-bottom: 4px;"><span class="label">Mobile:</span> 9510036176</div>
+                <!-- <div style="margin-bottom: 4px;"><span class="label">Website:</span> https://khandvihouse.com</div> -->
             </td>
         </tr>
     </table>
@@ -182,24 +241,24 @@
     <table class="party-table">
         <tr>
             <td class="party-left">
-                <span style="font-size:12px; font-weight:bold;">Bill To:</span>
+                <span class="party-label">Bill To:</span>
                 @if($customerInfo)
-                    <span class="party-title">{{ $customerInfo->customer_name }}</span><br>
-                    <span style="margin-left: 45px;">{{ $customerInfo->shop_name }}</span><br>
-                    <span style="margin-left: 45px;">Customer Address: {{ $customerInfo->shop_address }}{{ $customerInfo->city ? ', '.$customerInfo->city : '' }}</span><br>
-                    <span style="margin-left: 45px;">Customer Phone: {{ $customerInfo->customer_number }}</span>
+                    <span class="party-title">{{ $customerInfo->customer_name }}</span>
+                    <div class="party-detail">{{ $customerInfo->shop_name }}</div>
+                    <div class="party-detail"><span class="label">Address:</span> {{ $customerInfo->shop_address }}{{ $customerInfo->city ? ', '.$customerInfo->city : '' }}</div>
+                    <div class="party-detail"><span class="label">Phone:</span> {{ $customerInfo->customer_number }}</div>
                 @else
                     <span class="party-title">All customers</span>
                 @endif
             </td>
             <td class="party-right">
-                <table style="width:100%; border-collapse:separate; border-spacing:0 8px;">
+                <table style="text-align: right;">
                     <tr>
-                        <td style="width:70px; font-weight:bold;">Date:</td>
-                        <td><div class="val-box">{{ now()->format('d / m / Y') }}</div></td>
+                        <td class="label" style="padding-bottom:12px;">Date:</td>
+                        <td style="width:100px; padding-bottom:12px;"><div class="val-box">{{ now()->format('d / m / Y') }}</div></td>
                     </tr>
                     <tr>
-                        <td style="font-weight:bold;">Invoice No.:</td>
+                        <td class="label" style="padding-right: 10px;">Invoice No.:</td>
                         <td><div class="val-box">{{ $receiptNo }}</div></td>
                     </tr>
                 </table>
@@ -210,7 +269,7 @@
     <table class="items-table">
         <thead>
             <tr>
-                <th style="width: 45%; text-align: left;">Item Description</th>
+                <th style="width: 45%;">Item Description</th>
                 <th style="width: 20%;">Qty / Weight</th>
                 <th style="width: 15%;">Unit Price (&#8377;)</th>
                 <th style="width: 20%;">Amount (&#8377;)</th>
@@ -243,25 +302,25 @@
             @endforeach
             <!-- Blank spacing row for receipt feel -->
             <tr class="items-row-content">
-                <td style="border-bottom:none; border-top:none;"></td>
-                <td style="border-bottom:none; border-top:none;"></td>
-                <td style="border-bottom:none; border-top:none;"></td>
-                <td style="border-bottom:none; border-top:none;"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
         </tbody>
         <tfoot>
-            <tr style="background: #eef3e6; border-top: 2px solid #7c9372;">
-                <td style="text-align: right; font-weight: bold; font-size: 12px; padding: 10px; color: #4a5c43; text-transform: uppercase;">Grand Total:</td>
-                <td style="text-align: center; font-weight: bold; font-size: 11px; padding: 10px; color: #111;">
+            <tr>
+                <td style="text-align: right; font-weight: 800; font-size: 15px; padding: 14px;">GRAND TOTAL:</td>
+                <td style="text-align: center; font-weight: 800; font-size: 14px; padding: 14px;">
                     @if($totalKg > 0)
-                        <span style="display:block; margin-bottom:2px;">{{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} <span style="font-size:9px; color:#666;">KG</span></span>
+                        <span style="display:block; margin-bottom:4px;">{{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} <span style="font-size:11px; color:#555;">KG</span></span>
                     @endif
                     @if($totalNang > 0)
-                        <span style="display:block;">{{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} <span style="font-size:9px; color:#666;">NANG</span></span>
+                        <span style="display:block;">{{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} <span style="font-size:11px; color:#555;">NANG</span></span>
                     @endif
                 </td>
-                <td style="background: #fbfbf6; border-bottom: none; border-top: 2px solid #7c9372;"></td>
-                <td style="text-align: center; font-weight: bold; font-size: 13px; padding: 10px; color: #4a5c43; border-top: 2px solid #7c9372; background: #cedebb;">
+                <td style="background: #fff;"></td>
+                <td style="text-align: center; font-weight: 800; font-size: 16px; padding: 14px;">
                     &#8377; {{ number_format($totalOrderAmount, 2) }}
                 </td>
             </tr>
@@ -272,17 +331,17 @@
         <tr>
             <td class="qr-section">
                 <div class="qr-title">Scan to Pay</div>
-                <div class="qr-box border-0" style="border: none;">
-                    <img src="{{ public_path('images/scanner.webp') }}" style="max-width: 100%; max-height: 100px; display: block; margin: 0 auto;" alt="QR SCANNER">
+                <div class="qr-box">
+                    <img src="{{ public_path('images/scanner.webp') }}" alt="QR SCANNER">
                 </div>
             </td>
             <td class="details-section">
                 <div class="bank-box">
-                    <table style="width:100%;">
-                        <tr><td style="width:20px;">👉</td><td style="width:70px;">BANK</td><td>:: STATE BANK OF INDIA</td></tr>
-                        <tr><td>👉</td><td>A/C NAME</td><td>:: SHRI BRAHMANI KHANDVI HOUSE</td></tr>
-                        <tr><td>👉</td><td>A/C NO</td><td>:: *00000044017465451*</td></tr>
-                        <tr><td>👉</td><td>IFSC CODE</td><td>:: SBIN0011027</td></tr>
+                    <table>
+                        <tr><td>👉</td><td class="bank-box-title">BANK</td><td>:: STATE BANK OF INDIA</td></tr>
+                        <tr><td>👉</td><td class="bank-box-title">A/C NAME</td><td>:: SHRI BRAHMANI KHANDVI HOUSE</td></tr>
+                        <tr><td>👉</td><td class="bank-box-title">A/C NO</td><td>:: <span style="font-weight: 800;">*00000044017465451*</span></td></tr>
+                        <tr><td>👉</td><td class="bank-box-title">IFSC CODE</td><td>:: <span style="font-weight: 800;">SBIN0011027</span></td></tr>
                     </table>
                 </div>
                 
@@ -298,11 +357,11 @@
                     Amount in Words: <em>Rupees {{ $words }} Only</em>
                 </div>
                 
-                <div class="bank-box" style="background: #cedebb; padding: 2px;">
-                    <table class="total-box-table">
+                <div class="total-box-grand">
+                    <table>
                         <tr>
-                            <td style="padding-left:10px;">Total Amount</td>
-                            <td style="text-align:right; padding-right:10px;">&#8377; {{ number_format($totalOrderAmount, 2) }}</td>
+                            <td>Total Amount</td>
+                            <td style="text-align:right;">&#8377; {{ number_format($totalOrderAmount, 2) }}</td>
                         </tr>
                     </table>
                 </div>
@@ -312,9 +371,9 @@
 
     <table class="sign-table">
         <tr>
-            <td class="sign-left" style="width:250px;">For BHRAMANI KHANDVI HOUSE</td>
+            <td class="sign-left">For BHRAMANI KHANDVI HOUSE</td>
             <td style="border:none;"></td>
-            <td class="sign-right" style="width:200px;">Customer Signature</td>
+            <td class="sign-right">Customer Signature</td>
         </tr>
     </table>
 

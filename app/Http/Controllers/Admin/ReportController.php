@@ -172,7 +172,7 @@ class ReportController extends Controller
                 // Dynamic Date
                 $reportDate = now()->format('d M Y, h:i A');
 
-                $receiptNo = 'RCP-' . now()->format('Y') . '-' . str_pad($orders->count(), 4, '0', STR_PAD_LEFT);
+                $receiptNo = now()->format('Y') . '-' . now()->addYear()->format('y') . '-' . str_pad($orders->count(), 4, '0', STR_PAD_LEFT);
 
                 // Dynamic Logo Path (absolute path required for DomPDF)
                 $logoPath = public_path('images/logo.png');
