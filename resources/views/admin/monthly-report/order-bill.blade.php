@@ -9,16 +9,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-
+        /* A4 Setup */
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
         body {
             font-family: 'Outfit', DejaVu Sans, sans-serif;
             font-size: 13px;
             color: #000;
             line-height: 1.5;
-            background: #fff;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
         }
         .page {
-            padding: 30px;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 10mm auto;
+            background: #fff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        @media print {
+            body { background: #fff; }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                width: 100%;
+                min-height: 100%;
+                padding: 15mm;
+            }
         }
 
         /* Top Header */
@@ -56,9 +78,9 @@
         }
 
         /* Party Info */
-        .party-table { margin-bottom: 25px; }
-        .party-left { width: 60%; }
-        .party-right { width: 40%; }
+        .party-table { margin-bottom: 25px; width: 100%; }
+        .party-left { width: 50%; }
+        .party-right { width: 50%; text-align: right; vertical-align: top; }
         
         .val-box {
             font-weight: 700;
@@ -214,7 +236,7 @@
     </table>
 
     <div class="brand-title">
-        &#8764; BHRAMANI KHANDVI HOUSE &#8764;
+        BHRAMANI KHANDVI HOUSE
     </div>
 
     <table class="info-table">
@@ -252,16 +274,10 @@
                 @endif
             </td>
             <td class="party-right">
-                <table style="text-align: right;">
-                    <tr>
-                        <td class="label" style="padding-bottom:12px;">Date:</td>
-                        <td style="width:100px; padding-bottom:12px;"><div class="val-box">{{ now()->format('d / m / Y') }}</div></td>
-                    </tr>
-                    <tr>
-                        <td class="label" style="padding-right: 10px;">Invoice No.:</td>
-                        <td><div class="val-box">{{ $receiptNo }}</div></td>
-                    </tr>
-                </table>
+                <div style="font-size: 15px; margin-top: 5px;">
+                    <span class="label" style="margin-right:5px;">Invoice No.:</span><span class="val-box" style="margin-right:20px;">{{ $receiptNo }}</span>
+                    <span class="label" style="margin-right:5px;">Date:</span><span class="val-box">{{ now()->format('d / m / Y') }}</span>
+                </div>
             </td>
         </tr>
     </table>
