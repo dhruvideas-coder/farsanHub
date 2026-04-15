@@ -113,6 +113,7 @@ return [
     'shop_image' => 'Shop Image',
     'created_at' => 'Created At',
     'amount' => 'Amount',
+    'total' => 'Total',
     'comment' => 'Comment',
     'location' => 'Your Current Location',
     'contact_form_submitted' => 'Your message has been sent successfully!',

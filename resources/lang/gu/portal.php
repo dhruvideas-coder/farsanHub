@@ -74,6 +74,7 @@ return [
     'mobile' => 'મોબાઇલ નંબર',
     'address' => 'સરનામું',
     'amount' => 'રકમ',
+    'total' => 'કુલ',
     'donation_for' => 'દાનનો હેતુ',
     'select_donation_for' => 'દાનનો હેતુ પસંદ કરો',
     'meals' => 'ભોજન સહાય',

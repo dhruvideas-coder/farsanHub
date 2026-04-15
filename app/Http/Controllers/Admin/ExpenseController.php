@@ -30,16 +30,25 @@ class ExpenseController extends Controller
                 });
             }
 
+            // Month filter (format: YYYY-MM)
+            if ($request->month) {
+                [$year, $month] = explode('-', $request->month);
+                $query->whereYear('date', $year)->whereMonth('date', $month);
+            }
+
             $query->orderBy('created_at', 'desc');
+
+            // Total amount for the current filter (before pagination)
+            $totalAmount = (clone $query)->sum('amount');
 
             // Get paginated results
             $expenses = $query->paginate($limit);
             // $expenses = $query->latest()->paginate($limit);
 
             if (request()->ajax()) {
-                return view('admin.expense.view', compact('expenses'));
+                return view('admin.expense.view', compact('expenses', 'totalAmount'));
             }
-            return view('admin.expense.index', compact('expenses'));
+            return view('admin.expense.index', compact('expenses', 'totalAmount'));
         } catch (\Throwable $th) {
             Log::error('ExpenseController@index Error: ' . $th->getMessage());
             return redirect()->route('admin.expense.index')
