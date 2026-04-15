@@ -3,263 +3,279 @@
 <head>
     <meta charset="utf-8">
     <title>Order Bill - {{ $monthYear }}</title>
-    <!-- Modern Google Font for Premium Look -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        /* A4 Setup */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         @page {
             size: A4 portrait;
-            margin: 0;
-        }
-        body {
-            font-family: 'Outfit', DejaVu Sans, sans-serif;
-            font-size: 13px;
-            color: #000;
-            line-height: 1.5;
-            background: #f4f6f9;
-            margin: 0;
-            padding: 0;
-        }
-        .page {
-            width: 210mm;
-            min-height: 297mm;
-            padding: 20mm;
-            margin: 10mm auto;
-            background: #fff;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        @media print {
-            body { background: #fff; }
-            .page {
-                margin: 0;
-                box-shadow: none;
-                width: 100%;
-                min-height: 100%;
-                padding: 15mm;
-            }
+            margin: 10mm 12mm 10mm 12mm;
         }
 
-        /* Top Header */
-        table { width: 100%; border-collapse: collapse; }
-        td { vertical-align: top; }
-        
-        .header-table td {
-            padding-bottom: 15px;
+        body {
+            font-family: DejaVu Sans, Arial, sans-serif;
+            font-size: 12px;
+            color: #000;
+            line-height: 1.4;
+            background: #fff;
+            margin: 18mm 20mm 15mm 20mm;
+            padding: 0;
+        }
+
+        /* ── Page wrapper ── */
+        .page {
+            width: 100%;
+            background: #fff;
+        }
+
+        /* ── Header ── */
+        .header-row {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+        }
+        .header-row td {
+            vertical-align: middle;
         }
 
         .brand-title {
             text-align: center;
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 800;
             color: #000;
             text-transform: uppercase;
-            margin-bottom: 20px;
             letter-spacing: 1px;
+            margin-bottom: 15px;
         }
 
-        /* Business Info */
-        .info-table { margin-bottom: 20px; }
-        .info-table td { font-size: 14px; line-height: 1.5; color: #333; }
-        .info-left { width: 60%; }
+        /* ── Info block ── */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        .info-table td {
+            font-size: 11px;
+            line-height: 1.5;
+            vertical-align: top;
+        }
+        .info-left  { width: 60%; }
         .info-right { width: 40%; text-align: right; }
-        
-        .label {
-            font-weight: 700;
-            color: #000;
+
+        .label { font-weight: 700; }
+
+        .divider {
+            border: none;
+            border-top: 1.5px solid #000;
+            margin: 8px 0;
         }
 
-        .divider { 
-            border-top: 1px solid #000; 
-            margin: 20px 0; 
+        /* ── Party info ── */
+        .party-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
         }
-
-        /* Party Info */
-        .party-table { margin-bottom: 25px; width: 100%; }
-        .party-left { width: 50%; }
-        .party-right { width: 50%; text-align: right; vertical-align: top; }
-        
-        .val-box {
-            font-weight: 700;
-            color: #000;
-            font-size: 14px;
-            text-align: right;
-        }
+        .party-left  { width: 55%; vertical-align: top; }
+        .party-right { width: 45%; vertical-align: top; text-align: right; }
 
         .party-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #000;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .party-title {
             font-size: 16px;
             font-weight: 800;
             color: #000;
-            text-transform: uppercase;
-            margin-bottom: 5px;
             display: block;
-        }
-        .party-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: #000;
-            margin-bottom: 5px;
-            display: block;
+            margin-bottom: 3px;
         }
         .party-detail {
-            font-size: 14px;
+            font-size: 11px;
             color: #333;
-            margin-bottom: 4px;
-            margin-left: 15px;
+            margin-bottom: 2px;
         }
 
-        /* Table */
+        .inv-meta {
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+
+        /* ── Items table ── */
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 30px;
+            margin-bottom: 12px;
             border: 1px solid #000;
+            page-break-inside: auto;
         }
         .items-table thead {
-            background: #f8f9fa;
+            background: #f0f0f0;
+            display: table-header-group;
         }
         .items-table th {
-            padding: 12px;
+            padding: 8px 10px;
             text-align: center;
-            font-size: 14px;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             border: 1px solid #000;
         }
-        .items-table th:first-child {
-            text-align: left;
-        }
+        .items-table th:first-child { text-align: left; }
         .items-table td {
-            padding: 10px 12px;
-            font-size: 14px;
+            padding: 7px 10px;
+            font-size: 12px;
             text-align: center;
             border: 1px solid #000;
             font-weight: 600;
-            color: #000;
         }
-        .items-table td.col-desc { 
-            text-align: left; 
+        .items-table td.col-desc {
+            text-align: left;
             font-weight: 700;
         }
-        
-        .items-row-content td { 
-            height: 100px;
-            border-top: none;
-            border-bottom: none;
-        }
+        .items-table tbody tr { page-break-inside: avoid; }
 
-        /* Footer Table inside items-table */
+        /* tfoot */
         .items-table tfoot td {
-            background: #f8f9fa;
-            border-top: 1px solid #000;
-            border-bottom: 1px solid #000;
+            background: #f0f0f0;
+            border-top: 1.5px solid #000;
         }
 
-        /* Bottom section */
-        .bottom-table { width: 100%; margin-bottom: 40px; }
-        .qr-section { width: 35%; text-align: center; padding-right: 15px; }
-        .details-section { width: 65%; }
+        /* ── Bottom section ── */
+        .bottom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+        }
+        .qr-section {
+            width: 32%;
+            text-align: center;
+            vertical-align: top;
+            padding-right: 12px;
+        }
+        .details-section {
+            width: 68%;
+            vertical-align: top;
+        }
 
         .qr-title {
-            font-size: 15px;
-            font-weight: 800;
-            color: #000;
-            margin-bottom: 10px;
+            font-size: 12px;
+            font-weight: 700;
             text-transform: uppercase;
+            margin-bottom: 6px;
         }
         .qr-box {
-            width: 160px;
-            height: 160px;
+            width: 130px;
+            height: 130px;
             margin: 0 auto;
-            background: #ffffff;
-            padding: 5px;
             border: 1px dashed #000;
+            padding: 4px;
         }
         .qr-box img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
         }
 
         .bank-box {
             border: 1px solid #000;
-            padding: 15px;
-            margin-bottom: 15px;
-            font-size: 14px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
         }
         .bank-box table { width: 100%; border-collapse: collapse; }
-        .bank-box table td { padding: 4px 0; font-weight: 600; color: #000; }
-        .bank-box table td:first-child { width: 30px; font-size: 14px; }
-        .bank-box-title { color: #555; width: 100px; font-weight: 700; }
-        
-        .words-box {
-            border: 1px solid #000;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: #000;
+        .bank-box table td {
+            padding: 3px 0;
+            font-size: 11px;
             font-weight: 600;
         }
-        .words-box em {
-            font-style: normal;
-            font-weight: 800;
+        .bank-box-title { width: 80px; font-weight: 700; color: #333; }
+
+        .words-box {
+            border: 1px solid #000;
+            padding: 9px 12px;
+            margin-bottom: 10px;
+            font-size: 11px;
+            font-weight: 600;
         }
+        .words-box strong { font-weight: 800; }
 
         .total-box-grand {
             border: 1px solid #000;
-            background: #f8f9fa;
-            color: #000;
-            padding: 15px 20px;
+            background: #f0f0f0;
+            padding: 10px 14px;
         }
-        .total-box-grand table { width: 100%; }
-        .total-box-grand td { font-size: 20px; font-weight: 800; vertical-align: middle; }
+        .total-box-grand table { width: 100%; border-collapse: collapse; }
+        .total-box-grand td {
+            font-size: 17px;
+            font-weight: 800;
+            vertical-align: middle;
+        }
 
-        /* Signatures */
-        .sign-table { width: 100%; border-collapse: collapse; margin-top: 60px; }
-        .sign-table td { font-size: 14px; font-weight: 700; color: #000; padding-top: 10px; }
-        .sign-left { text-align: center; border-top: 1px solid #000; width: 250px; }
-        .sign-right { text-align: center; border-top: 1px solid #000; width: 250px;}
+        /* ── Signatures ── */
+        .sign-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            page-break-inside: avoid;
+        }
+        .sign-cell {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            width: 200px;
+            padding-top: 6px;
+            border-top: 1px solid #000;
+        }
+        .sign-gap { border: none; }
 
+        /* ── Terms ── */
+        .terms {
+            font-size: 10px;
+            color: #555;
+            margin-top: 12px;
+            border-top: 1px solid #ccc;
+            padding-top: 6px;
+        }
     </style>
 </head>
 <body>
 <div class="page">
-    <table class="header-table">
+
+    {{-- ── TOP HEADER ── --}}
+    <table class="header-row">
         <tr>
-            <td style="text-align: left; font-size: 14px; font-weight: 700; text-transform: uppercase;">Jay Ma Bhramani</td>
-            <td style="text-align: center; font-size: 18px; font-weight: bold;">Invoice</td>
-            <td style="text-align: right; font-size: 14px; font-weight: 700; text-transform: uppercase;">Jay Shree Krishna</td>
+            <td style="text-align:left; font-size:11px; font-weight:700; text-transform:uppercase;">Jay Ma Bhramani</td>
+            <td style="text-align:center; font-size:16px; font-weight:800; text-transform:uppercase; letter-spacing:1px;">Invoice</td>
+            <td style="text-align:right; font-size:11px; font-weight:700; text-transform:uppercase;">Jay Shree Krishna</td>
         </tr>
     </table>
 
-    <div class="brand-title">
-        BHRAMANI KHANDVI HOUSE
-    </div>
+    <div class="brand-title">BHRAMANI KHANDVI HOUSE</div>
 
+    {{-- ── BUSINESS INFO ── --}}
     <table class="info-table">
         <tr>
             <td class="info-left">
-                <div style="margin-bottom: 4px;"><span class="label">FSSAI Lic No.:</span> 12345678901234</div>
-                <div style="margin-top: 10px;">
-                    <span class="label">Address:</span><br>
-                    Shop No-06, Arkview Tower,<br>
-                    near Hari Om Subhanpura Water Tank,<br>
+                <div><span class="label">FSSAI Lic No.:</span> 12345678901234</div>
+                <div style="margin-top:4px;">
+                    <span class="label">Address:</span>
+                    Shop No-06, Arkview Tower, near Hari Om Subhanpura Water Tank,
                     Subhanpura, Vadodara, Gujarat – 390021
                 </div>
             </td>
             <td class="info-right">
-                <div style="margin-bottom: 4px;"><span class="label">Email:</span> patelhitesh0723a@gmail.com</div>
-                <div style="margin-bottom: 4px;"><span class="label">Mobile:</span> 9510036176</div>
-                <!-- <div style="margin-bottom: 4px;"><span class="label">Website:</span> https://khandvihouse.com</div> -->
+                <div><span class="label">Email:</span> patelhitesh0723a@gmail.com</div>
+                <div><span class="label">Mobile:</span> 9510036176</div>
             </td>
         </tr>
     </table>
 
     <div class="divider"></div>
 
+    {{-- ── PARTY INFO ── --}}
     <table class="party-table">
         <tr>
             <td class="party-left">
@@ -270,44 +286,45 @@
                     <div class="party-detail"><span class="label">Address:</span> {{ $customerInfo->shop_address }}{{ $customerInfo->city ? ', '.$customerInfo->city : '' }}</div>
                     <div class="party-detail"><span class="label">Phone:</span> {{ $customerInfo->customer_number }}</div>
                 @else
-                    <span class="party-title">All customers</span>
+                    <span class="party-title">All Customers</span>
                 @endif
             </td>
             <td class="party-right">
-                <div style="font-size: 15px; margin-top: 5px;">
-                    <span class="label" style="margin-right:5px;">Invoice No.:</span><span class="val-box" style="margin-right:20px;">{{ $receiptNo }}</span>
-                    <span class="label" style="margin-right:5px;">Date:</span><span class="val-box">{{ now()->format('d / m / Y') }}</span>
-                </div>
+                <div class="inv-meta"><span class="label">Invoice No.:</span> {{ $receiptNo }}</div>
+                <div class="inv-meta"><span class="label">Date:</span> {{ now()->format('d / m / Y') }}</div>
+                <div class="inv-meta"><span class="label">Period:</span> {{ $monthYear }}</div>
             </td>
         </tr>
     </table>
 
+    {{-- ── ITEMS TABLE ── --}}
+    @php
+        $groupedOrders = [];
+        foreach($orders as $order) {
+            $key = $order->product_name;
+            if (!isset($groupedOrders[$key])) {
+                $groupedOrders[$key] = [
+                    'product_name' => $order->product_name,
+                    'total_qty'    => 0,
+                    'unit'         => $order->unit ?? 'kg',
+                    'total_amount' => 0,
+                ];
+            }
+            $groupedOrders[$key]['total_qty']    += (float) $order->order_quantity;
+            $groupedOrders[$key]['total_amount'] += (float) $order->order_quantity * (float) $order->order_price;
+        }
+    @endphp
+
     <table class="items-table">
         <thead>
             <tr>
-                <th style="width: 45%;">Item Description</th>
-                <th style="width: 20%;">Qty / Weight</th>
-                <th style="width: 15%;">Unit Price (&#8377;)</th>
-                <th style="width: 20%;">Amount (&#8377;)</th>
+                <th style="width:42%;">Item Description</th>
+                <th style="width:20%;">Qty / Weight</th>
+                <th style="width:17%;">Unit Price</th>
+                <th style="width:21%;">Amount</th>
             </tr>
         </thead>
         <tbody>
-            @php
-                $groupedOrders = [];
-                foreach($orders as $order) {
-                    $key = $order->product_name;
-                    if (!isset($groupedOrders[$key])) {
-                        $groupedOrders[$key] = [
-                            'product_name' => $order->product_name,
-                            'total_qty' => 0,
-                            'unit' => $order->unit ?? 'kg',
-                            'total_amount' => 0,
-                        ];
-                    }
-                    $groupedOrders[$key]['total_qty'] += (float) $order->order_quantity;
-                    $groupedOrders[$key]['total_amount'] += ((float) $order->order_quantity * (float) $order->order_price);
-                }
-            @endphp
             @foreach($groupedOrders as $item)
                 <tr>
                     <td class="col-desc">{{ $item['product_name'] }}</td>
@@ -316,68 +333,75 @@
                     <td>{{ number_format($item['total_amount'], 2) }}</td>
                 </tr>
             @endforeach
-            <!-- Blank spacing row for receipt feel -->
-            <tr class="items-row-content">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
         </tbody>
         <tfoot>
             <tr>
-                <td style="text-align: right; font-weight: 800; font-size: 15px; padding: 14px;">GRAND TOTAL:</td>
-                <td style="text-align: center; font-weight: 800; font-size: 14px; padding: 14px;">
+                <td colspan="2" style="text-align:right; font-weight:800; font-size:13px; padding:10px;">
+                    GRAND TOTAL:
+                    &nbsp;&nbsp;
                     @if($totalKg > 0)
-                        <span style="display:block; margin-bottom:4px;">{{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} <span style="font-size:11px; color:#555;">KG</span></span>
+                        {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} KG
                     @endif
                     @if($totalNang > 0)
-                        <span style="display:block;">{{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} <span style="font-size:11px; color:#555;">NANG</span></span>
+                        &nbsp; {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} NANG
                     @endif
                 </td>
-                <td style="background: #fff;"></td>
-                <td style="text-align: center; font-weight: 800; font-size: 16px; padding: 14px;">
-                    &#8377; {{ number_format($totalOrderAmount, 2) }}
+                <td style="background:#fff; border:1px solid #000;"></td>
+                <td style="text-align:center; font-weight:800; font-size:15px; padding:10px;">
+                    {{ number_format($totalOrderAmount, 2) }}
                 </td>
             </tr>
         </tfoot>
     </table>
 
+    {{-- ── BOTTOM: QR + BANK + TOTAL ── --}}
     <table class="bottom-table">
         <tr>
             <td class="qr-section">
                 <div class="qr-title">Scan to Pay</div>
                 <div class="qr-box">
-                    <img src="{{ public_path('images/scanner.webp') }}" alt="QR SCANNER">
+                    <img src="{{ public_path('images/scanner.webp') }}" alt="QR">
                 </div>
             </td>
             <td class="details-section">
                 <div class="bank-box">
                     <table>
-                        <tr><td>👉</td><td class="bank-box-title">BANK</td><td>:: STATE BANK OF INDIA</td></tr>
-                        <tr><td>👉</td><td class="bank-box-title">A/C NAME</td><td>:: SHRI BRAHMANI KHANDVI HOUSE</td></tr>
-                        <tr><td>👉</td><td class="bank-box-title">A/C NO</td><td>:: <span style="font-weight: 800;">*00000044017465451*</span></td></tr>
-                        <tr><td>👉</td><td class="bank-box-title">IFSC CODE</td><td>:: <span style="font-weight: 800;">SBIN0011027</span></td></tr>
+                        <tr>
+                            <td class="bank-box-title">Bank</td>
+                            <td>: STATE BANK OF INDIA</td>
+                        </tr>
+                        <tr>
+                            <td class="bank-box-title">A/C Name</td>
+                            <td>: SHRI BRAHMANI KHANDVI HOUSE</td>
+                        </tr>
+                        <tr>
+                            <td class="bank-box-title">A/C No</td>
+                            <td>: <strong>*00000044017465451*</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="bank-box-title">IFSC Code</td>
+                            <td>: <strong>SBIN0011027</strong></td>
+                        </tr>
                     </table>
                 </div>
-                
+
                 <div class="words-box">
                     @php
                         if (class_exists('NumberFormatter')) {
                             $f = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
-                            $words = ucwords($f->format((int)$totalOrderAmount));
+                            $words = ucwords($f->format((int) $totalOrderAmount));
                         } else {
-                            $words = (string) (int)$totalOrderAmount;
+                            $words = (string)(int) $totalOrderAmount;
                         }
                     @endphp
-                    Amount in Words: <em>Rupees {{ $words }} Only</em>
+                    Amount in Words: <strong>Rupees {{ $words }} Only</strong>
                 </div>
-                
+
                 <div class="total-box-grand">
                     <table>
                         <tr>
                             <td>Total Amount</td>
-                            <td style="text-align:right;">&#8377; {{ number_format($totalOrderAmount, 2) }}</td>
+                            <td style="text-align:right;"> {{ number_format($totalOrderAmount, 2) }}</td>
                         </tr>
                     </table>
                 </div>
@@ -385,13 +409,18 @@
         </tr>
     </table>
 
+    {{-- ── SIGNATURES ── --}}
     <table class="sign-table">
         <tr>
-            <td class="sign-left">For BHRAMANI KHANDVI HOUSE</td>
-            <td style="border:none;"></td>
-            <td class="sign-right">Customer Signature</td>
+            <td class="sign-cell">For BHRAMANI KHANDVI HOUSE</td>
+            <td class="sign-gap"></td>
+            <td class="sign-cell">Customer Signature</td>
         </tr>
     </table>
+
+    <div class="terms">
+        * This is a computer-generated invoice. Goods once sold will not be taken back. Subject to Vadodara jurisdiction.
+    </div>
 
 </div>
 </body>
