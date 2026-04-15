@@ -105,4 +105,37 @@ return [
 
     // testimonial validation
     'required_post' => 'પોસ્ટ જરૂરી છે.',
+    // Customer Validation Extras
+    'required_customer_name' => 'ગ્રાહકનું નામ જરૂરી છે.',
+    'required_shop_name' => 'દુકાનનું નામ જરૂરી છે.',
+    'required_shop_address' => 'દુકાનનું સરનામું જરૂરી છે.',
+    'required_customer_number' => 'ગ્રાહકનો નંબર જરૂરી છે.',
+    'size_customer_number' => 'મોબાઇલ નંબર ચોક્કસ 10 નંબર હોવો જોઈએ.',
+    'regex_customer_number' => 'મોબાઇલ નંબરમાં ફક્ત નંબર હોવા જોઈએ.',
+    'email_customer_email' => 'ઈમેઈલ માન્ય હોવો જોઈએ.',
+    'required_city' => 'શહેરનું નામ જરૂરી છે.',
+    'required_status' => 'સ્થિતિ જરૂરી છે.',
+
+    // Product Validation
+    'required_product_name' => 'પ્રૉડક્ટનું નામ જરૂરી છે.',
+    'required_product_base_price' => 'પ્રૉડક્ટની કિંમત જરૂરી છે.',
+    'image_product_image' => 'અપલોડ કરેલી ફાઈલ ફોટો હોવી જોઈએ.',
+    'mimes_product_image' => 'ફોટો jpeg, png, jpg, gif પ્રકારની ફાઈલ હોવી જોઈએ.',
+    'max_product_image' => 'ફોટો 5MB થી મોટો હોવો જોઈએ નહીં.',
+
+    // Content Validation
+    'required_upload_date' => 'અપલોડ તકો જરૂરી છે.',
+    'date_upload_date' => 'અપલોડ તારીખ માન્ય હોવી જોઈએ.',
+
+    // Standard Validation Fallbacks
+    'required' => ':attribute ફીલ્ડ જરૂરી છે.',
+    'integer' => ':attribute પૂર્ણાંક હોવો જોઈએ.',
+    'numeric' => ':attribute એક સંખ્યા હોવી જોઈએ.',
+    'date' => ':attribute માન્ય તારીખ નથી.',
+    'min' => [
+        'numeric' => ':attribute ઓછામાં ઓછું :min હોવું જોઈએ.',
+        'file' => ':attribute ઓછામાં ઓછું :min કિલોબાઇટ હોવું જોઈએ.',
+        'string' => ':attribute ઓછામાં ઓછું :min અક્ષરો હોવા જોઈએ.',
+        'array' => ':attribute માં ઓછામાં ઓછી :min વસ્તુઓ હોવી જોઈએ.',
+    ],
 ];

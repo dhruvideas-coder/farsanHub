@@ -181,4 +181,25 @@ return [
 
     'attributes' => [],
 
+    // Customer Validation Extras
+    'required_customer_name' => 'The customer name is required.',
+    'required_shop_name' => 'The shop name is required.',
+    'required_shop_address' => 'The shop address is required.',
+    'required_customer_number' => 'The customer number is required.',
+    'size_customer_number' => 'The customer number must be exactly 10 digits.',
+    'regex_customer_number' => 'The customer number must contain only numbers.',
+    'email_customer_email' => 'The email format is invalid.',
+    'required_city' => 'The city is required.',
+    'required_status' => 'The status is required.',
+
+    // Product Validation
+    'required_product_name' => 'The product name is required.',
+    'required_product_base_price' => 'The product base price is required.',
+    'image_product_image' => 'The uploaded file must be an image.',
+    'mimes_product_image' => 'The image must be a file of type: jpeg, png, jpg, gif.',
+    'max_product_image' => 'The image may not be greater than 5MB.',
+
+    // Content Validation
+    'required_upload_date' => 'The upload date is required.',
+    'date_upload_date' => 'The upload date is not a valid date.',
 ];

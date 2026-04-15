@@ -116,5 +116,42 @@ return [
     'required_product_image' => 'Product image is required.',
     'image_product_image' => 'Product image must be a valid image.',
     'mimes_product_image' => 'Product image must be a JPG, JPEG, PNG, or GIF.',
-    'max_product_image' => 'Product image must be at most :max kilobytes.',
+    // Remaining Customer validation
+    'required_customer_number' => 'The customer number is required.',
+    'size_customer_number'     => 'The customer number must be exactly 10 digits.',
+    'regex_customer_number'    => 'The customer number must contain only digits.',
+    'email_customer_email'     => 'The email format is invalid.',
+    'required_city'            => 'The city is required.',
+
+    // Content Validation
+    'required_upload_date' => 'The upload date is required.',
+    'date_upload_date'     => 'The upload date is not a valid date.',
+
+    // Standard Validation Fallbacks
+    'required' => 'The :attribute field is required.',
+    'integer' => 'The :attribute must be an integer.',
+    'numeric' => 'The :attribute must be a number.',
+    'date' => 'The :attribute is not a valid date.',
+    'min' => [
+        'numeric' => 'The :attribute must be at least :min.',
+        'file' => 'The :attribute must be at least :min kilobytes.',
+        'string' => 'The :attribute must be at least :min characters.',
+        'array' => 'The :attribute must have at least :min items.',
+    ],
+    'max' => [
+        'numeric' => 'The :attribute must not be greater than :max.',
+        'file' => 'The :attribute must not be greater than :max kilobytes.',
+        'string' => 'The :attribute must not be greater than :max characters.',
+        'array' => 'The :attribute must not have more than :max items.',
+    ],
+    'string' => 'The :attribute must be a string.',
+    'email' => 'The :attribute must be a valid email address.',
+    'regex' => 'The :attribute format is invalid.',
+    'in' => 'The selected :attribute is invalid.',
+    'size' => [
+        'numeric' => 'The :attribute must be :size.',
+        'file' => 'The :attribute must be :size kilobytes.',
+        'string' => 'The :attribute must be :size characters.',
+        'array' => 'The :attribute must contain :size items.',
+    ],
 ];
