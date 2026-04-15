@@ -172,13 +172,14 @@ class ReportController extends Controller
                 // Dynamic Date
                 $reportDate = now()->format('d M Y, h:i A');
 
-                // Receipt number: e.g. ORD-2025-03-0042
                 $receiptNo = 'RCP-' . now()->format('Y') . '-' . str_pad($orders->count(), 4, '0', STR_PAD_LEFT);
 
                 // Dynamic Logo Path (absolute path required for DomPDF)
                 $logoPath = public_path('images/logo.png');
 
-                $pdf = \PDF::loadView('admin.monthly-report.order-pdf', [
+                $exportType = $request->input('export_type', 'challan');
+
+                $data = [
                     'orders' => $orders,
                     'monthName' => $monthName,
                     'monthYear' => $monthYear,
@@ -190,13 +191,23 @@ class ReportController extends Controller
                     'logoPath' => $logoPath,
                     'customerInfo' => $customerInfo,
                     'receiptNo' => $receiptNo,
-                ]);
+                ];
+
+                if ($exportType === 'bill_image') {
+                    return view('admin.monthly-report.order-bill-image', $data);
+                }
+
+                $viewName = $exportType === 'bill' ? 'admin.monthly-report.order-bill' : 'admin.monthly-report.order-challan';
+                
+                $pdf = \PDF::loadView($viewName, $data);
+                $pdf->setPaper('A4', 'portrait');
 
                 $shopPart = $customerInfo
                     ? rtrim(preg_replace('/[^A-Za-z0-9]+/', '-', $customerInfo->shop_name), '-') . '-'
                     : '';
                 $datePart = now()->format('d-M-Y');
-                $fileName = $shopPart . 'Order-Receipt-' . $datePart . '.pdf';
+                $prefix = $exportType === 'bill' ? 'Order-Bill-' : 'Order-Challan-';
+                $fileName = $shopPart . $prefix . $datePart . '.pdf';
 
                 return $pdf->download($fileName);
             }

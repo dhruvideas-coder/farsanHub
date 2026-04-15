@@ -187,10 +187,17 @@
                         </select>
                     </div>
                     <div class="rpt-btn-row">
-                        <button type="button" id="pdfExportBtn" class="rpt-btn rpt-btn-pdf">
-                            <i class="fa fa-file-pdf-o"></i> PDF
+                        <button type="button" class="rpt-btn rpt-btn-pdf exportBtn" data-type="challan">
+                            <i class="fa fa-file-pdf-o"></i> Challan
+                        </button>
+                        <button type="button" class="rpt-btn rpt-btn-pdf exportBtn" data-type="bill">
+                            <i class="fa fa-file-pdf-o"></i> Bill
+                        </button>
+                        <button type="button" class="rpt-btn rpt-btn-excel exportBtn" data-type="bill_image">
+                            <i class="fa fa-image"></i> Bill Image
                         </button>
                     </div>
+                    <input type="hidden" name="export_type" id="exportTypeInput" value="">
                 </form>
             </div>
         </div>
@@ -295,16 +302,60 @@
         toast: true, position: 'top-end', showConfirmButton: false, timer: 3500
     });
 
-    document.getElementById('pdfExportBtn').addEventListener('click', function () {
-        const form = this.closest('form');
-        const monthYear = form.querySelector('select[name="month_year"]').value;
+    function showDownloadLoader() {
+        Swal.fire({
+            title: 'Please wait',
+            html: 'Your exported file is being generated...',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
+        // Auto close loader after 3 seconds as requested
+        setTimeout(() => {
+            Swal.close();
+        }, 3000);
+    }
 
-        if (!monthYear) {
-            orderWarning.fire({ icon: 'warning', text: 'Please select a month and year before exporting.' });
-            return;
+    document.querySelectorAll('.exportBtn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const form = this.closest('form');
+            const monthYear = form.querySelector('select[name="month_year"]').value;
+            
+            if (!monthYear) {
+                orderWarning.fire({ icon: 'warning', text: 'Please select a month and year before exporting.' });
+                return;
+            }
+
+            document.getElementById('exportTypeInput').value = this.getAttribute('data-type');
+            
+            if (this.getAttribute('data-type') === 'bill_image') {
+                form.target = "_blank";
+            } else {
+                form.target = "_self";
+                showDownloadLoader(); // Only show loader if downloading in same tab
+            }
+            
+            form.submit();
+        });
+    });
+
+    // For other Excel buttons
+    document.querySelectorAll('form').forEach(form => {
+        if (!form.querySelector('.exportBtn')) {
+            form.addEventListener('submit', function(e) {
+                const monthYearInput = form.querySelector('select[name="month_year"]');
+                if (monthYearInput && !monthYearInput.value) {
+                    e.preventDefault();
+                    orderWarning.fire({ icon: 'warning', text: 'Please select a month and year before exporting.' });
+                    return;
+                }
+                showDownloadLoader();
+            });
         }
-
-        form.submit();
     });
 </script>
 
