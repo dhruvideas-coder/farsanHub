@@ -9,13 +9,15 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Exp;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ExpenseExport implements FromCollection, WithHeadings, WithStyles, WithColumnFormatting
+class ExpenseExport implements FromCollection, WithHeadings, WithStyles, WithColumnFormatting, WithEvents
 {
     public $monthYear;
+    protected $total = 0;
 
     public function __construct($monthYear)
     {
@@ -25,23 +27,26 @@ class ExpenseExport implements FromCollection, WithHeadings, WithStyles, WithCol
     public function collection()
     {
         $start = Carbon::parse($this->monthYear . '-01')->startOfMonth();
-        $end = Carbon::parse($this->monthYear . '-01')->endOfMonth();
+        $end   = Carbon::parse($this->monthYear . '-01')->endOfMonth();
 
         Log::info('Export Start Date: ' . $start);
         Log::info('Export End Date: ' . $end);
 
-        $Expense = Expense::where('user_id', auth()->id())
+        $expenses = Expense::where('user_id', auth()->id())
             ->whereBetween('created_at', [$start, $end])
             ->get();
 
-        Log::info('Expense record count: ' . $Expense->count());
+        Log::info('Expense record count: ' . $expenses->count());
 
-        return $Expense->map(function ($item) {
+        return $expenses->map(function ($item) {
+            $amount = (float) ($item->amount ?? 0);
+            $this->total += $amount;
+
             return [
-                'purpose'   => $item->purpose ?? '-',
-                'amount'   => $item->amount ?? '-',
-                'comment'   => $item->comment ?? '-',
-                'date'   => $item->created_at ? date('d-m-Y', strtotime($item->created_at)) : '-',
+                'purpose' => $item->purpose ?? '-',
+                'amount'  => $amount,
+                'comment' => $item->comment ?? '-',
+                'date'    => $item->created_at ? date('d-m-Y', strtotime($item->created_at)) : '-',
             ];
         });
     }
@@ -64,8 +69,37 @@ class ExpenseExport implements FromCollection, WithHeadings, WithStyles, WithCol
     public function columnFormats(): array
     {
         return [
-            // 'F' => '#,##0.00',     // Amount
-            // 'M' => 'DD-MM-YYYY',   // Cheque Date
+            'B' => '#,##0.00',
+        ];
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $sheet    = $event->sheet->getDelegate();
+                $lastRow  = $sheet->getHighestRow();
+                $totalRow = $lastRow + 1;
+
+                // Write PHP-calculated total directly — no formula
+                $sheet->setCellValue('A' . $totalRow, 'Total');
+                $sheet->setCellValue('B' . $totalRow, $this->total);
+
+                // Bold the total row
+                $sheet->getStyle('A' . $totalRow . ':D' . $totalRow)
+                    ->getFont()->setBold(true);
+
+                // Light yellow background
+                $sheet->getStyle('A' . $totalRow . ':D' . $totalRow)
+                    ->getFill()
+                    ->setFillType(Fill::FILL_SOLID)
+                    ->getStartColor()->setARGB('FFFFF3CD');
+
+                // Number format on total amount cell
+                $sheet->getStyle('B' . $totalRow)
+                    ->getNumberFormat()
+                    ->setFormatCode('#,##0.00');
+            },
         ];
     }
 }
