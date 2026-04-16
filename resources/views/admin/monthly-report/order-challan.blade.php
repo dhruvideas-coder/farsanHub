@@ -28,6 +28,7 @@
         .brand-name   { font-size:16px; font-weight:bold; color:#1c1917; text-transform:uppercase; letter-spacing:1px; }
         .brand-tagline{ font-size:8.5px; color:#78716c; margin-top:2px; }
         .brand-address{ font-size:9px; color:#57534e; margin-top:5px; line-height:1.6; }
+        .brand-fssai  { font-size:9px; font-weight:bold; color:#1c1917; margin-top:3px; }
         .receipt-info { vertical-align:top; text-align:right; }
         .receipt-badge{ display:inline-block; background:#fef3c7; color:#92400e; font-size:8.5px; font-weight:bold;
                         text-transform:uppercase; letter-spacing:1px; padding:3px 10px; border-radius:20px; border:1px solid #fcd34d; }
@@ -64,15 +65,15 @@
         /* ── ORDERS TABLE ─── */
         .orders-table { width:100%; border-collapse:collapse; }
 
-        .orders-table thead tr { background:#1c1917; }
+        .orders-table thead tr { background:#fef3c7; }
         .orders-table thead th {
             padding:8px 7px;
             font-size:8px;
             font-weight:bold;
             text-transform:uppercase;
             letter-spacing:0.6px;
-            color:#e7e5e4;
-            border:1px solid #44403c;
+            color:#92400e;
+            border:1px solid #fcd34d;
             text-align:center;
             white-space:nowrap;
         }
@@ -101,17 +102,17 @@
         .badge-purchase { background:#dbeafe; color:#1e40af; padding:1px 6px; border-radius:20px; font-size:8px; font-weight:bold; }
 
         /* Grand total row */
-        .orders-table tfoot tr { background:#1c1917; }
+        .orders-table tfoot tr { background:#fef3c7; }
         .orders-table tfoot td {
             padding:9px 7px;
-            border:1px solid #44403c;
+            border:1px solid #fcd34d;
             font-size:9.5px;
             font-weight:bold;
-            color:#e7e5e4;
+            color:#92400e;
         }
-        .orders-table tfoot td.ft-label { text-align:left; color:#fcd34d; font-size:8.5px; text-transform:uppercase; }
-        .orders-table tfoot td.ft-qty   { text-align:center; color:#e7e5e4; }
-        .orders-table tfoot td.ft-amt   { text-align:right; color:#fcd34d; font-size:11px; background:#292524; }
+        .orders-table tfoot td.ft-label { text-align:left; color:#92400e; font-size:8.5px; text-transform:uppercase; }
+        .orders-table tfoot td.ft-qty   { text-align:center; color:#92400e; }
+        .orders-table tfoot td.ft-amt   { text-align:right; color:#92400e; font-size:11px; background:#fde68a; }
 
         /* ── TOTALS SECTION ─── */
         .totals-wrapper { margin-top:18px; width:100%; border-collapse:collapse; }
@@ -126,9 +127,27 @@
         .totals-table td{ padding:7px 12px; border-bottom:1px solid #f5f5f4; font-size:10px; }
         .totals-table .t-label { color:#78716c; }
         .totals-table .t-value { text-align:right; font-weight:bold; color:#1c1917; }
-        .totals-table .grand-row td { background:#1c1917; border-bottom:none; padding:10px 12px; }
-        .totals-table .grand-label  { color:#e7e5e4; font-size:10.5px; font-weight:bold; }
-        .totals-table .grand-value  { text-align:right; color:#fcd34d; font-size:14px; font-weight:bold; }
+        .totals-table .grand-row td { background:#fef3c7; border-bottom:none; padding:10px 12px; }
+        .totals-table .grand-label  { color:#92400e; font-size:10.5px; font-weight:bold; }
+        .totals-table .grand-value  { text-align:right; color:#92400e; font-size:14px; font-weight:bold; }
+
+        /* ── PAYMENT & SIGNATURE ─── */
+        .pay-sign-wrapper { width:100%; border-collapse:collapse; margin-top:20px; page-break-inside:avoid; }
+        .qr-section { width:22%; vertical-align:top; text-align:center; padding-right:15px; }
+        .qr-box { width:90px; height:90px; border:1px dashed #a8a29e; padding:4px; margin:0 auto; }
+        .qr-box img { width:100%; height:100%; }
+        .qr-title { font-size:9.5px; font-weight:bold; color:#57534e; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
+
+        .bank-section { width:48%; vertical-align:top; padding-right:15px; }
+        .bank-box { background:#fafaf9; border:1px solid #e7e5e4; padding:10px 12px; }
+        .bank-title { font-size:9.5px; font-weight:bold; color:#1c1917; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
+        .bank-table { width:100%; border-collapse:collapse; }
+        .bank-table td { font-size:9px; color:#57534e; padding:3px 0; }
+        .bank-col-label { width:65px; font-weight:bold; color:#1c1917; }
+
+        .sign-section { width:30%; vertical-align:bottom; text-align:center; }
+        .sign-img { height:50px; max-width:140px; display:block; margin:0 auto 5px auto; }
+        .sign-line { border-top:1px solid #1c1917; padding-top:6px; font-size:9.5px; font-weight:bold; color:#1c1917; margin:0 20px; text-transform:uppercase; letter-spacing:0.5px; }
 
         /* ── FOOTER ─── */
         .footer-table { width:100%; border-collapse:collapse; }
@@ -156,6 +175,7 @@
                     Shop No-06, Arkview Tower, near Hari Om Subhanpura Water Tank,<br>
                     Subhanpura, Vadodara, Gujarat &ndash; 390021
                 </div>
+                <div class="brand-fssai">FSSAI Lic No.: 20725032000942</div>
             </td>
             <td class="receipt-info">
                 <div class="receipt-badge">Monthly Order Report</div>
@@ -314,10 +334,9 @@
         <tr>
             <td class="totals-left">
                 <div class="note-box">
-                    <strong>Note:</strong><br>
-                    &bull; Rate is the effective price per unit for this order.<br>
-                    &bull; Amount = Quantity &times; Rate.<br>
-                    &bull; This is a computer-generated report and does not require a signature.
+                    <strong>Terms &amp; Conditions:</strong><br>
+                    &bull; Goods once sold will not be taken back.<br>
+                    &bull; Subject to Vadodara jurisdiction.
                 </div>
             </td>
             <td class="totals-right">
@@ -342,6 +361,45 @@
                         <td class="grand-value">&#8377; {{ number_format($totalOrderAmount, 2) }}</td>
                     </tr>
                 </table>
+            </td>
+        </tr>
+    </table>
+
+    {{-- PAYMENT & SIGNATURE --}}
+    <table class="pay-sign-wrapper">
+        <tr>
+            <td class="qr-section">
+                <div class="qr-title">Scan to Pay</div>
+                <div class="qr-box">
+                    <img src="{{ public_path('images/scanner.webp') }}" alt="QR">
+                </div>
+            </td>
+            <td class="bank-section">
+                <div class="bank-box">
+                    <div class="bank-title">Bank Details</div>
+                    <table class="bank-table">
+                        <tr>
+                            <td class="bank-col-label">Bank</td>
+                            <td>: STATE BANK OF INDIA</td>
+                        </tr>
+                        <tr>
+                            <td class="bank-col-label">A/C Name</td>
+                            <td>: SHRI BRAHMANI KHANDVI HOUSE</td>
+                        </tr>
+                        <tr>
+                            <td class="bank-col-label">A/C No</td>
+                            <td>: <strong>*00000044017465451*</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="bank-col-label">IFSC Code</td>
+                            <td>: <strong>SBIN0011027</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+            <td class="sign-section">
+                <img src="{{ public_path('images/hitesh_sign.webp') }}" class="sign-img" alt="Sign">
+                <div class="sign-line">Authorized Signatory</div>
             </td>
         </tr>
     </table>
