@@ -228,6 +228,13 @@
             width: 200px;
             padding-top: 6px;
             border-top: 1px solid #000;
+            vertical-align: bottom;
+        }
+        .sign-img {
+            display: block;
+            margin: 0 auto 4px;
+            height: 55px;
+            max-width: 160px;
         }
         .sign-gap { border: none; }
 
@@ -259,7 +266,7 @@
     <table class="info-table">
         <tr>
             <td class="info-left">
-                <div><span class="label">FSSAI Lic No.:</span> 12345678901234</div>
+                <div><span class="label">FSSAI Lic No.:</span> 20725032000942</div>
                 <div style="margin-top:4px;">
                     <span class="label">Address:</span>
                     Shop No-06, Arkview Tower, near Hari Om Subhanpura Water Tank,
@@ -411,6 +418,13 @@
 
     {{-- ── SIGNATURES ── --}}
     <table class="sign-table">
+        <tr>
+            <td style="width:200px; text-align:center; vertical-align:bottom; padding-bottom:0;">
+                <img src="{{ public_path('images/hitesh_sign.webp') }}" class="sign-img" alt="Sign">
+            </td>
+            <td class="sign-gap"></td>
+            <td style="width:200px; vertical-align:bottom; padding-bottom:0;"></td>
+        </tr>
         <tr>
             <td class="sign-cell">For BHRAMANI KHANDVI HOUSE</td>
             <td class="sign-gap"></td>
