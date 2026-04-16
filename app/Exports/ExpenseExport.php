@@ -17,11 +17,13 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class ExpenseExport implements FromCollection, WithHeadings, WithStyles, WithColumnFormatting, WithEvents
 {
     public $monthYear;
+    public $expenseType;
     protected $total = 0;
 
-    public function __construct($monthYear)
+    public function __construct($monthYear, $expenseType = null)
     {
-        $this->monthYear = $monthYear;
+        $this->monthYear   = $monthYear;
+        $this->expenseType = $expenseType;
     }
 
     public function collection()
@@ -32,9 +34,14 @@ class ExpenseExport implements FromCollection, WithHeadings, WithStyles, WithCol
         Log::info('Export Start Date: ' . $start);
         Log::info('Export End Date: ' . $end);
 
-        $expenses = Expense::where('user_id', auth()->id())
-            ->whereBetween('created_at', [$start, $end])
-            ->get();
+        $query = Expense::where('user_id', auth()->id())
+            ->whereBetween('created_at', [$start, $end]);
+
+        if ($this->expenseType) {
+            $query->where('type', $this->expenseType);
+        }
+
+        $expenses = $query->get();
 
         Log::info('Expense record count: ' . $expenses->count());
 
@@ -43,6 +50,7 @@ class ExpenseExport implements FromCollection, WithHeadings, WithStyles, WithCol
             $this->total += $amount;
 
             return [
+                'type'    => ucfirst($item->type ?? 'business'),
                 'purpose' => $item->purpose ?? '-',
                 'amount'  => $amount,
                 'comment' => $item->comment ?? '-',
@@ -54,6 +62,7 @@ class ExpenseExport implements FromCollection, WithHeadings, WithStyles, WithCol
     public function headings(): array
     {
         return [
+            'Type',
             trans('portal.purpose'),
             trans('portal.amount'),
             trans('portal.comment'),
@@ -63,13 +72,13 @@ class ExpenseExport implements FromCollection, WithHeadings, WithStyles, WithCol
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:E1')->getFont()->setBold(true);
     }
 
     public function columnFormats(): array
     {
         return [
-            'B' => '#,##0.00',
+            'C' => '#,##0.00',
         ];
     }
 
@@ -83,20 +92,20 @@ class ExpenseExport implements FromCollection, WithHeadings, WithStyles, WithCol
 
                 // Write PHP-calculated total directly — no formula
                 $sheet->setCellValue('A' . $totalRow, 'Total');
-                $sheet->setCellValue('B' . $totalRow, $this->total);
+                $sheet->setCellValue('C' . $totalRow, $this->total);
 
                 // Bold the total row
-                $sheet->getStyle('A' . $totalRow . ':D' . $totalRow)
+                $sheet->getStyle('A' . $totalRow . ':E' . $totalRow)
                     ->getFont()->setBold(true);
 
                 // Light yellow background
-                $sheet->getStyle('A' . $totalRow . ':D' . $totalRow)
+                $sheet->getStyle('A' . $totalRow . ':E' . $totalRow)
                     ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
                     ->getStartColor()->setARGB('FFFFF3CD');
 
                 // Number format on total amount cell
-                $sheet->getStyle('B' . $totalRow)
+                $sheet->getStyle('C' . $totalRow)
                     ->getNumberFormat()
                     ->setFormatCode('#,##0.00');
             },

@@ -92,15 +92,18 @@
     .filter-item { flex: 1 1 auto; min-width: 0; }
     .filter-item.narrow  { flex: 0 0 auto; width: 80px; }
     .filter-item.medium  { flex: 0 0 auto; width: 210px; }
+    .filter-item.type-w  { flex: 0 0 auto; width: 140px; }
 
     @media (max-width: 991.98px) {
-        .filter-item.medium { width: 190px; }
+        .filter-item.medium { width: 180px; }
+        .filter-item.type-w { width: 120px; }
     }
     @media (max-width: 767.98px) {
         .filter-bar { flex-direction: column; align-items: stretch; }
         .filter-bar > .filter-item,
         .filter-bar > .filter-item.narrow,
-        .filter-bar > .filter-item.medium {
+        .filter-bar > .filter-item.medium,
+        .filter-bar > .filter-item.type-w {
             width: 100% !important;
             flex: 0 0 100% !important;
         }
@@ -159,6 +162,16 @@
                                     <i class="fa fa-times"></i>
                                 </button>
                             </div>
+                        </div>
+
+                        {{-- Type filter --}}
+                        <div class="filter-item type-w">
+                            <label class="filter-group-label d-md-none">Type</label>
+                            <select id="type-filter" onchange="reloadTable()" class="form-select custom-select w-100">
+                                <option value="">All Types</option>
+                                <option value="business">Business</option>
+                                <option value="personal">Personal</option>
+                            </select>
                         </div>
 
                         {{-- Search --}}
@@ -273,13 +286,14 @@
         var search = $('#search-val').val();
         var limit  = $('#selected_data').val();
         var month  = $('#month-filter').val();
+        var type   = $('#type-filter').val();
 
         $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 
         $.ajax({
             type: "GET",
             url: "{{ route('admin.expense.index') }}",
-            data: { search: search, limit: limit, month: month },
+            data: { search: search, limit: limit, month: month, type: type },
             beforeSend: function () {
                 $('#expense-table-wrap').css('opacity', '0.45');
             },

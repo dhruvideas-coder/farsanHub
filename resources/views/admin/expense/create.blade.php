@@ -75,6 +75,29 @@
                                 @enderror
                             </div>
                             
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Expense Type <span class="text-danger">*</span></label>
+                                <div class="d-flex gap-4 mt-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="type" id="type_business" value="business"
+                                            {{ old('type', 'business') === 'business' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="type_business">
+                                            <i class="fa fa-briefcase text-primary me-1"></i> Business
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="type" id="type_personal" value="personal"
+                                            {{ old('type') === 'personal' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="type_personal">
+                                            <i class="fa fa-user text-success me-1"></i> Personal
+                                        </label>
+                                    </div>
+                                </div>
+                                @error('type')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="mb-3 col-md-6">
                                 <label for="comment" class="form-label">{{ @trans('portal.comment') }} <span>*(Max 1000 characters)</span></label>
                                 <textarea class="form-control @error('comment') is-invalid @enderror"

@@ -220,22 +220,27 @@ class ReportController extends Controller
     public function expenseReport(Request $request)
     {
         try {
-            $monthYear = $request->input('month_year');
+            $monthYear   = $request->input('month_year');
+            $expenseType = $request->input('expense_type'); // 'personal', 'business', or null for all
 
             if (!$monthYear) {
                 return redirect()->back()->with('error', 'Please select a month and year before exporting.');
             }
 
-            $count = Expense::where('user_id', auth()->id())
-                ->whereRaw("DATE_FORMAT(COALESCE(date, DATE(created_at)), '%Y-%m') = ?", [$monthYear])
-                ->count();
+            $query = Expense::where('user_id', auth()->id())
+                ->whereRaw("DATE_FORMAT(COALESCE(date, DATE(created_at)), '%Y-%m') = ?", [$monthYear]);
 
-            if ($count === 0) {
-                return redirect()->back()->with('error', 'No expenses found for the selected month.');
+            if ($expenseType) {
+                $query->where('type', $expenseType);
             }
 
-            $formatted = Carbon::parse($monthYear . '-01')->format('F-Y');
-            return Excel::download(new ExpenseExport($monthYear), $formatted . '-Expense-List.xlsx');
+            if ($query->count() === 0) {
+                return redirect()->back()->with('error', 'No expenses found for the selected filters.');
+            }
+
+            $formatted  = Carbon::parse($monthYear . '-01')->format('F-Y');
+            $typeSuffix = $expenseType ? '-' . ucfirst($expenseType) : '';
+            return Excel::download(new ExpenseExport($monthYear, $expenseType), $formatted . $typeSuffix . '-Expense-List.xlsx');
         } catch (\Throwable $th) {
             Log::error('ReportController@expenseReport Error: ' . $th->getMessage());
             return redirect()->back()->with('error', 'Could not export expenses. Please try again.');

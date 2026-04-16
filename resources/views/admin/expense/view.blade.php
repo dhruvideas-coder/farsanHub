@@ -7,13 +7,14 @@
                 <th class="text-uppercase fw-bold text-end" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.amount') }}</th>
                 <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.comment') }}</th>
                 <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.date') }}</th>
+                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap;">Type</th>
                 <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.action') }}</th>
             </tr>
         </thead>
         <tbody>
             @if ($expenses->isEmpty())
                 <tr>
-                    <td colspan="6" class="text-center py-4" style="color:#a8a29e; font-size:0.9rem;">
+                    <td colspan="7" class="text-center py-4" style="color:#a8a29e; font-size:0.9rem;">
                         <i class="fa fa-inbox me-1"></i> {{ @trans('messages.no_expense') }}
                     </td>
                 </tr>
@@ -32,6 +33,17 @@
                         <td style="font-size:13px; color:#292524;">{{ $expense->comment ?: '-' }}</td>
                         <td class="text-center" style="font-size:12px; color:#78716c; white-space:nowrap;">
                             {{ $expense->date ? date('d-m-Y', strtotime($expense->date)) : '-' }}
+                        </td>
+                        <td class="text-center">
+                            @if(($expense->type ?? 'business') === 'personal')
+                                <span class="badge" style="background:#dcfce7; color:#16a34a; font-size:11px; font-weight:600;">
+                                    <i class="fa fa-user me-1"></i> Personal
+                                </span>
+                            @else
+                                <span class="badge" style="background:#dbeafe; color:#2563eb; font-size:11px; font-weight:600;">
+                                    <i class="fa fa-briefcase me-1"></i> Business
+                                </span>
+                            @endif
                         </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
@@ -58,7 +70,7 @@
                     <td class="text-end" style="font-size:14px; color:#FF9933; white-space:nowrap;">
                         ₹{{ number_format($totalAmount, 2) }}
                     </td>
-                    <td colspan="3"></td>
+                    <td colspan="4"></td>
                 </tr>
             @endif
         </tbody>

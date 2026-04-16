@@ -36,6 +36,11 @@ class ExpenseController extends Controller
                 $query->whereYear('date', $year)->whereMonth('date', $month);
             }
 
+            // Type filter
+            if ($request->type && in_array($request->type, ['personal', 'business'])) {
+                $query->where('type', $request->type);
+            }
+
             $query->orderBy('created_at', 'desc');
 
             // Total amount for the current filter (before pagination)
@@ -69,6 +74,7 @@ class ExpenseController extends Controller
                 'amount'  => 'required|numeric|min:0',
                 'purpose' => 'required|string|max:255',
                 'comment' => 'nullable|string|max:500',
+                'type'    => 'required|in:personal,business',
             ], [
                 'amount.required' => __('validation.required_amount'),
                 'purpose.required' => __('validation.required_purpose'),
@@ -85,10 +91,11 @@ class ExpenseController extends Controller
             // Save the expense data
             Expense::create([
                 'user_id' => auth()->id(),
-                'amount' => $request->amount ?? 0,
+                'amount'  => $request->amount ?? 0,
                 'purpose' => $request->purpose ?? '',
                 'comment' => $request->comment ?? '',
-                'date' => $request->date ?? '',
+                'date'    => $request->date ?? '',
+                'type'    => $request->type ?? 'business',
             ]);
 
             // Redirect to the expense index page with a success message
@@ -117,6 +124,7 @@ class ExpenseController extends Controller
                 'amount'  => 'required|numeric|min:0',
                 'purpose' => 'required|string|max:255',
                 'comment' => 'nullable|string|max:500',
+                'type'    => 'required|in:personal,business',
             ], [
                 'amount.required' => __('validation.required_amount'),
                 'purpose.required' => __('validation.required_purpose'),
@@ -124,10 +132,11 @@ class ExpenseController extends Controller
 
 
             $data = [
-                'amount' => $request->amount ?? 0,
+                'amount'  => $request->amount ?? 0,
                 'purpose' => $request->purpose ?? '',
                 'comment' => $request->comment ?? '',
-                'date' => $request->date ?? '',
+                'date'    => $request->date ?? '',
+                'type'    => $request->type ?? 'business',
             ];
 
             $expense->update($data);

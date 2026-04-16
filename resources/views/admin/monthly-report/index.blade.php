@@ -228,6 +228,14 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label class="rpt-label">Expense Type</label>
+                        <select name="expense_type" class="rpt-select">
+                            <option value="">— All Types —</option>
+                            <option value="business" {{ old('expense_type') == 'business' ? 'selected' : '' }}>Business</option>
+                            <option value="personal" {{ old('expense_type') == 'personal' ? 'selected' : '' }}>Personal</option>
+                        </select>
+                    </div>
                     <div class="rpt-btn-row">
                         <button type="submit" name="export_type" value="excel" class="rpt-btn rpt-btn-excel">
                             <i class="fa fa-file-excel-o"></i> Excel
