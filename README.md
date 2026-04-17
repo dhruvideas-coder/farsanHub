@@ -585,7 +585,7 @@ All export classes implement `FromCollection`, `WithHeadings`, `WithStyles`, `Wi
 | `$reportDate` | string | e.g. "04 Mar 2026, 02:30 PM" |
 | `$logoPath` | string | Absolute path to `public/images/logo.png` |
 | `$customerInfo` | Customer\|null | Full customer model if specific customer selected |
-| `$receiptNo` | string | Auto-generated: `RCP-2026-0012` |
+| `$receiptNo` | string | Auto-generated: `0001` |
 
 ---
 

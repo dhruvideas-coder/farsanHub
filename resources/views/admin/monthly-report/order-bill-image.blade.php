@@ -467,7 +467,7 @@ body {
     {{-- ── BUSINESS INFO STRIP ── --}}
     <div class="biz-strip">
         <span><b>FSSAI:</b> 20725032000942</span>
-        <span><b>Mobile:</b> 9510036176</span>
+        <span><b>Mobile:</b> 9574659456</span>
         <span><b>Email:</b> patelhitesh0723a@gmail.com</span>
         <span>Shop No-06, Arkview Tower, Subhanpura, Vadodara – 390021</span>
     </div>

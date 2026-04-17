@@ -275,7 +275,7 @@
             </td>
             <td class="info-right">
                 <div><span class="label">Email:</span> patelhitesh0723a@gmail.com</div>
-                <div><span class="label">Mobile:</span> 9510036176</div>
+                <div><span class="label">Mobile:</span> 9574659456</div>
             </td>
         </tr>
     </table>
