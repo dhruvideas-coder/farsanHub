@@ -1,302 +1,311 @@
 @extends('layouts.app')
 
 <style>
-/* ── STAT CARDS ─────────────────────────────────── */
-.dash-card {
-    border-radius: 14px;
-    border: none;
-    overflow: hidden;
-    transition: transform .2s ease, box-shadow .2s ease;
-    box-shadow: 0 2px 12px rgba(0,0,0,.07);
-}
-.dash-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
-
-.dash-card .icon-box {
-    width: 54px; height: 54px;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-}
-.dash-card .stat-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: #9ca3af; }
-.dash-card .stat-value { font-size: 26px; font-weight: 700; color: #1c1917; line-height: 1.1; margin-top: 4px; }
-.dash-card .trend       { font-size: 11.5px; margin-top: 6px; }
-.dash-card .trend.up    { color: #10b981; }
-.dash-card .trend.down  { color: #ef4444; }
-.dash-card .trend.neutral { color: #9ca3af; }
-
-/* ── CHART CARDS ────────────────────────────────── */
-.chart-card {
-    border-radius: 14px;
-    border: none;
-    box-shadow: 0 2px 12px rgba(0,0,0,.07);
-}
-.chart-card .chart-title {
-    font-size: 13px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .6px; color: #44403c;
-}
-.chart-card .chart-sub { font-size: 11px; color: #a8a29e; }
-
-/* ── TABLE CARDS ────────────────────────────────── */
-.table-card {
-    border-radius: 14px; border: none;
-    box-shadow: 0 2px 12px rgba(0,0,0,.07);
-}
-.table-card .section-label {
-    font-size: 12px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .6px; color: #44403c; margin-bottom: 14px;
-}
-.dash-table { width: 100%; border-collapse: collapse; }
-.dash-table th {
-    font-size: 14px !important; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
-    color: #a8a29e; padding: 8px 10px; border-bottom: 2px solid #f5f5f4;
-}
-.dash-table td { font-size: 12px; color: #292524; padding: 10px 10px; border-bottom: 1px solid #f5f5f4; vertical-align: middle; }
-.dash-table tr:last-child td { border-bottom: none; }
-.dash-table .main-text { font-weight: 600; color: #1c1917; }
-.dash-table .sub-text  { font-size: 10.5px; color: #a8a29e; margin-top: 1px; }
-.dash-table .amt       { font-weight: 700; color: #d97706; }
-
-/* ── TOP CUSTOMER LIST ──────────────────────────── */
-.cust-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 9px 0; border-bottom: 1px solid #f5f5f4;
-}
-.cust-row:last-child { border-bottom: none; }
-.cust-avatar {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: #fef3c7; color: #92400e;
-    font-size: 13px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-}
-.cust-name  { font-size: 12.5px; font-weight: 600; color: #1c1917; }
-.cust-shop  { font-size: 10.5px; color: #a8a29e; }
-.cust-badge {
-    margin-left: auto; background: #fef3c7; color: #92400e;
-    font-size: 10px; font-weight: 700; padding: 3px 9px;
-    border-radius: 20px; white-space: nowrap;
+/* ── MODERN DASHBOARD DESIGN SYSTEM ──────────────── */
+:root {
+    --accent: #5c67f2;
+    --accent-glow: rgba(92, 103, 242, 0.1);
+    --glass-bg: #ffffff;
+    --glass-border: #f1f5f9;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --card-radius: 20px;
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
-/* ── PRODUCT BAR ────────────────────────────────── */
-.prod-row { margin-bottom: 14px; }
-.prod-row:last-child { margin-bottom: 0; }
-.prod-label { display: flex; justify-content: space-between; margin-bottom: 4px; }
-.prod-label span:first-child { font-size: 12px; font-weight: 600; color: #292524; }
-.prod-label span:last-child  { font-size: 11px; color: #a8a29e; }
-.prod-bar-wrap { height: 8px; background: #f5f5f4; border-radius: 99px; overflow: hidden; }
-.prod-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #d97706, #fbbf24); }
-
-/* ── MONTH BADGE ────────────────────────────────── */
-.month-badge {
-    display: inline-block; padding: 3px 10px; border-radius: 20px;
-    background: #fef3c7; color: #92400e; font-size: 10.5px; font-weight: 600;
+.dashboard-wrapper {
+    padding: 2rem;
+    background: #f8fafc;
+    min-height: calc(100vh - 100px);
+    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── AMBER ACCENT ───────────────────────────────── */
-.text-amber { color: #d97706; }
-.bg-amber-soft { background: #fef3c7; }
-.border-amber  { border-color: #fcd34d !important; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-/* ── ORDERS PRODUCT FILTER SELECT ───────────────── */
-.orders-prod-select {
-    width: 100%;
-    padding: 5px 28px 5px 10px;
-    border-radius: 8px;
-    border: 1.5px solid #fde68a;
-    font-size: 11.5px;
-    color: #374151;
-    background: #fffbeb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23d97706'/%3E%3C/svg%3E") no-repeat right 10px center;
-    appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-    transition: border-color .15s, box-shadow .15s;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+/* ── HEADER DESIGN ────────────────────────────────── */
+.header-hero { margin-bottom: 2.5rem; }
+.header-hero h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.025em;
+    margin-top: 0.5rem;
 }
-.orders-prod-select:focus {
-    outline: none;
-    border-color: #d97706;
-    box-shadow: 0 0 0 3px rgba(217,119,6,.15);
-    background-color: #fff;
+.live-badge {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: var(--success);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow-sm);
+    text-transform: uppercase;
 }
-/* ── LOADING STATE ──────────────────────────────── */
-.loading-active .dash-card,
-.loading-active .chart-card,
-.loading-active .table-card {
-    position: relative;
-    pointer-events: none;
-}
-.loading-active .dash-card::after,
-.loading-active .chart-card::after,
-.loading-active .table-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0.6);
-    backdrop-filter: blur(2px);
-    z-index: 10;
-    border-radius: 14px;
-    animation: pulse 1.5s infinite;
+.live-dot {
+    width: 8px; height: 8px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
 }
 @keyframes pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 0.8; }
-    100% { opacity: 0.5; }
+    0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
-/* ── RESPONSIVE OVERRIDES ───────────────────────── */
-@media (max-width: 991.98px) {
-    .page-title { font-size: 1.5rem; }
-    .stat-value { font-size: 22px; }
-    .icon-box   { width: 44px; height: 44px; font-size: 18px; }
+/* ── KPI CARDS ─────────────────────────────────── */
+.kpi-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f1f5f9;
+    height: 100%;
+    position: relative;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+.kpi-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #eff2fe;
+    color: #5c67f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-bottom: 1.2rem;
+}
+.kpi-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: #ecfdf5;
+    color: #10b981;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.kpi-badge.negative {
+    background: #fef2f2;
+    color: #ef4444;
+}
+.kpi-label {
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+}
+.kpi-value {
+    color: #1e293b;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.2;
 }
 
-@media (max-width: 767.98px) {
-    .page-header { margin-bottom: 1.5rem !important; }
-    .dash-card { padding: 1rem !important; }
-    .stat-value { font-size: 20px; }
-    .chart-card, .table-card { padding: 1.25rem !important; }
-    
-    /* Keep 2 columns on small screens instead of 1 if possible, but stack filters */
-    .period-filters { width: 100%; margin-top: 1rem; }
+/* ── MODERN CARDS ─────────────────────────────────── */
+.premium-card {
+    background: #fff;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--card-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+.premium-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+}
+.card-header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.card-title-main {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
 }
 
-@media (max-width: 575.98px) {
-    .stat-value { font-size: 18px; }
-    .stat-label { font-size: 10px; }
-    .dash-table th { font-size: 11px !important; }
-    .dash-table td { font-size: 11px; padding: 8px 5px; }
-    .chart-title { font-size: 11px; }
+/* ── MODERN TABLES ────────────────────────────────── */
+.modern-table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0; 
+    min-width: 800px; /* Forces horizontal scroll on small devices */
+}
+.modern-table thead th {
+    padding: 1rem;
+    font-size: 11px;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.modern-table thead th:nth-child(2) { width: 120px; } /* Date */
+.modern-table thead th:nth-child(4) { width: 110px; } /* Quantity */
+.modern-table thead th:nth-child(5) { width: 130px; } /* Billing */
+
+.modern-table td {
+    padding: 0.85rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.2s ease;
+    background: #fff;
+    white-space: nowrap;
+}
+.modern-table td:nth-child(1),
+.modern-table td:nth-child(3) {
+    white-space: normal; /* Allow text wrapping for long names */
+}
+.modern-table tr:hover td { 
+    background: #fcfdfe;
+}
+
+.table-responsive {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+    border-radius: 12px;
+}
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.status-pill {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+}
+.status-pill.sell { background: #ecfdf5; color: #059669; }
+.status-pill.purchase { background: #fff1f2; color: #e11d48; }
+
+/* ── CUSTOMER LIST ────────────────────────────────── */
+.customer-row {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+.customer-row:hover { background: #f8fafc; }
+.avatar-box {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: #eff2fe;
+    color: #5c67f2;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px;
+}
+
+/* ── FILTER BAR ───────────────────────────────────── */
+.modern-filters {
+    background: #fff;
+    padding: 0.5rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    gap: 0.5rem;
+}
+.filter-item {
+    border: none;
+    background: transparent;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.filter-item:hover { background: #f1f5f9; color: var(--text-primary); }
+.filter-item.active { background: #eff2fe; color: #5c67f2; }
+
+/* ── LOADING ──────────────────────────────────────── */
+.loading-overlay {
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    border-radius: var(--card-radius);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.loading-active .loading-overlay { opacity: 1; pointer-events: all; }
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media (max-width: 991px) {
+    .dashboard-wrapper { padding: 1.2rem; }
+    .header-hero h1 { font-size: 1.8rem; }
+    .stat-value { font-size: 26px; }
 }
 </style>
 
 @section('content')
 
-{{-- ── PAGE HEADER ──────────────────────────────────── --}}
-<div class="page-header d-flex flex-wrap justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center gap-2">
-        <h1 class="page-title">{{ @trans('messages.dashboard') }}</h1>
-        <div class="d-flex align-items-center gap-1 ms-2">
-            <span class="badge bg-amber-soft text-amber px-2 py-1" style="font-size:10px; border-radius:4px; font-weight:700;">SYSTEM LIVE</span>
-        </div>
-    </div>
-    <div class="d-flex align-items-center gap-3">
-        <ol class="breadcrumb d-none d-md-flex mb-0" style="background:transparent; padding:0;">
-            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}" style="color:#d97706; text-decoration:none;">Admin</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Overview</li>
-        </ol>
-    </div>
-</div>
-
-{{-- ── SECTION 1 : GLOBAL SYSTEM OVERVIEW (Static) ───── --}}
-<div class="mb-5">
-    <div class="d-flex align-items-center gap-2 mb-3">
-        <div style="width:4px; height:20px; background:#1c1917; border-radius:2px;"></div>
-        <h2 style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#1c1917; margin:0;">Global System Overview</h2>
-        <span style="font-size:11px; color:#a8a29e; font-weight:500;">(All-time statistics)</span>
-    </div>
-
-    <div class="row g-3 mb-4">
-        {{-- Total Customers --}}
-        <div class="col-6 col-md-3">
-            <div class="card dash-card p-3 border-0" style="background:#fff; height:100%;">
-                <div class="stat-label">Total Customers</div>
-                <div class="d-flex justify-content-between align-items-end mt-1">
-                    <div class="stat-value">{{ number_format($global['totalCustomers']) }}</div>
-                    <div class="icon-box" style="width:32px; height:32px; background:#eff6ff; font-size:14px; color:#3b82f6;"><i class="fa fa-users"></i></div>
-                </div>
+<div class="dashboard-wrapper">
+    {{-- ── HERO SECTION ─────────────────────────────────── --}}
+    <div class="header-hero d-flex flex-wrap justify-content-between align-items-center gap-4">
+        <div>
+            <div class="live-badge">
+                <div class="live-dot"></div>
+                Live Analytics
             </div>
-        </div>
-        {{-- Total Products --}}
-        <div class="col-6 col-md-3">
-            <div class="card dash-card p-3 border-0" style="background:#fff; height:100%;">
-                <div class="stat-label">Total Products</div>
-                <div class="d-flex justify-content-between align-items-end mt-1">
-                    <div class="stat-value">{{ number_format($global['totalProducts']) }}</div>
-                    <div class="icon-box" style="width:32px; height:32px; background:#ecfdf5; font-size:14px; color:#10b981;"><i class="fa fa-cube"></i></div>
-                </div>
-            </div>
-        </div>
-        {{-- Total Sales --}}
-        <div class="col-6 col-md-3">
-            <div class="card dash-card p-3 border-0" style="background:#fff; height:100%;">
-                <div class="stat-label">Total Sales</div>
-                <div class="d-flex justify-content-between align-items-end mt-1">
-                    <div>
-                        <div class="stat-value" style="color:#10b981;">₹{{ number_format($global['allTimeSellRevenue'] / 1000, 1) }}k</div>
-                        <div class="trend neutral">{{ number_format($global['allTimeSellOrders']) }} Sell Orders</div>
-                    </div>
-                    <div class="icon-box" style="width:32px; height:32px; background:#ecfdf5; font-size:14px; color:#10b981;"><i class="fa fa-arrow-trend-up"></i></div>
-                </div>
-            </div>
-        </div>
-        {{-- Total Purchases --}}
-        <div class="col-6 col-md-3">
-            <div class="card dash-card p-3 border-0" style="background:#fff; height:100%;">
-                <div class="stat-label">Total Purchases</div>
-                <div class="d-flex justify-content-between align-items-end mt-1">
-                    <div>
-                        <div class="stat-value" style="color:#ef4444;">₹{{ number_format($global['allTimePurchaseRevenue'] / 1000, 1) }}k</div>
-                        <div class="trend neutral">{{ number_format($global['allTimePurchaseOrders']) }} Purchase Orders</div>
-                    </div>
-                    <div class="icon-box" style="width:32px; height:32px; background:#fef2f2; font-size:14px; color:#ef4444;"><i class="fa fa-arrow-trend-down"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Monthly Grid (Chart) --}}
-    <div class="card chart-card p-4 border-0" style="background:#fff;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <div class="chart-title" style="font-size:12px; color:#1c1917;">Monthly Growth trajectory</div>
-                <div class="chart-sub">System-wide performance for the last 6 months</div>
-            </div>
-            <div class="d-flex gap-3">
-                <div class="d-flex align-items-center gap-1" style="font-size:11px; font-weight:600; color:#44403c;">
-                    <span style="width:10px; height:10px; background:#10b981; border-radius:2px;"></span> Sell
-                </div>
-                <div class="d-flex align-items-center gap-1" style="font-size:11px; font-weight:600; color:#44403c;">
-                    <span style="width:10px; height:10px; background:#ef4444; border-radius:2px;"></span> Purchase
-                </div>
-            </div>
-        </div>
-        <div style="height:280px;">
-            <canvas id="monthlyChart"></canvas>
-        </div>
-    </div>
-</div>
-
-{{-- ── SECTION 2 : PERFORMANCE ANALYTICS (Dynamic AJAX) ── --}}
-<div id="analyticsSection" style="margin: 0 -1.5rem; padding: 2rem 1.5rem; background: #fafaf9; border-top: 2px solid #f5f5f4;">
-    
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-        <div class="d-flex align-items-center gap-3">
-            <div style="width:4px; height:24px; background:#d97706; border-radius:2px;"></div>
-            <div>
-                <h2 style="font-size:16px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#d97706; margin:0;">Period Performance</h2>
-                <div style="font-size:11px; color:#78716c; font-weight:600; margin-top:2px;">ANALYTICS REPORT: <span id="filterLabelBadge" class="text-uppercase">{{ $period['filterLabel'] }}</span></div>
-            </div>
+            <h1>Dashboard</h1>
+            <p class="text-muted fw-medium mb-0">Welcome back, {{ explode(' ', auth()->user()->name)[0] }}. Here is your store summary.</p>
         </div>
         
-        <div class="d-flex flex-wrap align-items-center gap-2 period-filters">
-            <div class="d-flex align-items-center gap-2">
-                <div style="font-size:11px; font-weight:700; color:#a8a29e; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Timeframe:</div>
-                <select id="dashFilter" class="form-select form-select-sm" style="width:130px; font-size:11px; font-weight:600; border-radius:8px; border-color:#e7e5e4; background:#fff; cursor:pointer;">
+        <div class="d-flex flex-wrap gap-3">
+            <div class="modern-filters">
+                <select id="dashFilter" class="form-select border-0 bg-transparent fw-bold text-dark" style="cursor:pointer; min-width: 140px;">
                     <option value="today"         {{ $period['filter'] === 'today'         ? 'selected' : '' }}>Today</option>
                     <option value="yesterday"     {{ $period['filter'] === 'yesterday'     ? 'selected' : '' }}>Yesterday</option>
-                    <option value="current_week"  {{ $period['filter'] === 'current_week'  ? 'selected' : '' }}>Current Week</option>
-                    <option value="current_month" {{ $period['filter'] === 'current_month' ? 'selected' : '' }}>Current Month</option>
-                    <option value="current_year"  {{ $period['filter'] === 'current_year'  ? 'selected' : '' }}>Current Year</option>
+                    <option value="current_week"  {{ $period['filter'] === 'current_week'  ? 'selected' : '' }}>This Week</option>
+                    <option value="current_month" {{ $period['filter'] === 'current_month' ? 'selected' : '' }}>This Month</option>
+                    <option value="current_year"  {{ $period['filter'] === 'current_year'  ? 'selected' : '' }}>This Year</option>
                 </select>
             </div>
-            
-            <div class="d-flex align-items-center gap-2">
-                <div style="font-size:11px; font-weight:700; color:#a8a29e; text-transform:uppercase; letter-spacing:.5px; margin-left:10px; white-space:nowrap;">Product:</div>
-                <select id="orderProductFilter" class="form-select form-select-sm" style="width:150px; font-size:11px; font-weight:600; border-radius:8px; border-color:#e7e5e4; background:#fff; cursor:pointer;">
-                    <option value="">All Categories</option>
+            <div class="modern-filters">
+                <select id="orderProductFilter" class="form-select border-0 bg-transparent fw-bold text-dark" style="cursor:pointer; min-width: 160px;">
+                    <option value="">All Products</option>
                     @foreach($global['products'] as $product)
                         <option value="{{ $product->id }}" {{ $period['productId'] == $product->id ? 'selected' : '' }}>{{ $product->product_name }}</option>
                     @endforeach
@@ -305,71 +314,134 @@
         </div>
     </div>
 
-    {{-- Period Stat Row --}}
-    <div class="row g-3 mb-4">
-        {{-- Period Sales --}}
-        <div class="col-12 col-md-4">
-            <div class="card dash-card p-3 border border-success shadow-sm" style="background:#fff; border-left-width:4px !important;">
-                <div class="stat-label text-success">Period Sales</div>
-                <div class="d-flex align-items-center justify-content-between mt-2">
-                    <div class="stat-value" id="sellRevenueVal" style="color:#10b981;">₹ {{ number_format($period['sellRevenue'], 0) }}</div>
-                    <div class="trend neutral" id="sellOrdersCountVal" style="font-weight:600;">{{ number_format($period['sellOrdersCount']) }} orders</div>
+    {{-- ── KPI SECTION ──────────────────────────────────── --}}
+    <div class="row g-4 mb-5" id="analyticsCards">
+        {{-- Total Sales --}}
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon-box" style="background: #ecfdf5; color: #10b981;">
+                    <i class="fa fa-shopping-cart"></i>
                 </div>
                 @php
-                    $sRevDiff = $period['sellRevenue'] - $period['prevSellRevenue'];
-                    $sRevTrend = $sRevDiff > 0 ? 'up' : ($sRevDiff < 0 ? 'down' : 'neutral');
-                    $sRevPct = $period['prevSellRevenue'] > 0 ? round(abs($sRevDiff) / $period['prevSellRevenue'] * 100, 1) : 0;
+                    $sellDiff = $period['sellRevenue'] - $period['prevSellRevenue'];
+                    $sellPct = $period['prevSellRevenue'] > 0 ? round(abs($sellDiff) / $period['prevSellRevenue'] * 100, 1) : 0;
                 @endphp
-                <div id="sellTrendContainer" class="trend {{ $sRevTrend }} d-flex align-items-center gap-1 mt-2">
-                    <i class="fa {{ $sRevDiff > 0 ? 'fa-arrow-up' : ($sRevDiff < 0 ? 'fa-arrow-down' : 'fa-minus') }}"></i>
-                    <span id="sellTrendLabel">{{ $sRevPct }}% {{ $sRevDiff >= 0 ? 'more' : 'less' }} than prev period</span>
+                <div id="sellTrendBadge" class="kpi-badge {{ $sellDiff >= 0 ? '' : 'negative' }}">
+                    {{ $sellDiff >= 0 ? '+' : '-' }}{{ $sellPct }}%
                 </div>
+                <div class="kpi-label">Sales</div>
+                <div class="kpi-value" id="sellRevenueVal">₹{{ number_format($period['sellRevenue'], 0) }}</div>
             </div>
         </div>
-        {{-- Period Purchases --}}
-        <div class="col-12 col-md-4">
-            <div class="card dash-card p-3 border border-danger shadow-sm" style="background:#fff; border-left-width:4px !important;">
-                <div class="stat-label text-danger">Period Purchases</div>
-                <div class="d-flex align-items-center justify-content-between mt-2">
-                    <div class="stat-value" id="purchaseRevenueVal" style="color:#ef4444;">₹ {{ number_format($period['purchaseRevenue'], 0) }}</div>
-                    <div class="trend neutral" id="purchaseOrdersCountVal" style="font-weight:600;">{{ number_format($period['purchaseOrdersCount']) }} orders</div>
+
+        {{-- Total Purchases --}}
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon-box" style="background: #fff1f2; color: #ef4444;">
+                    <i class="fa fa-truck"></i>
                 </div>
                 @php
-                    $pRevDiff = $period['purchaseRevenue'] - $period['prevPurchaseRevenue'];
-                    $pRevTrend = $pRevDiff > 0 ? 'up' : ($pRevDiff < 0 ? 'down' : 'neutral');
-                    $pRevPct = $period['prevPurchaseRevenue'] > 0 ? round(abs($pRevDiff) / $period['prevPurchaseRevenue'] * 100, 1) : 0;
+                    $purchaseDiff = $period['purchaseRevenue'] - $period['prevPurchaseRevenue'];
+                    $purchasePct = $period['prevPurchaseRevenue'] > 0 ? round(abs($purchaseDiff) / $period['prevPurchaseRevenue'] * 100, 1) : 0;
                 @endphp
-                <div id="purchaseTrendContainer" class="trend {{ $pRevTrend }} d-flex align-items-center gap-1 mt-2">
-                    <i class="fa {{ $pRevDiff > 0 ? 'fa-arrow-up' : ($pRevDiff < 0 ? 'fa-arrow-down' : 'fa-minus') }}"></i>
-                    <span id="purchaseTrendLabel">{{ $pRevPct }}% {{ $pRevDiff >= 0 ? 'more' : 'less' }} than prev period</span>
+                <div id="purchaseTrendBadge" class="kpi-badge {{ $purchaseDiff <= 0 ? '' : 'negative' }}">
+                    {{ $purchaseDiff <= 0 ? '-' : '+' }}{{ $purchasePct }}%
                 </div>
+                <div class="kpi-label">Purchases</div>
+                <div class="kpi-value" id="purchaseRevenueVal">₹{{ number_format($period['purchaseRevenue'], 0) }}</div>
             </div>
         </div>
-        {{-- Period Expenses --}}
-        <div class="col-12 col-md-4">
-            <div class="card dash-card p-3 border-0 shadow-sm" style="background:#fefce8; border: 1px dashed #fde047 !important;">
-                <div class="stat-label" style="color: #854d0e;">Period Expenses</div>
-                <div class="stat-value" id="expensesVal" style="color: #854d0e; margin-top:8px;">₹ {{ number_format($period['expenses'], 0) }}</div>
-                <div class="trend neutral mt-2" style="color: #a16207;"><i class="fa fa-info-circle"></i> General operational costs</div>
+
+        {{-- Total Expenses --}}
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon-box" style="background: #fffbeb; color: #f59e0b;">
+                    <i class="fa fa-money"></i>
+                </div>
+                @php
+                    $expenseDiff = $period['expenses'] - $period['prevExpenses'];
+                    $expensePct = $period['prevExpenses'] > 0 ? round(abs($expenseDiff) / $period['prevExpenses'] * 100, 1) : 0;
+                @endphp
+                <div id="expenseTrendBadge" class="kpi-badge {{ $expenseDiff <= 0 ? '' : 'negative' }}">
+                    {{ $expenseDiff <= 0 ? '-' : '+' }}{{ $expensePct }}%
+                </div>
+                <div class="kpi-label">Expenses</div>
+                <div class="kpi-value" id="expenseVal">₹{{ number_format($period['expenses'], 0) }}</div>
+            </div>
+        </div>
+
+        {{-- Net Profit/Balance --}}
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon-box" style="background: #eff2fe; color: #5c67f2;">
+                    <i class="fa fa-bank"></i>
+                </div>
+                @php
+                    $netProfit = $period['sellRevenue'] - $period['purchaseRevenue'] - $period['expenses'];
+                    $prevNetProfit = $period['prevSellRevenue'] - $period['prevPurchaseRevenue'] - $period['prevExpenses'];
+                    $netDiff = $netProfit - $prevNetProfit;
+                    $netPct = $prevNetProfit != 0 ? round(abs($netDiff) / abs($prevNetProfit) * 100, 1) : 0;
+                @endphp
+                <div id="netTrendBadge" class="kpi-badge {{ $netProfit >= 0 ? '' : 'negative' }}">
+                    {{ $netProfit >= 0 ? '+' : '-' }}{{ $netPct }}%
+                </div>
+                <div class="kpi-label">Net Balance</div>
+                <div class="kpi-value" id="netProfitVal">{{ $netProfit < 0 ? '-' : '' }}₹{{ number_format(abs($netProfit), 0) }}</div>
             </div>
         </div>
     </div>
 
-    {{-- Analysis Grid --}}
-    <div class="row g-4">
-        {{-- Activity Table --}}
+    {{-- ── ANALYTICS GRID ───────────────────────────────── --}}
+    <div class="row g-4 mb-5">
         <div class="col-12 col-xl-8">
-            <div class="card table-card p-4 border-0 shadow-sm" style="background:#fff;">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="section-label mb-0" style="color:#1c1917;">Activity Log — <span id="ordersSectionLabel">{{ $period['filterLabel'] }}</span></div>
-                    <a href="{{ route('admin.order.index') }}" class="btn btn-sm btn-outline-secondary px-3 py-1" style="font-size:10px; font-weight:700; border-radius:20px;">View More</a>
+            <div class="premium-card position-relative" id="chartCardWrapper">
+                <div class="loading-overlay"><div class="spinner-border text-primary"></div></div>
+                <div class="card-header-main">
+                    <h3 class="card-title-main">Revenue Performance</h3>
+                    <div class="d-flex gap-3">
+                        <div class="d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 800;">
+                            <span class="rounded-circle" style="width:8px; height:8px; background:var(--success);"></span> SALES
+                        </div>
+                        <div class="d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 800;">
+                            <span class="rounded-circle" style="width:8px; height:8px; background:var(--danger);"></span> PURCHASES
+                        </div>
+                    </div>
+                </div>
+                <div style="height: 380px;">
+                    <canvas id="mainRevenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-4">
+            <div class="premium-card">
+                <div class="card-header-main">
+                    <h3 class="card-title-main">Top Customers</h3>
+                </div>
+                <div style="height: 250px; position: relative;">
+                    <canvas id="customerPieChart"></canvas>
+                </div>
+                <div id="customerLegend" class="mt-4">
+                    {{-- Populated by JS --}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- ── ACTIVITY & TOP PERFORMERS ────────────────────── --}}
+    <div class="row g-4">
+        <div class="col-12 col-xl-8">
+            <div class="premium-card">
+                <div class="card-header-main">
+                    <h3 class="card-title-main">Recent Orders</h3>
+                    <a href="{{ route('admin.order.index') }}" class="btn btn-sm fw-bold text-primary px-3" style="background: #eff2fe; border-radius: 8px;">View All</a>
                 </div>
                 <div class="table-responsive">
-                    <table class="dash-table">
+                    <table class="modern-table">
                         <thead>
                             <tr>
-                                <th>Client Details</th>
-                                <th>Product Item</th>
+                                <th>Client / Shop</th>
+                                <th>Date</th>
+                                <th>Item</th>
                                 <th class="text-center">Quantity</th>
                                 <th class="text-end">Billing</th>
                             </tr>
@@ -378,90 +450,66 @@
                             @forelse($period['recentOrders'] as $order)
                             <tr>
                                 <td>
-                                    <div class="main-text">{{ $order->customer_name }}</div>
-                                    <div class="sub-text">{{ $order->shop_name }}</div>
-                                </td>
-                                <td>
-                                    <div style="font-weight:600; color:#57534e;">{{ $order->product_name }}</div>
-                                    <div style="font-size:10px; margin-top:2px;">
-                                        @if($order->type === 'sell')
-                                            <span class="badge bg-success" style="font-size:9px;">Sell</span>
-                                        @else
-                                            <span class="badge bg-danger" style="font-size:9px;">Purchase</span>
-                                        @endif
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar-box" style="width: 32px; height: 32px; font-size: 11px; flex-shrink: 0;">
+                                            {{ strtoupper(substr($order->customer_name, 0, 1)) }}
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark" style="font-size: 13.5px;">{{ $order->customer_name }}</div>
+                                            <div class="text-muted" style="font-size: 10.5px; font-weight: 600;">{{ $order->shop_name }}</div>
+                                        </div>
                                     </div>
                                 </td>
-                                <td class="text-center">{{ number_format($order->order_quantity, 0) }} {{ $order->unit }}</td>
-                                <td class="text-end amt">₹ {{ number_format($order->calculated_total, 0) }}</td>
+                                <td>
+                                    <div class="fw-bold text-dark" style="font-size: 13px;">{{ $order->display_date }}</div>
+                                    <div class="text-muted" style="font-size: 9px; font-weight: 800;">RECORDED</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark" style="font-size: 13.5px;">{{ $order->product_name }}</div>
+                                    <div class="mt-1">
+                                        <span class="status-pill {{ $order->type === 'sell' ? 'sell' : 'purchase' }}" style="padding: 2px 8px; font-size: 9px;">
+                                            {{ strtoupper($order->type) }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="fw-bold text-dark" style="font-size: 13.5px;">{{ number_format($order->order_quantity, 0) }}</div>
+                                    <div class="text-muted" style="font-size: 9.5px; font-weight: 800; text-transform: uppercase;">{{ $order->unit }}</div>
+                                </td>
+                                <td class="text-end">
+                                    <div class="fw-bold text-primary" style="font-size: 14.5px;">₹{{ number_format($order->calculated_total, 0) }}</div>
+                                    <div class="text-muted" style="font-size: 9.5px; font-weight: 700;">PROCESSED</div>
+                                </td>
                             </tr>
                             @empty
-                            <tr><td colspan="4" class="text-center py-5" style="color:#a8a29e;">No active orders for this period.</td></tr>
+                            <tr><td colspan="5" class="text-center py-5 text-muted fw-bold">No transactions found</td></tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
-        {{-- Top Lists --}}
         <div class="col-12 col-xl-4">
-            {{-- Top Customers --}}
-            <div class="card table-card p-4 border-0 shadow-sm mb-4" style="background:#fff;">
-                <div class="section-label" style="color:#1c1917;">Top Customers ({{ $period['filterLabel'] }})</div>
+            <div class="premium-card">
+                <div class="card-header-main">
+                    <h3 class="card-title-main">Top Customers</h3>
+                </div>
                 <div id="topCustomersContainer">
-                @forelse($period['topCustomers'] as $c)
-                <div class="cust-row">
-                    <div class="cust-avatar" style="background:#fef3c7; color:#92400e;">{{ strtoupper(substr($c->customer_name, 0, 1)) }}</div>
-                    <div>
-                        <div class="cust-name">{{ $c->customer_name }}</div>
-                        <div class="cust-shop">
-                            {{ number_format($c->total_kg ?? 0, 0) }} kg /
-                            {{ number_format($c->total_nang ?? 0, 0) }} Nang
+                    @forelse($period['topCustomers'] as $c)
+                    <div class="customer-row">
+                        <div class="avatar-box">{{ strtoupper(substr($c->customer_name, 0, 1)) }}</div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold text-dark" style="font-size: 14px;">{{ $c->customer_name }}</div>
+                            <div class="text-muted small fw-bold">{{ number_format($c->total_kg ?? 0, 0) }}kg Volume</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold text-primary" style="font-size: 14px;">{{ $c->order_count }}</div>
+                            <div class="text-muted" style="font-size: 10px; font-weight: 800;">ORDERS</div>
                         </div>
                     </div>
-                    <div class="cust-badge">{{ $c->order_count }}</div>
-                </div>
-                @empty
-                <div style="color:#a8a29e; font-size:12px; text-align:center; padding:20px 0;">N/A</div>
-                @endforelse
-                </div>
-            </div>
-
-            {{-- Top Products Bar --}}
-            <div class="card table-card p-4 border-0 shadow-sm" style="background:#fff;">
-                <div class="section-label" style="color:#1c1917;">Category focus</div>
-                <div style="position:relative; height:140px; margin-bottom:15px;">
-                    <canvas id="productChart"></canvas>
-                </div>
-                <div id="topProductsLegend">
-                    @foreach($period['topProducts'] as $i => $p)
-                    <div class="prod-row">
-                        <div class="prod-label align-items-end">
-                            <span style="font-size:11px;">{{ $p->product_name }}</span>
-                            <div style="text-align: right;">
-                                <span style="font-size:9.5px; color:#10b981; font-weight:700;" title="Sell">Sell: {{ number_format($p->total_sell_qty, 0) }} {{ $p->unit }}</span>
-                                <span style="font-size:9.5px; color:#ef4444; font-weight:700; margin-left:3px;" title="Purchase">Purchase: {{ number_format($p->total_purchase_qty, 0) }} {{ $p->unit }}</span>
-                            </div>
-                        </div>
-                        @php $maxQty = $period['topProducts']->max('total_qty'); @endphp
-                        <div class="prod-bar-wrap" style="height:6px; display:flex;">
-                            <div style="width:{{ $maxQty > 0 ? round($p->total_sell_qty / $maxQty * 100) : 0 }}%; background:#10b981; height:100%;"></div>
-                            <div style="width:{{ $maxQty > 0 ? round($p->total_purchase_qty / $maxQty * 100) : 0 }}%; background:#ef4444; height:100%;"></div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Monthly Detail Bar (Dynamic if needed, currently static 6 months) --}}
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card chart-card p-4 border-0 shadow-sm" style="background:#fff;">
-                <div class="chart-title" style="font-size:12px; color:#1c1917;">System Load — Quantity Analytics</div>
-                <div style="height:180px; margin-top:15px;">
-                    <canvas id="quantityChart"></canvas>
+                    @empty
+                    <div class="text-center py-5 text-muted">No partnerships data</div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -471,168 +519,224 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 (function() {
-    let chartInstances = {};
-    const donutColors = ['#d97706','#3b82f6','#10b981','#8b5cf6','#ef4444'];
-    
-    // Initial Data - Carefully extracted from bifurcated structure
-    const globalData = {!! json_encode($global) !!};
-    const periodData = {!! json_encode($period) !!};
+    let charts = {};
+    const COLORS = {
+        accent: '#ff9933',
+        success: '#10b981',
+        danger: '#ef4444',
+        primary: '#3b82f6',
+        secondary: '#64748b',
+        border: '#f1f5f9'
+    };
 
-    const initCharts = (g, p) => {
-        // ── Monthly Overview ──────────
-        const ctx1 = document.getElementById('monthlyChart').getContext('2d');
-        const revGrad = ctx1.createLinearGradient(0, 0, 0, 260);
-        revGrad.addColorStop(0, 'rgba(217,119,6,.25)');
-        revGrad.addColorStop(1, 'rgba(217,119,6,0)');
+    const initDashboard = () => {
+        const globalData = {!! json_encode($global) !!};
+        const periodData = {!! json_encode($period) !!};
 
-        chartInstances.monthly = new Chart(ctx1, {
+        // ── Main Revenue Chart ──────────────────────────
+        const ctxRev = document.getElementById('mainRevenueChart').getContext('2d');
+        const gradientS = ctxRev.createLinearGradient(0, 0, 0, 400);
+        gradientS.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
+        gradientS.addColorStop(1, 'rgba(16, 185, 129, 0)');
+
+        const gradientP = ctxRev.createLinearGradient(0, 0, 0, 400);
+        gradientP.addColorStop(0, 'rgba(239, 68, 68, 0.1)');
+        gradientP.addColorStop(1, 'rgba(239, 68, 68, 0)');
+
+        charts.revenue = new Chart(ctxRev, {
             type: 'line',
             data: {
-                labels: g.chartLabels,
+                labels: globalData.chartLabels,
                 datasets: [
-                    { label: 'Sell Revenue (₹)', data: g.chartSellRevenue, borderColor: '#10b981', backgroundColor: 'transparent', borderWidth: 2.5, tension: .4, pointBackgroundColor: '#10b981', pointRadius: 4, yAxisID: 'yRev' },
-                    { label: 'Purchase Revenue (₹)', data: g.chartPurchaseRevenue, borderColor: '#ef4444', backgroundColor: 'transparent', borderWidth: 2.5, tension: .4, pointBackgroundColor: '#ef4444', pointRadius: 4, yAxisID: 'yRev' },
+                    {
+                        label: 'Sales',
+                        data: globalData.chartSellRevenue,
+                        borderColor: COLORS.success,
+                        backgroundColor: gradientS,
+                        fill: true,
+                        tension: 0.45,
+                        borderWidth: 4,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointHoverBorderWidth: 4,
+                        pointHoverBorderColor: '#fff',
+                        pointHoverBackgroundColor: COLORS.success
+                    },
+                    {
+                        label: 'Purchases',
+                        data: globalData.chartPurchaseRevenue,
+                        borderColor: COLORS.danger,
+                        backgroundColor: gradientP,
+                        fill: true,
+                        tension: 0.45,
+                        borderWidth: 4,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointHoverBorderWidth: 4,
+                        pointHoverBorderColor: '#fff',
+                        pointHoverBackgroundColor: COLORS.danger
+                    }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false } },
-                scales: { 
-                    yRev: { position: 'left', grid: { color: '#f5f5f4' }, ticks: { font: { size: 10 }, callback: v => '₹' + (v >= 1000 ? (v/1000).toFixed(0)+'k' : v) } },
-                    x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { padding: 15, backgroundColor: '#1e293b', titleFont: { size: 13 }, bodyFont: { size: 14, weight: 'bold' } } },
+                scales: {
+                    y: { grid: { color: COLORS.border, drawBorder: false }, ticks: { font: { weight: 600 }, callback: v => '₹' + (v >= 1000 ? (v/1000).toFixed(0)+'k' : v) } },
+                    x: { grid: { display: false }, ticks: { font: { weight: 600 } } }
                 }
             }
         });
 
-        // ── Top Products Chart ──────────
-        const ctx2 = document.getElementById('productChart').getContext('2d');
-        chartInstances.products = new Chart(ctx2, {
+        // ── Customer Pie Chart ──────────────────────────
+        const ctxPie = document.getElementById('customerPieChart').getContext('2d');
+        charts.pie = new Chart(ctxPie, {
             type: 'doughnut',
             data: {
-                labels: p.topProducts.map(x => x.product_name),
-                datasets: [{ data: p.topProducts.map(x => x.total_qty), backgroundColor: donutColors, borderWidth: 2, borderColor: '#fff' }]
+                labels: periodData.topCustomers.map(c => c.customer_name),
+                datasets: [{
+                    data: periodData.topCustomers.map(c => c.total_amount),
+                    backgroundColor: [COLORS.accent, COLORS.primary, COLORS.success, '#8b5cf6', COLORS.danger],
+                    borderWidth: 0,
+                    hoverOffset: 15
+                }]
             },
-            options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { display: false } } }
-        });
-
-        // ── Quantity Chart ──────────
-        const ctx3 = document.getElementById('quantityChart').getContext('2d');
-        chartInstances.quantity = new Chart(ctx3, {
-            type: 'bar',
-            data: {
-                labels: g.chartLabels,
-                datasets: [{ label: 'Quantity (KG)', data: g.chartQuantity, backgroundColor: '#d97706', borderRadius: 4 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, 
-                scales: { y: { grid: { color: '#f5f5f4' }, ticks: { font: { size: 10 } } }, x: { grid: { display: false } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: { legend: { display: false } }
             }
         });
+
+        updateCustomerLegend(periodData.topCustomers);
+    };
+
+    const updateCustomerLegend = (customers) => {
+        const colors = [COLORS.accent, COLORS.primary, COLORS.success, '#8b5cf6', COLORS.danger];
+        const container = document.getElementById('customerLegend');
+        container.innerHTML = customers.map((c, i) => `
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: ${colors[i % colors.length]}"></div>
+                    <span class="fw-bold text-dark" style="font-size: 12px;">${c.customer_name}</span>
+                </div>
+                <span class="text-muted fw-bold" style="font-size: 11px;">₹${Number(c.total_amount).toLocaleString('en-IN')}</span>
+            </div>
+        `).join('');
     };
 
     const updateDashboard = () => {
         const filter = document.getElementById('dashFilter').value;
         const productId = document.getElementById('orderProductFilter').value;
+        const url = `{{ route('admin.dashboard') }}?filter=${filter}&product_id=${productId}`;
 
-        let url = '{{ route('admin.dashboard') }}?filter=' + filter;
-        if (productId) url += '&product_id=' + productId;
+        document.getElementById('chartCardWrapper').classList.add('loading-active');
 
-        document.getElementById('analyticsSection').classList.add('loading-active');
-        
         fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-            .then(r => r.json())
+            .then(res => res.json())
             .then(data => {
                 const p = data.period;
-
-                // Update UI Labels
-                const prodName = document.getElementById('orderProductFilter').options[document.getElementById('orderProductFilter').selectedIndex].text;
-                const labelPrefix = productId ? `[${prodName}] ` : '';
                 
-                document.getElementById('filterLabelBadge').textContent = labelPrefix + p.filterLabel;
-                document.getElementById('ordersSectionLabel').textContent = labelPrefix + p.filterLabel;
+                // Update Stats
+                const updateVal = (id, val, prefix = '₹') => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        const isNeg = val < 0;
+                        el.textContent = (isNeg ? '-' : '') + prefix + Math.abs(Number(val)).toLocaleString('en-IN');
+                    }
+                };
+                updateVal('sellRevenueVal', p.sellRevenue);
+                updateVal('purchaseRevenueVal', p.purchaseRevenue);
+                updateVal('expenseVal', p.expenses);
+                
+                const netProfit = p.sellRevenue - p.purchaseRevenue - p.expenses;
+                updateVal('netProfitVal', netProfit);
 
-                // Update Period Data
-                document.getElementById('sellOrdersCountVal').textContent = Number(p.sellOrdersCount).toLocaleString('en-IN') + ' orders';
-                document.getElementById('sellRevenueVal').textContent = '₹ ' + Number(p.sellRevenue).toLocaleString('en-IN');
-                document.getElementById('purchaseOrdersCountVal').textContent = Number(p.purchaseOrdersCount).toLocaleString('en-IN') + ' orders';
-                document.getElementById('purchaseRevenueVal').textContent = '₹ ' + Number(p.purchaseRevenue).toLocaleString('en-IN');
-                document.getElementById('expensesVal').textContent = '₹ ' + Number(p.expenses).toLocaleString('en-IN');
+                // Update Trends & Growth
+                const updateBadge = (id, current, prev, inverse = false) => {
+                    const diff = current - prev;
+                    const pct = prev != 0 ? Math.round(Math.abs(diff) / Math.abs(prev) * 100 * 10) / 10 : 0;
+                    const badge = document.getElementById(id);
+                    if (badge) {
+                        badge.textContent = (diff >= 0 ? '+' : '-') + pct + '%';
+                        const isPositive = inverse ? diff <= 0 : diff >= 0;
+                        badge.className = 'kpi-badge ' + (isPositive ? '' : 'negative');
+                    }
+                };
 
-                // Update Trends
-                const sRevDiff = p.sellRevenue - p.prevSellRevenue;
-                const sRevTrendCont = document.getElementById('sellTrendContainer');
-                const sRevPct = p.prevSellRevenue > 0 ? Math.round(Math.abs(sRevDiff) / p.prevSellRevenue * 100 * 10) / 10 : 0;
-                sRevTrendCont.className = 'trend ' + (sRevDiff > 0 ? 'up' : (sRevDiff < 0 ? 'down' : 'neutral')) + ' d-flex align-items-center gap-1 mt-2';
-                sRevTrendCont.querySelector('i').className = 'fa ' + (sRevDiff > 0 ? 'fa-arrow-up' : (sRevDiff < 0 ? 'fa-arrow-down' : 'fa-minus'));
-                document.getElementById('sellTrendLabel').textContent = `${sRevPct}% ${sRevDiff >= 0 ? 'more' : 'less'} than prev period`;
+                updateBadge('sellTrendBadge', p.sellRevenue, p.prevSellRevenue);
+                updateBadge('purchaseTrendBadge', p.purchaseRevenue, p.prevPurchaseRevenue, true);
+                updateBadge('expenseTrendBadge', p.expenses, p.prevExpenses, true);
+                
+                const prevNetProfit = p.prevSellRevenue - p.prevPurchaseRevenue - p.prevExpenses;
+                updateBadge('netTrendBadge', netProfit, prevNetProfit);
 
-                const pRevDiff = p.purchaseRevenue - p.prevPurchaseRevenue;
-                const pRevTrendCont = document.getElementById('purchaseTrendContainer');
-                const pRevPct = p.prevPurchaseRevenue > 0 ? Math.round(Math.abs(pRevDiff) / p.prevPurchaseRevenue * 100 * 10) / 10 : 0;
-                pRevTrendCont.className = 'trend ' + (pRevDiff > 0 ? 'up' : (pRevDiff < 0 ? 'down' : 'neutral')) + ' d-flex align-items-center gap-1 mt-2';
-                pRevTrendCont.querySelector('i').className = 'fa ' + (pRevDiff > 0 ? 'fa-arrow-up' : (pRevDiff < 0 ? 'fa-arrow-down' : 'fa-minus'));
-                document.getElementById('purchaseTrendLabel').textContent = `${pRevPct}% ${pRevDiff >= 0 ? 'more' : 'less'} than prev period`;
-
-                // Update Tables & Lists
+                // Update Table
                 document.getElementById('recentOrdersBody').innerHTML = p.recentOrders.length ? p.recentOrders.map(o => `
                     <tr>
-                        <td><div class="main-text">${o.customer_name}</div><div class="sub-text">${o.shop_name}</div></td>
-                        <td><div style="font-weight:600; color:#57534e;">${o.product_name}</div>
-                            <div style="font-size:10px; margin-top:2px;">
-                                ${o.type === 'sell' ? '<span class="badge bg-success" style="font-size:9px;">Sell</span>' : '<span class="badge bg-danger" style="font-size:9px;">Purchase</span>'}
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="avatar-box" style="width: 32px; height: 32px; font-size: 11px; flex-shrink: 0;">
+                                    ${o.customer_name.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark" style="font-size: 13.5px;">${o.customer_name}</div>
+                                    <div class="text-muted" style="font-size: 10.5px; font-weight: 600;">${o.shop_name}</div>
+                                </div>
                             </div>
                         </td>
-                        <td class="text-center">${Number(o.order_quantity).toLocaleString('en-IN')} ${o.unit}</td>
-                        <td class="text-end amt">₹ ${Number(o.calculated_total).toLocaleString('en-IN')}</td>
-                    </tr>
-                `).join('') : '<tr><td colspan="4" class="text-center py-5" style="color:#a8a29e;">No active orders for this period.</td></tr>';
-
-                document.getElementById('topCustomersContainer').innerHTML = p.topCustomers.length ? p.topCustomers.map(c => `
-                    <div class="cust-row">
-                        <div class="cust-avatar" style="background:#fef3c7; color:#92400e;">${c.customer_name.charAt(0).toUpperCase()}</div>
-                        <div><div class="cust-name">${c.customer_name}</div><div class="cust-shop">${Number(c.total_kg || 0).toLocaleString('en-IN')} kg / ${Number(c.total_nang || 0).toLocaleString('en-IN')} Nang volume</div></div>
-                        <div class="cust-badge">${c.order_count}</div>
-                    </div>
-                `).join('') : '<div style="color:#a8a29e; font-size:12px; text-align:center; padding:20px 0;">N/A</div>';
-
-                // Product Chart & Bar fills
-                const maxQty = Math.max(...p.topProducts.map(x => x.total_qty), 1);
-                document.getElementById('topProductsLegend').innerHTML = p.topProducts.map((pr, i) => `
-                    <div class="prod-row">
-                        <div class="prod-label align-items-end"><span>${pr.product_name}</span>
-                            <div style="text-align: right;">
-                                <span style="font-size:9.5px; color:#10b981; font-weight:700;" title="Sell">Sell: ${Number(pr.total_sell_qty).toLocaleString('en-IN')} ${pr.unit}</span>
-                                <span style="font-size:9.5px; color:#ef4444; font-weight:700; margin-left:3px;" title="Purchase">Purchase: ${Number(pr.total_purchase_qty).toLocaleString('en-IN')} ${pr.unit}</span>
+                        <td>
+                            <div class="fw-bold text-dark" style="font-size: 13px;">${o.display_date}</div>
+                            <div class="text-muted" style="font-size: 9px; font-weight: 800;">RECORDED</div>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark" style="font-size: 13.5px;">${o.product_name}</div>
+                            <div class="mt-1">
+                                <span class="status-pill ${o.type === 'sell' ? 'sell' : 'purchase'}" style="padding: 2px 8px; font-size: 9px;">${o.type.toUpperCase()}</span>
                             </div>
-                        </div>
-                        <div class="prod-bar-wrap" style="height:6px; display:flex;">
-                            <div style="width:${(pr.total_sell_qty/maxQty*100)}%; background:#10b981; height:100%;"></div>
-                            <div style="width:${(pr.total_purchase_qty/maxQty*100)}%; background:#ef4444; height:100%;"></div>
-                        </div>
-                    </div>`).join('');
+                        </td>
+                        <td class="text-center">
+                            <div class="fw-bold text-dark" style="font-size: 13.5px;">${Number(o.order_quantity).toLocaleString()}</div>
+                            <div class="text-muted" style="font-size: 9.5px; font-weight: 800; text-transform: uppercase;">${o.unit}</div>
+                        </td>
+                        <td class="text-end">
+                            <div class="fw-bold text-primary" style="font-size: 14.5px;">₹${Number(o.calculated_total).toLocaleString()}</div>
+                            <div class="text-muted" style="font-size: 9.5px; font-weight: 700;">PROCESSED</div>
+                        </td>
+                    </tr>
+                `).join('') : '<tr><td colspan="5" class="text-center py-5 text-muted fw-bold">No transactions found</td></tr>';
 
-                // Update Chart
-                chartInstances.products.data.labels = p.topProducts.map(x => x.product_name);
-                chartInstances.products.data.datasets[0].data = p.topProducts.map(x => x.total_qty);
-                chartInstances.products.update();
+                // Update Top Customers
+                document.getElementById('topCustomersContainer').innerHTML = p.topCustomers.length ? p.topCustomers.map(c => `
+                    <div class="customer-row">
+                        <div class="avatar-box">${c.customer_name.charAt(0).toUpperCase()}</div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold text-dark" style="font-size: 14px;">${c.customer_name}</div>
+                            <div class="text-muted small fw-bold">${Number(c.total_kg || 0).toLocaleString()}kg Volume</div>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold text-primary" style="font-size: 14px;">${c.order_count}</div>
+                            <div class="text-muted" style="font-size: 10px; font-weight: 800;">ORDERS</div>
+                        </div>
+                    </div>
+                `).join('') : '<div class="text-center py-5 text-muted">No partnerships data</div>';
 
-                document.getElementById('analyticsSection').classList.remove('loading-active');
-            })
-            .catch(err => {
-                console.error("Dashboard Update Failed:", err);
-                document.getElementById('analyticsSection').classList.remove('loading-active');
+                // Update Pie Chart
+                charts.pie.data.labels = p.topCustomers.map(c => c.customer_name);
+                charts.pie.data.datasets[0].data = p.topCustomers.map(c => c.total_amount);
+                charts.pie.update();
+                updateCustomerLegend(p.topCustomers);
+
+                document.getElementById('chartCardWrapper').classList.remove('loading-active');
             });
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        initCharts(globalData, periodData);
-        
-        // Date Filter Change
-        document.getElementById('dashFilter').addEventListener('change', function() {
-            updateDashboard();
-        });
-
-        // Product Filter Change
-        document.getElementById('orderProductFilter').addEventListener('change', function() {
-            updateDashboard();
-        });
+        initDashboard();
+        document.getElementById('dashFilter').addEventListener('change', updateDashboard);
+        document.getElementById('orderProductFilter').addEventListener('change', updateDashboard);
     });
 })();
 </script>

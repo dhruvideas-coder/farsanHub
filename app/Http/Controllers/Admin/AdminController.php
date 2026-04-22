@@ -139,6 +139,10 @@ class AdminController extends Controller
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
+        $prevPeriodExpenses = Expense::where('user_id', $uid)
+            ->whereBetween('date', [$pStart, $pEnd])
+            ->sum('amount');
+
         // ── MONTHLY CHART DATA (last 6 months — always fixed) ────────
         $monthlyData = Order::where('user_id', $uid)
             ->selectRaw("DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%Y-%m') as month,
@@ -187,7 +191,7 @@ class AdminController extends Controller
                          SUM(CASE WHEN LOWER(COALESCE(products.unit, \'kg\')) = \'kg\' THEN orders.order_quantity ELSE 0 END) as total_kg,
                          SUM(CASE WHEN LOWER(COALESCE(products.unit, \'kg\')) = \'nang\' THEN orders.order_quantity ELSE 0 END) as total_nang')
             ->groupBy('customers.customer_name', 'customers.shop_name')
-            ->orderByDesc('order_count')
+            ->orderByDesc('total_amount')
             ->limit(5)
             ->get();
 
@@ -251,6 +255,7 @@ class AdminController extends Controller
                 'prevPurchaseRevenue' => (float)$prevPeriodPurchaseRevenue,
                 
                 'expenses'         => (float)$periodExpenses,
+                'prevExpenses'     => (float)$prevPeriodExpenses,
                 
                 'recentOrders'     => $recentOrders,
                 'topProducts'      => $topProducts,
