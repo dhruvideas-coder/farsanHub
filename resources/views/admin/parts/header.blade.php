@@ -37,7 +37,15 @@
                 class="leading-none nav-link pe-0 d-flex align-items-center justify-content-end animate">
                 <div class="avatar profile-user brround flex-shrink-0 order-2 order-lg-1 d-flex align-items-center justify-content-center shadow-sm"
                      style="background-color:#FF9933; color:white; font-weight:800; font-size:16px; letter-spacing:-0.5px;">
-                     FH
+                     @php
+                         $name = auth()->user()->name;
+                         $words = explode(' ', $name);
+                         $initials = '';
+                         foreach ($words as $word) {
+                             $initials .= strtoupper(substr($word, 0, 1));
+                         }
+                         echo $initials;
+                     @endphp
                 </div>
                 <div class="p-1 text-center d-flex overflow-hidden order-1 order-lg-2">
                     <h6 class="mb-0 ms-1 text-truncate" id="profile-heading">

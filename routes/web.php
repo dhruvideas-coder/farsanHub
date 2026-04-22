@@ -80,6 +80,11 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('monthly-report/product', [App\Http\Controllers\Admin\ReportController::class, 'productReport'])->name('monthly-report.product');
     Route::get('monthly-report/order', [App\Http\Controllers\Admin\ReportController::class, 'orderReport'])->name('monthly-report.order');
 
+    // Users
+    Route::middleware(['super_admin'])->group(function () {
+        Route::resource('user', App\Http\Controllers\Admin\UserController::class);
+    });
+
     // change password
     Route::get('changePassword', [App\Http\Controllers\Admin\AdminController::class, 'changePassword'])->name('changePassword');
     Route::post('changePassword', [App\Http\Controllers\Admin\AdminController::class, 'changePasswordPost'])->name('changePassword.save');

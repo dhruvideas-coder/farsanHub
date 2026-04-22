@@ -153,7 +153,7 @@
 
         .welcome-text {
             color: #6c757d;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             font-size: 1rem;
         }
 
@@ -297,7 +297,7 @@
 
             <!-- Right Form Section -->
             <div class="login-form-container">
-                <div class="text-center mb-4">
+                <div class="text-center">
                     <div class="brand-text-logo">
                         <span class="farsan">Farsan</span><span class="hub">Hub</span>
                     </div>

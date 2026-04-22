@@ -22,7 +22,9 @@ class User extends Authenticatable
         'email',
         'password',
         'google_id',
-        'is_admin'
+        'is_admin',
+        'role',
+        'webpage_url'
     ];
 
     /**
@@ -46,12 +48,22 @@ class User extends Authenticatable
     ];
 
     /**
-     * Check if user is admin
+     * Check if user is admin or super_admin
      *
      * @return bool
      */
     public function isAdmin()
     {
-        return $this->is_admin;
+        return $this->role === 'admin' || $this->role === 'super_admin' || $this->is_admin;
+    }
+
+    /**
+     * Check if user is super_admin
+     *
+     * @return bool
+     */
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super_admin';
     }
 }
