@@ -556,7 +556,7 @@
                         fill: true,
                         tension: 0.45,
                         borderWidth: 4,
-                        pointRadius: 0,
+                        pointRadius: 4,
                         pointHoverRadius: 6,
                         pointHoverBorderWidth: 4,
                         pointHoverBorderColor: '#fff',
@@ -570,7 +570,7 @@
                         fill: true,
                         tension: 0.45,
                         borderWidth: 4,
-                        pointRadius: 0,
+                        pointRadius: 4,
                         pointHoverRadius: 6,
                         pointHoverBorderWidth: 4,
                         pointHoverBorderColor: '#fff',
@@ -722,6 +722,12 @@
                         </div>
                     </div>
                 `).join('') : '<div class="text-center py-5 text-muted">No partnerships data</div>';
+
+                // Update Revenue Chart
+                charts.revenue.data.labels = data.global.chartLabels;
+                charts.revenue.data.datasets[0].data = data.global.chartSellRevenue;
+                charts.revenue.data.datasets[1].data = data.global.chartPurchaseRevenue;
+                charts.revenue.update();
 
                 // Update Pie Chart
                 charts.pie.data.labels = p.topCustomers.map(c => c.customer_name);

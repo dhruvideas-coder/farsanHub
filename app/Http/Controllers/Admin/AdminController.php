@@ -143,27 +143,90 @@ class AdminController extends Controller
             ->whereBetween('date', [$pStart, $pEnd])
             ->sum('amount');
 
-        // ── MONTHLY CHART DATA (last 6 months — always fixed) ────────
-        $monthlyData = Order::where('user_id', $uid)
-            ->selectRaw("DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%Y-%m') as month,
-                         DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%b %Y') as label,
-                         COUNT(*) as order_count,
-                         SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell_revenue,
-                         SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase_revenue,
-                         SUM(order_quantity) as quantity")
-            ->groupByRaw("DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%Y-%m'),
-                          DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%b %Y')")
-            ->orderByRaw("DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%Y-%m') DESC")
-            ->limit(6)
-            ->get()
-            ->reverse()
-            ->values();
+        // ── DYNAMIC CHART DATA (Based on Filter) ─────────────────────
+        $chartLabels          = collect();
+        $chartSellRevenue     = collect();
+        $chartPurchaseRevenue = collect();
+        $chartOrders          = collect();
+        $chartQuantity        = collect();
+        
+        switch ($filter) {
+            case 'today':
+            case 'yesterday':
+                // Hourly data for the specific day
+                $targetDate = ($filter === 'today') ? Carbon::today() : Carbon::yesterday();
+                for ($i = 0; $i < 24; $i++) {
+                    $hour = str_pad($i, 2, '0', STR_PAD_LEFT);
+                    $chartLabels->push($hour . ':00');
+                    
+                    $stats = Order::where('user_id', $uid)
+                        ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$targetDate->toDateString()])
+                        ->whereRaw("HOUR(created_at) = ?", [$i])
+                        ->selectRaw("
+                            SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
+                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase
+                        ")->first();
+                    
+                    $chartSellRevenue->push((float)($stats->sell ?? 0));
+                    $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
+                }
+                break;
 
-        $chartLabels          = $monthlyData->pluck('label');
-        $chartOrders          = $monthlyData->pluck('order_count');
-        $chartSellRevenue     = $monthlyData->pluck('sell_revenue')->map(fn($v) => round($v, 2));
-        $chartPurchaseRevenue = $monthlyData->pluck('purchase_revenue')->map(fn($v) => round($v, 2));
-        $chartQuantity        = $monthlyData->pluck('quantity');
+            case 'current_week':
+                // Last 7 days
+                for ($i = 6; $i >= 0; $i--) {
+                    $day = Carbon::now()->subDays($i);
+                    $chartLabels->push($day->format('D d M'));
+                    
+                    $stats = Order::where('user_id', $uid)
+                        ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$day->toDateString()])
+                        ->selectRaw("
+                            SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
+                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase
+                        ")->first();
+                        
+                    $chartSellRevenue->push((float)($stats->sell ?? 0));
+                    $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
+                }
+                break;
+
+            case 'current_month':
+                // Days of the month (or last 30 days for better visual)
+                for ($i = 29; $i >= 0; $i--) {
+                    $day = Carbon::now()->subDays($i);
+                    $chartLabels->push($day->format('d M'));
+                    
+                    $stats = Order::where('user_id', $uid)
+                        ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$day->toDateString()])
+                        ->selectRaw("
+                            SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
+                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase
+                        ")->first();
+                        
+                    $chartSellRevenue->push((float)($stats->sell ?? 0));
+                    $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
+                }
+                break;
+
+            case 'current_year':
+            default:
+                // Last 12 months
+                for ($i = 11; $i >= 0; $i--) {
+                    $month = Carbon::now()->subMonths($i);
+                    $chartLabels->push($month->format('M Y'));
+                    
+                    $stats = Order::where('user_id', $uid)
+                        ->whereRaw("DATE_FORMAT(COALESCE(order_date, created_at), '%Y-%m') = ?", [$month->format('Y-m')])
+                        ->selectRaw("
+                            SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
+                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase
+                        ")->first();
+                        
+                    $chartSellRevenue->push((float)($stats->sell ?? 0));
+                    $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
+                }
+                break;
+        }
 
         // ── TOP 5 PRODUCTS (filtered by date) ────────────────────────
         $topProducts = Order::where('orders.user_id', $uid)
