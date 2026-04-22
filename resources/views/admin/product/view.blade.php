@@ -29,7 +29,7 @@
                                     data-bs-toggle="modal" data-bs-target="#imageModal"
                                     data-image="{{ asset('storage/' . $product->product_image) }}">
                             @else
-                                <img src="{{ asset('images/logo.png') }}" alt="img" class="rounded" width="44" height="44" style="object-fit:cover;">
+                                <div class="rounded d-flex align-items-center justify-content-center mx-auto" style="width:44px; height:44px; background-color:#FF9933; color:white; font-weight:800; font-size:16px; letter-spacing: -0.5px;">FH</div>
                             @endif
                         </td>
                         <td class="fw-semibold">{{ ucfirst($product->product_name ?? '-') }}</td>

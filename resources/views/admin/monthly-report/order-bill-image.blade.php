@@ -450,8 +450,9 @@ body {
     {{-- ── HEADER ── --}}
     <div class="header">
         <div class="brand-left">
-            <img src="{{ asset('images/logo.png') }}" class="logo" alt="Logo"
-                 onerror="this.style.display='none'">
+            <div class="logo" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF9933, #e07a1a); color: white; font-weight: 900; font-size: 24px; letter-spacing: -1px;">
+                 FH
+            </div>
             <div>
                 <div class="brand-name">BHRAMANI KHANDVI HOUSE</div>
                 <div class="brand-sub">Premium Snacks &amp; Catering &nbsp;·&nbsp; Vadodara, Gujarat</div>

@@ -14,8 +14,7 @@
                                 data-bs-toggle="modal" data-bs-target="#imageModal"
                                 data-image="{{ asset('storage/' . $customer->customer_image) }}">
                         @else
-                            <img src="{{ asset('images/logo.png') }}" alt="Profile" class="rounded-circle"
-                                width="100" height="100">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width:100px; height:100px; background-color:#FF9933; color:white; font-weight:800; font-size:36px; letter-spacing:-1px;">FH</div>
                         @endif
 
                         {{-- Title: Shop Name --}}

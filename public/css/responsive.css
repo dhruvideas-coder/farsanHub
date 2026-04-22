@@ -1,191 +1,116 @@
 /* ============================================================
    FarsanHub — Responsive Styles
-   All @media queries: Webpage, Admin Sidebar, Guest/Login
+   All @media queries: Landing Page, Admin Sidebar, Guest/Login
    ============================================================ */
 
 /* ─────────────────────────────────────────────────────────────
-   WEBPAGE: Gallery
+   LANDING PAGE: Navbar / Hamburger
    ───────────────────────────────────────────────────────────── */
-@media (max-width: 767.98px) {
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .gallery-item-large {
-        grid-column: span 2;
-    }
-}
-
-@media (max-width: 479.98px) {
-    .gallery-grid {
-        grid-template-columns: 1fr;
-    }
-    .gallery-item-large {
-        grid-column: span 1;
-        aspect-ratio: 4/3;
-    }
+@media (max-width: 991.98px) {
+    .fh-nav-links   { display: none; }
+    .fh-hamburger   { display: flex; }
 }
 
 /* ─────────────────────────────────────────────────────────────
-   WEBPAGE: Mobile Navbar (hamburger dropdown / sidebar)
+   LANDING PAGE: Hero
    ───────────────────────────────────────────────────────────── */
 @media (max-width: 991.98px) {
-    /* Collapsed nav gets brown brand theme */
-    #navMenu {
-        background: var(--brown);
-        border-radius: var(--radius-md);
-        margin-top: .6rem;
-        padding: .75rem .5rem;
-        box-shadow: var(--shadow-lg);
-        border: 1px solid rgba(255, 255, 255, .1);
-    }
-
-    /* Nav links: light text on dark brown */
-    #navMenu .nav-link {
-        color: rgba(255, 255, 255, .85) !important;
-        padding: .65rem 1rem !important;
-        border-radius: var(--radius-sm);
-        margin-bottom: .2rem;
-    }
-
-    /* Remove underline animation inside mobile menu */
-    #navMenu .nav-link::after {
-        display: none;
-    }
-
-    #navMenu .nav-link:hover,
-    #navMenu .nav-link.active {
-        color: var(--yellow) !important;
-        background: rgba(255, 255, 255, .1);
-    }
-
-    /* Language toggle button */
-    #navMenu .btn-lang {
-        background: rgba(255, 153, 51, .2);
-        border-color: var(--saffron);
-        color: var(--saffron);
-        width: 100%;
-        justify-content: center;
-    }
-
-    #navMenu .btn-lang:hover {
-        background: var(--saffron);
-        color: #fff;
-    }
-
-    /* Admin login button */
-    #navMenu .btn-admin {
-        background: var(--saffron);
-        color: #fff;
-        width: 100%;
-        justify-content: center;
-    }
-
-    #navMenu .btn-admin:hover {
-        background: var(--saffron-dark);
-        color: #fff;
-    }
-
-    /* Remove Bootstrap lg-specific margins inside mobile menu */
-    #navMenu .ms-lg-2,
-    #navMenu .ms-lg-1 {
-        margin-left: 0 !important;
-        margin-top: .4rem;
-    }
-
-    /* Toggler: brown icon on off-white navbar */
-    .navbar-toggler {
-        padding: .35rem .5rem;
-    }
-
-    .navbar-toggler:focus {
-        box-shadow: 0 0 0 3px rgba(255, 153, 51, .3);
-    }
-
-    .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%235C3A21' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2.5' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    }
+    .fh-hero        { padding: 60px 0 80px; min-height: auto; }
+    .fh-hero-row    { min-height: auto; flex-direction: column; text-align: center; }
+    .fh-hero-sub    { margin-left: auto; margin-right: auto; }
+    .fh-hero-cta    { justify-content: center; }
+    .fh-hero-trust  { justify-content: center; }
+    .fh-hero-visual { justify-content: center !important; }
+    .fh-hero-stats-row { margin-left: auto; margin-right: auto; }
+    .fh-hero-visual-wrap { animation: none; }
+    .fh-browser-mockup { max-width: 520px; width: 100%; }
+    .fh-fn-1, .fh-fn-2 { display: none; } /* hide floating cards on tablet */
 }
 
-/* ─────────────────────────────────────────────────────────────
-   WEBPAGE: General Layout Breakpoints
-   ───────────────────────────────────────────────────────────── */
-
-/* Tablet: 768px – 991.98px */
-@media (max-width: 991.98px) {
-    .section-pad        { padding-top: 70px; padding-bottom: 70px; }
-    .hero-content       { padding-top: 100px; padding-bottom: 60px; }
-    .hero-title         { font-size: clamp(2rem, 6vw, 3rem); }
-    .about-img-badge    { right: -.5rem; bottom: -.5rem; }
-
-    /* Hero: center text when image column is hidden */
-    .hero-text-col                       { text-align: center; }
-    .hero-text-col .hero-subtitle        { margin-left: auto; margin-right: auto; }
-    .hero-text-col .hero-cta             { justify-content: center; }
-    .hero-text-col .hero-stats           { justify-content: center; }
-    .hero-text-col .hero-badge           { display: inline-block; }
-
-    /* About: spacing below stacked image */
-    .about-image-grid   { margin-bottom: 2rem; }
-    /* Contain the badge from overflowing right edge */
-    .col-lg-5 .about-image-grid { overflow: hidden; padding-bottom: 1.5rem; }
-}
-
-/* Mobile: < 768px */
-@media (max-width: 767.98px) {
-    :root { --navbar-h: 64px; }
-
-    .section-pad            { padding-top: 55px; padding-bottom: 55px; }
-    .hero-title             { font-size: 2rem; }
-    .hero-subtitle          { font-size: .95rem; }
-    .hero-stats             { gap: 1.5rem; flex-wrap: wrap; }
-    .stat-divider           { display: none; }
-    .hero-cta               { gap: .75rem !important; }
-    .hero-cta .btn          { width: 100%; text-align: center; justify-content: center; }
-    .contact-form-card      { padding: 1.25rem; }
-    .about-img-badge        { display: none; }
-    .footer-hours li        { flex-direction: column; gap: .2rem; }
-
-    /* Product cards: 1 per row on small devices */
-    .product-card           { max-width: 100%; }
-
-    /* Section titles */
-    .section-subtitle       { font-size: .95rem; }
-
-    /* Gallery: 2 columns */
-    .gallery-grid           { gap: .6rem; }
-
-    /* Hero: remove full-screen forced height on mobile */
-    .hero-section           { min-height: auto; }
-    .min-vh-hero            { min-height: auto; }
-}
-
-/* Small mobile: < 576px */
 @media (max-width: 575.98px) {
-    .section-title          { font-size: 1.7rem; }
-    .float-whatsapp         { right: 1rem; bottom: 5rem; }
-    .back-to-top            { right: 1rem; bottom: 1rem; }
-    .stat-number            { font-size: 1.3rem; }
-    .stat-label             { font-size: .7rem; }
-    .hero-stats             { justify-content: space-around; }
-    .wholesale-features     { gap: .5rem; }
-    .ws-feature             { font-size: .8rem; padding: .4rem .9rem; }
-    .testimonial-card       { padding: 1.25rem; }
+    .fh-hero        { padding: 50px 0 70px; }
+    .fh-hero-title  { font-size: 2rem; }
+    .fh-hero-sub    { font-size: .95rem; }
+    .fh-hero-cta .fh-btn-primary,
+    .fh-hero-cta .fh-btn-ghost { width: 100%; justify-content: center; }
+    .fh-hero-trust  { gap: .75rem; }
+    .fh-hero-stats-row { width: 100%; justify-content: center; padding: .75rem 1rem; }
+    .fh-hero-stat { padding: 0 .75rem; }
+    .fh-hs-num { font-size: 1.2rem; }
+    .fh-browser-content { height: 260px; }
+    .fh-ss-tab span { display: none; }
+    .fh-ss-tab { padding: .5rem .7rem; }
+}
 
-    /* Hero: tighter padding and font */
-    .hero-content           { padding-top: 85px; padding-bottom: 40px; }
-    .hero-title             { font-size: 1.75rem; line-height: 1.2; }
-    .hero-badge             { font-size: .75rem; }
-    .hero-section           { min-height: auto; }
-    .min-vh-hero            { min-height: auto; }
 
-    /* About section */
-    .about-feature-card     { padding: 1rem; }
+/* ─────────────────────────────────────────────────────────────
+   LANDING PAGE: Sections general
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 991.98px) {
+    .fh-section                 { padding: 70px 0; }
+    .fh-stats-section           { padding: 70px 0; }
+    .fh-cta-section             { padding: 70px 0; }
+}
 
-    /* Footer bottom: stack on very small screens */
-    .footer-bottom .container { flex-direction: column; text-align: center; gap: .5rem; }
+@media (max-width: 767.98px) {
+    .fh-section                 { padding: 55px 0; }
+    .fh-stats-section           { padding: 55px 0; }
+    .fh-cta-section             { padding: 55px 0; }
+    :root { --navbar-h: 64px; }
+}
 
-    /* Navbar brand: shorten text */
-    .brand-sub              { font-size: .65rem; }
+/* ─────────────────────────────────────────────────────────────
+   LANDING PAGE: Module cards
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 575.98px) {
+    .fh-module-card { padding: 1.5rem; }
+    .fh-section-title { font-size: 1.75rem; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LANDING PAGE: Workflow cards grid
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 575.98px) {
+    .fh-workflow-cards { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LANDING PAGE: Stats
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 575.98px) {
+    .fh-stat-num  { font-size: 2.2rem; }
+    .fh-stat-card { padding: 1.5rem 1rem; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LANDING PAGE: CTA section
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 575.98px) {
+    .fh-cta-btns .fh-btn-primary,
+    .fh-cta-btns .fh-btn-whatsapp { width: 100%; justify-content: center; }
+    .fh-cta-title { font-size: 1.7rem; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LANDING PAGE: Contact form
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 575.98px) {
+    .fh-contact-form-card { padding: 1.5rem; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LANDING PAGE: Footer
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 575.98px) {
+    .fh-footer-bottom .container { flex-direction: column; text-align: center; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LANDING PAGE: Floating buttons
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 575.98px) {
+    .fh-float-wa  { right: 1rem; bottom: 5rem; }
+    .fh-back-top  { right: 1rem; bottom: 1rem; }
 }
 
 /* ─────────────────────────────────────────────────────────────

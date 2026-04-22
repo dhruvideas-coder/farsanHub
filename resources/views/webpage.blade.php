@@ -5,614 +5,688 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  {{-- Primary SEO --}}
-  <title>Bhramani Khandavi House – Authentic Gujarati Farsan | Vadodara</title>
-  <meta name="description" content="Bhramani Khandavi House – Best Khandavi, Samosa, Khaman, Dhokla & Gujarati Farsan in Shubhanpura, Vadodara. Wholesale & Retail orders available." />
-  <meta name="keywords" content="Khandavi, Farsan, Gujarati Farsan, Samosa, Khaman, Dhokla, Patra, Vadodara, Baroda, Shubhanpura, wholesale farsan" />
-  <meta name="author" content="Bhramani Khandavi House" />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="{{ url('/home') }}" />
+  <title>FarsanHub – Smart Business Management for Farsan Shops</title>
+  <meta name="description" content="FarsanHub is a complete business management portal for Farsan shops. Manage orders, products, customers, expenses, and reports — all in one place." />
+  <meta name="keywords" content="FarsanHub, Farsan Business Software, Order Management, Customer Management, Expense Tracking, Gujarati Business Portal" />
+  <meta name="author" content="FarsanHub" />
 
-  {{-- CSRF meta (Laravel) --}}
-  <meta name="csrf-token" content="{{ csrf_token() }}" />
-
-  {{-- Open Graph --}}
-  <meta property="og:title" content="Bhramani Khandavi House – Authentic Gujarati Farsan" />
-  <meta property="og:description" content="Fresh, hygienic & traditionally made Gujarati Farsan. Wholesale & Retail. Vadodara, Gujarat." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="{{ url('/home') }}" />
-  <meta property="og:image" content="{{ asset('images/farsan/og-image.webp') }}" />
-  <meta property="og:locale" content="en_IN" />
-
-  {{-- Twitter Card --}}
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Bhramani Khandavi House" />
-  <meta name="twitter:description" content="Authentic Gujarati Farsan – Khandavi, Samosa, Khaman & more. Vadodara." />
-
-  {{-- Content Security Policy --}}
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data:; script-src 'self' https://cdn.jsdelivr.net https://unpkg.com 'unsafe-inline'; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net data:; img-src 'self' data: https: blob:; connect-src 'self' https:; frame-src https://www.google.com;" />
-
-  {{-- Favicon --}}
   <link rel="icon" type="image/svg+xml" href="{{ asset('images/farsan-favicon.svg') }}" />
 
-  {{-- Google Fonts: Poppins + Noto Sans Gujarati --}}
+  {{-- Google Fonts --}}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  {{-- Bootstrap 5 CSS --}}
+  {{-- Bootstrap 5 --}}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
-
   {{-- Bootstrap Icons --}}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-
-  {{-- AOS Animate on Scroll --}}
+  {{-- AOS --}}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
 
   {{-- Custom CSS --}}
   <link rel="stylesheet" href="{{ asset('css/webpage.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/responsive.css') }}" />
-
-  {{-- JSON-LD Structured Data --}}
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": "{{ url('/') }}",
-    "name": "Bhramani Khandavi House",
-    "alternateName": "બ્રાહ્માણી ખાંડવી હાઉસ",
-    "description": "Authentic Gujarati Farsan shop specializing in Khandavi, Samosa, Khaman, Dhokla, Patra and more. Wholesale and retail orders available.",
-    "url": "{{ url('/') }}",
-    "telephone": "+91-9574659456",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Shubhanpura Area",
-      "addressLocality": "Vadodara",
-      "addressRegion": "Gujarat",
-      "postalCode": "390023",
-      "addressCountry": "IN"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": "22.3219",
-      "longitude": "73.1906"
-    },
-    "openingHoursSpecification": [
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-        "opens": "07:00",
-        "closes": "21:00"
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": "Sunday",
-        "opens": "07:00",
-        "closes": "13:00"
-      }
-    ],
-    "servesCuisine": "Gujarati",
-    "priceRange": "₹"
-  }
-  </script>
 </head>
 <body>
 
-{{-- ===================== NAVBAR ===================== --}}
-<nav class="navbar navbar-expand-lg navbar-light sticky-top" id="mainNav" aria-label="Main navigation">
+{{-- ══════════════════ NAVBAR ══════════════════ --}}
+<nav class="fh-navbar" id="fhNav" aria-label="Main navigation">
   <div class="container">
-    <a class="navbar-brand d-flex align-items-center gap-2" href="#home">
-      <div class="logo-icon" aria-hidden="true">
-             <img src="{{ asset('images/logo.png') }}" alt="logo" width="42" height="42">
-      <!-- <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="21" cy="21" r="21" fill="#FF9933"/>
-          <text x="21" y="27" text-anchor="middle" font-size="20" font-family="serif" fill="white">ભ</text>
-        </svg> -->
-      </div>
-      <div>
-        <span class="brand-name" data-en="Bhramani Khandavi House" data-gu="બ્રાહ્માણી ખાંડવી હાઉસ">Bhramani Khandavi House</span>
-        <small class="brand-sub d-block" data-en="Authentic Gujarati Farsan" data-gu="ભક્તિથી ભરપુર સ્વાદ">Authentic Gujarati Farsan</small>
-      </div>
-    </a>
+    <div class="fh-nav-inner">
 
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      {{-- Brand --}}
+      <a class="fh-brand" href="#hero" style="text-decoration:none;">
+        <div class="brand-text-logo" style="font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; line-height: 1.1; display: flex; flex-direction: column;">
+            <div><span style="color: #FF9933;">Farsan</span><span style="color: #3d2200;">Hub</span></div>
+            <div style="font-size: 0.65rem; color: #6c757d; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;">Business Portal</div>
+        </div>
+      </a>
 
-    <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
-        <li class="nav-item"><a class="nav-link" href="#home"       data-en="Home"       data-gu="હોમ">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about"      data-en="About Us"   data-gu="અમારા વિશે">About Us</a></li>
-        <li class="nav-item"><a class="nav-link" href="#products"   data-en="Products"   data-gu="ઉત્પાદનો">Products</a></li>
-        <li class="nav-item"><a class="nav-link" href="#wholesale"  data-en="Wholesale"  data-gu="જથ્થાબંધ">Wholesale</a></li>
-        <li class="nav-item"><a class="nav-link" href="#gallery"    data-en="Gallery"    data-gu="ગેલેરી">Gallery</a></li>
-        <li class="nav-item"><a class="nav-link" href="#testimonials" data-en="Reviews"  data-gu="સમીક્ષાઓ">Reviews</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contact"    data-en="Contact"    data-gu="સંપર્ક">Contact</a></li>
-        <li class="nav-item ms-lg-2 d-flex gap-2 align-items-center">
-          <button class="btn btn-lang d-flex align-items-center" id="langToggle" aria-label="Switch language">
-            <i class="bi bi-translate me-1"></i>
-            <span id="langLabel">ગુજરાતી</span>
-          </button>
-          <a href="{{ route('login') }}" class="btn btn-admin d-flex align-items-center" aria-label="Admin Login">
-            <i class="bi bi-shield-lock me-1"></i>Admin
-          </a>
-        </li>
+      {{-- Desktop Nav --}}
+      <ul class="fh-nav-links" id="fhNavLinks">
+        <li><a href="#hero"     class="fh-nav-link">Home</a></li>
+        <li><a href="#modules"  class="fh-nav-link">Features</a></li>
+        <li><a href="#workflow" class="fh-nav-link">How It Works</a></li>
+        <li><a href="#stats"    class="fh-nav-link">Why Us</a></li>
+        <li><a href="#contact"  class="fh-nav-link">Contact</a></li>
       </ul>
+
+      {{-- CTA --}}
+      <div class="fh-nav-actions">
+        <a href="{{ route('login') }}" class="fh-btn-login">
+          <i class="bi bi-shield-lock-fill me-1"></i>Admin Login
+        </a>
+        <button class="fh-hamburger" id="fhHamburger" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
     </div>
+  </div>
+
+  {{-- Mobile Menu --}}
+  <div class="fh-mobile-menu" id="fhMobileMenu" aria-hidden="true">
+    <ul>
+      <li><a href="#hero"     class="fh-mobile-link">Home</a></li>
+      <li><a href="#modules"  class="fh-mobile-link">Features</a></li>
+      <li><a href="#workflow" class="fh-mobile-link">How It Works</a></li>
+      <li><a href="#stats"    class="fh-mobile-link">Why Us</a></li>
+      <li><a href="#contact"  class="fh-mobile-link">Contact</a></li>
+      <li class="fh-mobile-cta">
+        <a href="{{ route('login') }}" class="fh-btn-login w-100 justify-content-center">
+          <i class="bi bi-shield-lock-fill me-2"></i>Admin Login
+        </a>
+      </li>
+    </ul>
   </div>
 </nav>
 
-{{-- ===================== HERO ===================== --}}
-<section id="home" class="hero-section" aria-label="Hero banner">
-  <div class="hero-overlay"></div>
-  <div class="hero-bg-pattern" aria-hidden="true"></div>
-  <div class="container hero-content">
-    <div class="row align-items-center min-vh-hero">
-      <div class="col-12 col-lg-7 hero-text-col" data-aos="fade-right" data-aos-duration="900">
-        <span class="hero-badge"
-        data-en="🕉️ Pure Taste • Pure Tradition"
-        data-gu="🕉️ શુદ્ધ સ્વાદ • શુદ્ધ પરંપરા">
-        🕉️ Pure Taste • Pure Tradition
-        </span>
+{{-- ══════════════════ HERO ══════════════════ --}}
+<section id="hero" class="fh-hero" aria-label="Hero">
 
-        <h1 class="hero-title">
-          <span data-en="Satvik Gujarati" data-gu="સાત્વિક ગુજરાતી">Satvik Gujarati</span><br>
-          <span class="text-highlight" data-en="Farsan with Devotion" data-gu="ભક્તિ સાથેનું ફરસાણ">
-            Farsan with Devotion
-          </span>
+  {{-- Animated background particles --}}
+  <div class="fh-hero-particles" aria-hidden="true">
+    <span class="fh-particle" style="--x:10%;--y:20%;--d:6s;--s:4px"></span>
+    <span class="fh-particle" style="--x:25%;--y:60%;--d:8s;--s:3px"></span>
+    <span class="fh-particle" style="--x:50%;--y:15%;--d:5s;--s:5px"></span>
+    <span class="fh-particle" style="--x:70%;--y:75%;--d:7s;--s:3px"></span>
+    <span class="fh-particle" style="--x:85%;--y:35%;--d:9s;--s:4px"></span>
+    <span class="fh-particle" style="--x:40%;--y:85%;--d:6.5s;--s:3px"></span>
+    <span class="fh-particle" style="--x:92%;--y:10%;--d:8.5s;--s:5px"></span>
+    <span class="fh-particle" style="--x:60%;--y:50%;--d:7.5s;--s:2px"></span>
+  </div>
+
+  {{-- Decorative orbs --}}
+  <div class="fh-hero-orb fh-orb-1" aria-hidden="true"></div>
+  <div class="fh-hero-orb fh-orb-2" aria-hidden="true"></div>
+  <div class="fh-hero-orb fh-orb-3" aria-hidden="true"></div>
+  <div class="fh-hero-grid" aria-hidden="true"></div>
+
+  <div class="container position-relative" style="z-index:2">
+    <div class="row align-items-center fh-hero-row">
+
+      {{-- Text Column --}}
+      <div class="col-lg-6 fh-hero-text" data-aos="fade-right" data-aos-duration="1000">
+
+        <div class="fh-hero-badge">
+          <span class="fh-badge-dot"></span>
+          <i class="bi bi-stars me-1"></i>All-in-One Business Portal
+        </div>
+
+        <h1 class="fh-hero-title">
+          Manage Your<br>
+          <span class="fh-hero-gradient">Farsan Business</span><br>
+          Smarter &amp; Faster
         </h1>
 
-        <p class="hero-subtitle"
-          data-en="Prepared with devotion and blessed before serving. Fresh Khandavi, Samosa, Khaman, Dhokla & more — pure ingredients, authentic taste, and traditional recipes."
-          data-gu="ભક્તિથી તૈયાર અને પ્રસાદરૂપે અર્પણ કરાયેલ. તાજી ખાંડવી, સામોસા, ખમણ, ઢોકળા અને વધુ — શુદ્ધ સામગ્રી, અસલી સ્વાદ અને પરંપરાગત રેસિપી.">
-          Prepared with devotion and blessed before serving. Fresh Khandavi, Samosa, Khaman, Dhokla & more — pure ingredients, authentic taste, and traditional recipes.
+        <p class="fh-hero-sub">
+          FarsanHub gives you complete control &mdash; track orders, manage products, monitor customers, analyse expenses and generate reports. Built for Farsan businesses, powered by simplicity.
         </p>
-        <div class="hero-cta d-flex flex-wrap gap-3">
-          <a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20place%20an%20order" class="btn btn-primary-custom btn-lg" target="_blank" rel="noopener noreferrer" data-en="Order on WhatsApp" data-gu="WhatsApp પર ઓર્ડર કરો">
-            <i class="bi bi-whatsapp me-2"></i>Order on WhatsApp
+
+        <div class="fh-hero-stats-row">
+          <div class="fh-hero-stat">
+            <span class="fh-hs-num">1,240+</span>
+            <span class="fh-hs-label">Orders</span>
+          </div>
+          <div class="fh-hero-stat-div"></div>
+          <div class="fh-hero-stat">
+            <span class="fh-hs-num">6</span>
+            <span class="fh-hs-label">Modules</span>
+          </div>
+          <div class="fh-hero-stat-div"></div>
+          <div class="fh-hero-stat">
+            <span class="fh-hs-num">100%</span>
+            <span class="fh-hs-label">Mobile Ready</span>
+          </div>
+        </div>
+
+        <div class="fh-hero-cta">
+          <a href="{{ route('login') }}" class="fh-btn-primary fh-btn-hero">
+            <i class="bi bi-rocket-takeoff-fill me-2"></i>Open Portal
+            <span class="fh-btn-shine"></span>
           </a>
-          <a href="#products" class="btn btn-outline-custom btn-lg" data-en="View Products" data-gu="ઉત્પાદનો જુઓ">
-            <i class="bi bi-grid me-2"></i>View Products
+          <a href="#modules" class="fh-btn-ghost">
+            <i class="bi bi-play-circle-fill me-2"></i>Explore Features
           </a>
         </div>
-        <div class="hero-stats d-flex gap-4 mt-4">
-          <div class="stat-item">
-            <span class="stat-number">500+</span>
-            <span class="stat-label" data-en="Happy Customers" data-gu="ખુશ ગ્રાહકો">Happy Customers</span>
+
+        <div class="fh-hero-trust">
+          <div class="fh-trust-item">
+            <i class="bi bi-shield-check-fill"></i>
+            <span>Secure Login</span>
           </div>
-          <div class="stat-divider" aria-hidden="true"></div>
-          <div class="stat-item">
-            <span class="stat-number">5+</span>
-            <span class="stat-label" data-en="Years of Taste" data-gu="સ્વાદના વર્ષ">Years of Taste</span>
+          <div class="fh-trust-item">
+            <i class="bi bi-translate"></i>
+            <span>Gujarati &amp; English</span>
           </div>
-          <div class="stat-divider" aria-hidden="true"></div>
-          <div class="stat-item">
-            <span class="stat-number">7+</span>
-            <span class="stat-label" data-en="Farsan Items" data-gu="ફરસાણ આઇટમ">Farsan Items</span>
+          <div class="fh-trust-item">
+            <i class="bi bi-phone-fill"></i>
+            <span>Mobile Ready</span>
           </div>
         </div>
       </div>
-      <div class="col-lg-5 d-none d-lg-flex justify-content-end" data-aos="fade-left" data-aos-duration="900" data-aos-delay="200">
-        <div class="hero-image-wrap">
-          <div class="hero-dish hero-dish-1">
-            <img src="{{ asset('images/farsan/khandvi.png') }}" alt="Fresh Khandavi" loading="eager" width="200" height="200"
-              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><rect fill=%22%23FF993322%22 width=%22200%22 height=%22200%22 rx=%22100%22/><text x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 font-size=%2240%22>🥗</text></svg>'" />
-            <span class="dish-label" data-en="Khandavi" data-gu="ખાંડવી">Khandavi</span>
+
+      {{-- Advanced Visual Column --}}
+      <div class="col-lg-6 fh-hero-visual" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+        <div class="fh-hero-visual-wrap">
+
+          <div class="fh-browser-mockup">
+            <div class="fh-browser-bar">
+              <div class="fh-browser-dots">
+                <span class="fh-dot red"></span>
+                <span class="fh-dot yellow"></span>
+                <span class="fh-dot green"></span>
+              </div>
+              <div class="fh-browser-url">
+                <i class="bi bi-lock-fill" style="color:#4ade80;font-size:.65rem"></i>
+                farsan<strong>hub</strong>.com/admin
+              </div>
+              <div class="fh-browser-actions">
+                <i class="bi bi-arrow-clockwise" style="opacity:.4"></i>
+              </div>
+            </div>
+            <div class="fh-browser-content">
+              <div class="fh-preview-sidebar">
+                <div class="fh-psb-logo"><i class="bi bi-grid-fill"></i></div>
+                <div class="fh-psb-item active"><i class="bi bi-speedometer2"></i></div>
+                <div class="fh-psb-item"><i class="bi bi-cart3"></i></div>
+                <div class="fh-psb-item"><i class="bi bi-box-seam"></i></div>
+                <div class="fh-psb-item"><i class="bi bi-people"></i></div>
+                <div class="fh-psb-item"><i class="bi bi-wallet2"></i></div>
+                <div class="fh-psb-item"><i class="bi bi-bar-chart"></i></div>
+              </div>
+              <div class="fh-preview-main">
+                <div class="fh-pm-header">
+                  <span class="fh-pm-title">Dashboard</span>
+                  <div class="fh-pm-filters">
+                    <span class="fh-pmf active">Today</span>
+                    <span class="fh-pmf">Week</span>
+                    <span class="fh-pmf">Month</span>
+                  </div>
+                </div>
+                <div class="fh-preview-stats">
+                  <div class="fh-pstat fh-pstat-orange">
+                    <i class="bi bi-cart-check-fill"></i>
+                    <div><strong>1,240</strong><small>Orders</small></div>
+                  </div>
+                  <div class="fh-pstat fh-pstat-green">
+                    <i class="bi bi-people-fill"></i>
+                    <div><strong>380</strong><small>Customers</small></div>
+                  </div>
+                  <div class="fh-pstat fh-pstat-blue">
+                    <i class="bi bi-box-seam-fill"></i>
+                    <div><strong>24</strong><small>Products</small></div>
+                  </div>
+                  <div class="fh-pstat fh-pstat-purple">
+                    <i class="bi bi-wallet2"></i>
+                    <div><strong>&#8377;84K</strong><small>Revenue</small></div>
+                  </div>
+                </div>
+                <div class="fh-preview-chart">
+                  <div class="fh-chart-label">Monthly Revenue</div>
+                  <div class="fh-chart-bars">
+                    <div class="fh-bar" style="height:45%" data-month="Oct"></div>
+                    <div class="fh-bar" style="height:60%" data-month="Nov"></div>
+                    <div class="fh-bar" style="height:50%" data-month="Dec"></div>
+                    <div class="fh-bar" style="height:75%" data-month="Jan"></div>
+                    <div class="fh-bar" style="height:65%" data-month="Feb"></div>
+                    <div class="fh-bar fh-bar-active" style="height:90%" data-month="Mar"></div>
+                  </div>
+                </div>
+                <div class="fh-preview-list">
+                  <div class="fh-list-hd">Recent Orders</div>
+                  <div class="fh-list-row">
+                    <span class="fh-list-dot fh-dot-sell"></span>
+                    <span>Khandavi &mdash; 5 kg</span>
+                    <span class="fh-list-badge sell">Sell</span>
+                  </div>
+                  <div class="fh-list-row">
+                    <span class="fh-list-dot fh-dot-buy"></span>
+                    <span>Samosa &mdash; 10 kg</span>
+                    <span class="fh-list-badge buy">Purchase</span>
+                  </div>
+                  <div class="fh-list-row">
+                    <span class="fh-list-dot fh-dot-sell"></span>
+                    <span>Dhokla &mdash; 3 kg</span>
+                    <span class="fh-list-badge sell">Sell</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="hero-dish hero-dish-2">
-            <img src="{{ asset('images/farsan/samosa.png') }}" alt="Crispy Samosa" loading="eager" width="160" height="160"
-              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22160%22><rect fill=%22%23FFC10722%22 width=%22160%22 height=%22160%22 rx=%2280%22/><text x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 font-size=%2240%22>🥟</text></svg>'" />
-            <span class="dish-label" data-en="Samosa" data-gu="સામોસા">Samosa</span>
+
+          <div class="fh-float-notif fh-fn-1" data-aos="zoom-in" data-aos-delay="700">
+            <i class="bi bi-graph-up-arrow" style="color:#4ade80;font-size:1.2rem"></i>
+            <div>
+              <strong>Revenue Up 24%</strong>
+              <small>vs last month</small>
+            </div>
           </div>
-          <div class="hero-dish hero-dish-3">
-            <img src="{{ asset('images/farsan/khaman.png') }}" alt="Soft Khaman" loading="eager" width="140" height="140"
-              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22140%22 height=%22140%22><rect fill=%22%23FF993322%22 width=%22140%22 height=%22140%22 rx=%2270%22/><text x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 font-size=%2236%22>🍰</text></svg>'" />
-            <span class="dish-label" data-en="Khaman" data-gu="ખમણ">Khaman</span>
+          <div class="fh-float-notif fh-fn-2" data-aos="zoom-in" data-aos-delay="900">
+            <i class="bi bi-cart-check-fill" style="color:var(--saffron);font-size:1.2rem"></i>
+            <div>
+              <strong>New Order</strong>
+              <small>Khandavi &middot; 5 kg &middot; &#8377;600</small>
+            </div>
           </div>
+
         </div>
       </div>
+
     </div>
   </div>
-  <a href="#about" class="scroll-down-btn" aria-label="Scroll to About">
+
+  <a href="#modules" class="fh-scroll-hint" aria-label="Scroll down">
     <i class="bi bi-chevron-double-down"></i>
   </a>
 </section>
-
-{{-- ===================== ABOUT ===================== --}}
-<section id="about" class="section-pad bg-white" aria-labelledby="about-heading">
-  <div class="container">
-    <div class="row align-items-center g-5">
-      <div class="col-lg-5" data-aos="fade-right">
-        <div class="about-image-grid">
-          <div class="about-img-main">  
-            <picture>
-              <source srcset="{{ asset('images/shop.webp') }}" type="image/webp">
-              <img src="{{ asset('images/shop.png') }}" alt="Bhramani Khandavi House shop front" loading="lazy" class="rounded-4 w-100"
-                onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect fill=%22%23FF993311%22 width=%22400%22 height=%22300%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 font-size=%2260%22>🏪</text></svg>'" />
-            </picture>
-            </div>
-          <div class="about-img-badge">
-            <i class="bi bi-award-fill"></i>
-            <span data-en="Since Years" data-gu="વર્ષોથી">Since Years</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-7" data-aos="fade-left" data-aos-delay="150">
-        <div class="section-label" data-en="Our Story" data-gu="અમારી વાર્તા">Our Story</div>
-        <h2 class="section-title" id="about-heading">
-          <span data-en="A Journey of" data-gu="એક યાત્રા">A Journey of</span>
-          <span class="text-saffron" data-en=" Devotion & Prasad" data-gu=" ભક્તિ અને પ્રસાદ"> Devotion & Prasad</span>
-        </h2>
-        <p class="section-text" data-en="Bhramani Khandavi House is not just about food, it is about devotion and blessings. Every item we prepare carries spiritual value, as it is made with a focused mind and offered to God before reaching you. Located in Shubhanpura, Vadodara, we serve not just taste, but positivity, tradition, and divine energy in every bite."  data-gu="બ્રાહ્માણી ખાંડવી હાઉસ માત્ર ખોરાક વિશે નથી, પરંતુ ભક્તિ અને આશીર્વાદ વિશે છે. અમે બનાવેલી દરેક વસ્તુમાં આધ્યાત્મિક મૂલ્ય છે, કારણ કે તે એકાગ્ર મનથી બનાવવામાં આવે છે અને પહેલા ભગવાનને અર્પણ થાય છે. શુભાનપુરા, વડોદરામાં આવેલ, અમે માત્ર સ્વાદ નહીં પરંતુ દરેક ગ્રાસમાં સકારાત્મકતા, પરંપરા અને દૈવી ઊર્જા પીરસીએ છીએ.">
-          Bhramani Khandavi House is not just about food, it is about devotion and blessings. Every item we prepare carries spiritual value, as it is made with a focused mind and offered to God before reaching you. Located in Shubhanpura, Vadodara, we serve not just taste, but positivity, tradition, and divine energy in every bite.
-        </p>
-        <div class="row g-3 mt-2">
-
-          <!-- Fresh Ingredients -->
-          <div class="col-sm-6" data-aos="zoom-in" data-aos-delay="100">
-            <div class="about-feature-card">
-              <div class="feature-icon"><i class="bi bi-flower3"></i></div>
-              <h4 data-en="Sattvic Ingredients" data-gu="સાત્વિક સામગ્રી">Sattvic Ingredients</h4>
-              <p data-en="We carefully select fresh and sattvic ingredients every day, ensuring purity, natural taste, and positive energy in every preparation." 
-                data-gu="અમે દરરોજ તાજી અને સાત્વિક સામગ્રી પસંદ કરીએ છીએ, જેથી દરેક બનાવટમાં શુદ્ધતા, કુદરતી સ્વાદ અને સકારાત્મક ઊર્જા રહે.">
-                We carefully select fresh and sattvic ingredients every day, ensuring purity, natural taste, and positive energy in every preparation.
-              </p>
-            </div>
-          </div>
-
-          <!-- Sacred Prasad -->
-          <div class="col-sm-6" data-aos="zoom-in" data-aos-delay="200">
-            <div class="about-feature-card">
-              <div class="feature-icon">🖐️</div>
-              <h4 data-en="Sacred Prasad Offering" data-gu="પવિત્ર પ્રસાદ અર્પણ">Sacred Prasad Offering</h4>
-              <p data-en="Each item is prepared with a peaceful mind and positive intention, offered to God as Prasad, and then served to you with blessings and devotion." 
-                data-gu="દરેક વસ્તુ શાંતિપૂર્ણ મન અને સકારાત્મક ભાવના સાથે બનાવવામાં આવે છે, પહેલા ભગવાનને પ્રસાદરૂપે અર્પણ થાય છે અને પછી આશીર્વાદ અને ભક્તિ સાથે તમને પીરસવામાં આવે છે.">
-                Each item is prepared with a peaceful mind and positive intention, offered to God as Prasad, and then served to you with blessings and devotion.
-              </p>
-            </div>
-          </div>
-
-          <!-- Hygiene -->
-          <div class="col-sm-6" data-aos="zoom-in" data-aos-delay="300">
-            <div class="about-feature-card">
-              <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
-              <h4 data-en="Clean & Sacred Environment" data-gu="સ્વચ્છ અને પવિત્ર વાતાવરણ">Clean & Sacred Environment</h4>
-              <p data-en="Our kitchen maintains the highest level of cleanliness and discipline, creating a sacred space where food is prepared with care, respect, and devotion." 
-                data-gu="અમારું રસોડું ઉચ્ચ સ્તરની સ્વચ્છતા અને નિયમિતતા જાળવે છે, જ્યાં ખોરાક કાળજી, સન્માન અને ભક્તિ સાથે બનાવવામાં આવે છે.">
-                Our kitchen maintains the highest level of cleanliness and discipline, creating a sacred space where food is prepared with care, respect, and devotion.
-              </p>
-            </div>
-          </div>
-
-          <!-- Bulk Orders -->
-          <div class="col-sm-6" data-aos="zoom-in" data-aos-delay="400">
-            <div class="about-feature-card">
-              <div class="feature-icon"><i class="bi bi-gift"></i></div>
-              <h4 data-en="Prasad for Every Occasion" data-gu="દરેક પ્રસંગ માટે પ્રસાદ">Prasad for Every Occasion</h4>
-              <p data-en="We prepare Prasad for weddings, religious events, and special occasions, spreading blessings, joy, and positive energy to every gathering." 
-                data-gu="અમે લગ્ન, ધાર્મિક કાર્યક્રમો અને ખાસ પ્રસંગો માટે પ્રસાદ તૈયાર કરીએ છીએ, દરેક પ્રસંગમાં આશીર્વાદ, આનંદ અને સકારાત્મક ઊર્જા ફેલાવીએ છીએ.">
-                We prepare Prasad for weddings, religious events, and special occasions, spreading blessings, joy, and positive energy to every gathering.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
-{{-- ===================== PRODUCTS ===================== --}}
-<section id="products" class="section-pad bg-light-saffron" aria-labelledby="products-heading">
+{{-- ══════════════════ MODULES (SaaS Sidebar) ══════════════════ --}}
+<section id="modules" class="fh-saas-modules" aria-labelledby="modules-heading">
   <div class="container">
-    <div class="text-center mb-5" data-aos="fade-up">
-      <div class="section-label" data-en="Our Menu" data-gu="અમારું મેનૂ">Our Menu</div>
-      <h2 class="section-title" id="products-heading">
-        <span data-en="Freshly Made " data-gu="તાજી બનાવેલ ">Freshly Made </span>
-        <span class="text-saffron" data-en="Farsan" data-gu="ફરસાણ">Farsan</span>
+    <div class="fh-section-head text-center mb-5" data-aos="fade-up">
+      <span class="fh-section-badge">Platform Features</span>
+      <h2 class="fh-section-title" id="modules-heading">
+        Everything you need to run your<br><span class="fh-text-saffron">Farsan Business</span>
       </h2>
-      <p class="section-subtitle" data-en="Each item is crafted with authentic Gujarati recipes, fresh ingredients, and lots of love." data-gu="દરેક આઇટમ અસલી ગુજરાતી રેસિપી, તાજી સામગ્રી અને ઘણો પ્રેમ સાથે તૈયાર.">
-        Each item is crafted with authentic Gujarati recipes, fresh ingredients, and lots of love.
-      </p>
+      <p class="fh-section-sub">Powerful, easy-to-use modules designed to give you total control over your daily operations and long-term growth.</p>
     </div>
-    <div class="row g-4">
 
-      {{-- Khandavi - Featured --}}
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="0">
-        <div class="product-card featured-product">
-          <div class="product-badge" data-en="⭐ Special" data-gu="⭐ વિશેષ">⭐ Special</div>
-          <div class="product-img-wrap">
-            <img src="{{ asset('images/farsan/khandvi.png') }}" alt="Khandavi" loading="lazy" width="380" height="240"
-              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22><rect fill=%22%23FF993322%22 width=%22380%22 height=%22240%22/><text x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 font-size=%2270%22>🥗</text></svg>'" />
+    <div class="fh-modules-layout" data-aos="fade-up" data-aos-delay="100">
+      
+      {{-- Mobile Menu Toggle --}}
+      <div class="d-lg-none mb-3">
+        <label class="form-label text-muted small fw-bold text-uppercase">Select Module</label>
+        <button class="fh-mobile-module-toggle" type="button" id="fhMobileModuleToggle" data-bs-toggle="offcanvas" data-bs-target="#modulesOffcanvas" aria-controls="modulesOffcanvas">
+          <span id="fhMobileModuleActiveText"><i class="bi bi-speedometer2 me-2"></i>Dashboard</span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+      </div>
+
+      {{-- Desktop Sidebar --}}
+      <div class="fh-modules-sidebar d-none d-lg-flex" id="fhModulesSidebar">
+        <button class="fh-ms-btn active" data-target="mod-dashboard">
+          <i class="bi bi-speedometer2"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="fh-ms-btn" data-target="mod-orders">
+          <i class="bi bi-cart3"></i>
+          <span>Orders</span>
+        </button>
+        <button class="fh-ms-btn" data-target="mod-products">
+          <i class="bi bi-box-seam"></i>
+          <span>Products</span>
+        </button>
+        <button class="fh-ms-btn" data-target="mod-customers">
+          <i class="bi bi-people"></i>
+          <span>Customers</span>
+        </button>
+        <button class="fh-ms-btn" data-target="mod-expenses">
+          <i class="bi bi-wallet2"></i>
+          <span>Expenses</span>
+        </button>
+        <button class="fh-ms-btn" data-target="mod-reports">
+          <i class="bi bi-bar-chart"></i>
+          <span>Reports</span>
+        </button>
+      </div>
+
+      {{-- Content Area --}}
+      <div class="fh-modules-content">
+        
+        {{-- Dashboard --}}
+        <div class="fh-mod-panel active" id="mod-dashboard">
+          <div class="fh-mod-text">
+            <h3>Real-Time Dashboard</h3>
+            <p>Get a complete business snapshot at a glance. Track your revenue trends, top products, and top customers in real-time to make informed decisions.</p>
+            <ul class="fh-mod-features">
+              <li><i class="bi bi-check-circle-fill text-success"></i> Comprehensive revenue & order charts</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Dynamic period filters (Today, Week, Month)</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Instant performance metrics & top sellers</li>
+            </ul>
           </div>
-          <div class="product-body">
-            <h3 class="product-name" data-en="Khandavi" data-gu="ખાંડવી">Khandavi</h3>
-            <p class="product-desc" data-en="Our signature dish — silky smooth, spiced besan rolls garnished with fresh coconut and mustard seeds. The taste you can't forget!" data-gu="અમારી સિગ્નેચર ડિશ — રેશમ જેવી, મસાલેદાર બેસન રોલ, તાજા નાળિયેર અને રાઈ સાથે. ભૂલી ન શકાય એવો સ્વાદ!">
-              Our signature dish — silky smooth, spiced besan rolls garnished with fresh coconut and mustard seeds.
-            </p>
-            <div class="product-footer">
-              <a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20order%20Khandavi" class="btn btn-product" target="_blank" rel="noopener noreferrer" data-en="Order Now" data-gu="હવે ઓર્ડર કરો">
-                <i class="bi bi-whatsapp me-1"></i>Order Now
-              </a>
+          <div class="fh-mod-visual">
+            <div class="fh-browser-frame">
+              <div class="fh-frame-header"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+              <img src="{{ asset('images/portal_dashboard.png') }}" alt="Dashboard" class="img-fluid" loading="lazy" />
             </div>
           </div>
         </div>
-      </div>
 
-      {{-- Samosa - Featured --}}
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-        <div class="product-card featured-product">
-          <div class="product-badge" data-en="🔥 Popular" data-gu="🔥 લોકપ્રિય">🔥 Popular</div>
-          <div class="product-img-wrap">
-            <img src="{{ asset('images/farsan/samosa.png') }}" alt="Crispy Samosa" loading="lazy" width="380" height="240"
-              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22><rect fill=%22%23FFC10722%22 width=%22380%22 height=%22240%22/><text x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 font-size=%2270%22>🥟</text></svg>'" />
+        {{-- Orders --}}
+        <div class="fh-mod-panel" id="mod-orders">
+          <div class="fh-mod-text">
+            <h3>Smart Order Management</h3>
+            <p>Effortlessly manage both sell and purchase orders. Streamline your operations and reduce manual errors with intelligent order workflows.</p>
+            <ul class="fh-mod-features">
+              <li><i class="bi bi-check-circle-fill text-success"></i> Smart duplicate order detection alerts</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Generate professional PDF Bills & Challans instantly</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Customer-specific pricing automatically applied</li>
+            </ul>
           </div>
-          <div class="product-body">
-            <h3 class="product-name" data-en="Samosa" data-gu="સામોસા">Samosa</h3>
-            <p class="product-desc" data-en="Crispy golden crust filled with perfectly spiced potato-pea stuffing. Best served hot with green chutney!" data-gu="સ્પષ્ટ સોનેરી ક્રસ્ટ, સ્પષ્ટ મસાલેદાર બટેટા-વટાણા ભરણ સાથે. ગ્રીન ચટણી સાથે ગરમ!">
-              Crispy golden crust filled with perfectly spiced potato-pea stuffing. Best served hot!
-            </p>
-            <div class="product-footer">
-              <a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20order%20Samosa" class="btn btn-product" target="_blank" rel="noopener noreferrer" data-en="Order Now" data-gu="હવે ઓર્ડર કરો">
-                <i class="bi bi-whatsapp me-1"></i>Order Now
-              </a>
+          <div class="fh-mod-visual">
+            <div class="fh-browser-frame">
+              <div class="fh-frame-header"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+              <img src="{{ asset('images/portal_orders.png') }}" alt="Orders" class="img-fluid" loading="lazy" />
             </div>
           </div>
         </div>
-      </div>
 
-      {{-- Khaman --}}
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-        <div class="product-card">
-          <div class="product-img-wrap">
-            <img src="{{ asset('images/farsan/khaman.png') }}" alt="Soft Khaman" loading="lazy" width="380" height="240"
-              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22><rect fill=%22%23FF993311%22 width=%22380%22 height=%22240%22/><text x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 font-size=%2270%22>🍰</text></svg>'" />
+        {{-- Products --}}
+        <div class="fh-mod-panel" id="mod-products">
+          <div class="fh-mod-text">
+            <h3>Product Catalogue</h3>
+            <p>Maintain your complete product inventory with ease. Define base prices and tailor custom rates to reward your best customers.</p>
+            <ul class="fh-mod-features">
+              <li><i class="bi bi-check-circle-fill text-success"></i> Flexible unit support (kg / nang)</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Advanced customer-specific custom rates</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Quick product search and editing tools</li>
+            </ul>
           </div>
-          <div class="product-body">
-            <h3 class="product-name" data-en="Khaman" data-gu="ખમણ">Khaman</h3>
-            <p class="product-desc" data-en="Soft, spongy & tangy steamed chickpea cake. Light on stomach, heavy on taste!" data-gu="નરમ, સ્પોન્જી અને ટેન્ગી. પેટ પર હળવો, સ્વાદ પર ભારે!">
-              Soft, spongy &amp; tangy steamed chickpea cake. Light on stomach, heavy on taste!
-            </p>
-            <div class="product-footer">
-              <a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20order%20Khaman" class="btn btn-product" target="_blank" rel="noopener noreferrer" data-en="Order Now" data-gu="હવે ઓર્ડર કરો">
-                <i class="bi bi-whatsapp me-1"></i>Order Now
-              </a>
+          <div class="fh-mod-visual">
+            <div class="fh-browser-frame">
+              <div class="fh-frame-header"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+              <img src="{{ asset('images/portal_products.png') }}" alt="Products" class="img-fluid" loading="lazy" />
             </div>
           </div>
         </div>
-      </div>
 
-      {{-- Patra --}}
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="0">
-        <div class="product-card">
-          <div class="product-img-wrap">
-            <img src="{{ asset('images/farsan/patra.png') }}" alt="Patra" loading="lazy" width="380" height="240"
-              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22><rect fill=%22%235C3A2222%22 width=%22380%22 height=%22240%22/><text x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 font-size=%2270%22>🌿</text></svg>'" />
+        {{-- Customers --}}
+        <div class="fh-mod-panel" id="mod-customers">
+          <div class="fh-mod-text">
+            <h3>Customer CRM & Map</h3>
+            <p>Build a detailed customer database with shop names, contact numbers, and complete addresses. Visualize your market reach instantly.</p>
+            <ul class="fh-mod-features">
+              <li><i class="bi bi-check-circle-fill text-success"></i> Maintain comprehensive customer profiles</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Interactive location map for delivery planning</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Robust search, sort, and filtering capabilities</li>
+            </ul>
           </div>
-          <div class="product-body">
-            <h3 class="product-name" data-en="Patra" data-gu="પાત્રા">Patra</h3>
-            <p class="product-desc" data-en="Colocasia leaves rolled with spiced besan paste and steamed to perfection. A unique Gujarati delicacy!" data-gu="અળવીના પાન, મસાલેદાર બેસન સાથે. અનોખી ગુજરાતી ડેલિકેટ!">
-              Colocasia leaves rolled with spiced besan paste and steamed to perfection.
-            </p>
-            <div class="product-footer">
-              <a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20order%20Patra" class="btn btn-product" target="_blank" rel="noopener noreferrer" data-en="Order Now" data-gu="હવે ઓર્ડર કરો">
-                <i class="bi bi-whatsapp me-1"></i>Order Now
-              </a>
+          <div class="fh-mod-visual">
+            <div class="fh-browser-frame">
+              <div class="fh-frame-header"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+              <img src="{{ asset('images/portal_customers.png') }}" alt="Customers" class="img-fluid" loading="lazy" />
             </div>
           </div>
         </div>
-      </div>
 
-      {{-- Dhokla --}}
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-        <div class="product-card">
-          <div class="product-img-wrap">
-            <img src="{{ asset('images/farsan/dhokla.jpg') }}" alt="Steamed Dhokla" loading="lazy" width="380" height="240"
-              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22><rect fill=%22%23FFC10722%22 width=%22380%22 height=%22240%22/><text x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 font-size=%2270%22>🟡</text></svg>'" />
+        {{-- Expenses --}}
+        <div class="fh-mod-panel" id="mod-expenses">
+          <div class="fh-mod-text">
+            <h3>Expense Tracking</h3>
+            <p>Keep a clear, organized record of where your money goes. Track your business and personal expenses separately to maintain clean accounting.</p>
+            <ul class="fh-mod-features">
+              <li><i class="bi bi-check-circle-fill text-success"></i> Distinct Business vs Personal expense splitting</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Intelligent monthly & category-based filtering</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Attach detailed notes & comments to every entry</li>
+            </ul>
           </div>
-          <div class="product-body">
-            <h3 class="product-name" data-en="Dhokla" data-gu="ઢોકળા">Dhokla</h3>
-            <p class="product-desc" data-en="Fluffy steamed rice-chickpea cake with tangy-sweet tempering. Healthy and delicious!" data-gu="ફ્લ્uffી સ્ટીમ્ડ ચોખા-ચણા કેક. સ્વસ્થ અને સ્વાદિષ્ટ!">
-              Fluffy steamed rice-chickpea cake with tangy-sweet tempering. Healthy and delicious!
-            </p>
-            <div class="product-footer">
-              <a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20order%20Dhokla" class="btn btn-product" target="_blank" rel="noopener noreferrer" data-en="Order Now" data-gu="હવે ઓર્ડર કરો">
-                <i class="bi bi-whatsapp me-1"></i>Order Now
-              </a>
+          <div class="fh-mod-visual">
+            <div class="fh-browser-frame">
+              <div class="fh-frame-header"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+              <img src="{{ asset('images/portal_expenses.png') }}" alt="Expenses" class="img-fluid" loading="lazy" />
             </div>
           </div>
         </div>
-      </div>
 
-      {{-- Mix Farsan --}}
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-        <div class="product-card">
-          <div class="product-img-wrap">
-            <img src="{{ asset('images/farsan/mix-farsan.png') }}" alt="Mix Farsan" loading="lazy" width="380" height="240"
-              onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22><rect fill=%22%23FF993311%22 width=%22380%22 height=%22240%22/><text x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 font-size=%2270%22>🍽️</text></svg>'" />
+        {{-- Reports --}}
+        <div class="fh-mod-panel" id="mod-reports">
+          <div class="fh-mod-text">
+            <h3>Comprehensive Reports</h3>
+            <p>Generate precise, formatted reports for your daily and monthly operations. Export everything for offline analysis or CA submission.</p>
+            <ul class="fh-mod-features">
+              <li><i class="bi bi-check-circle-fill text-success"></i> 4 distinct, detailed report types (Orders, etc.)</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> One-click Excel (XLSX) export functionality</li>
+              <li><i class="bi bi-check-circle-fill text-success"></i> Custom date range selection for targeted data</li>
+            </ul>
           </div>
-          <div class="product-body">
-            <h3 class="product-name" data-en="Mix Farsan" data-gu="મિક્સ ફરસાણ">Mix Farsan</h3>
-            <p class="product-desc" data-en="A festive assortment of our best Farsan — perfect for parties, gifts &amp; daily snacking!" data-gu="ઉત્સવ ફરસાણ સેટ — પાર્ટી, ભેટ અને નાસ્તા માટે!">
-              A festive assortment of our best Farsan — perfect for parties, gifts &amp; daily snacking!
-            </p>
-            <div class="product-footer">
-              <a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20order%20Mix%20Farsan" class="btn btn-product" target="_blank" rel="noopener noreferrer" data-en="Order Now" data-gu="હવે ઓર્ડર કરો">
-                <i class="bi bi-whatsapp me-1"></i>Order Now
-              </a>
+          <div class="fh-mod-visual">
+            <div class="fh-browser-frame">
+              <div class="fh-frame-header"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+              <img src="{{ asset('images/portal_reports.png') }}" alt="Reports" class="img-fluid" loading="lazy" />
             </div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
   </div>
 </section>
 
-{{-- ===================== WHOLESALE ===================== --}}
-<section id="wholesale" class="section-pad wholesale-section" aria-labelledby="wholesale-heading">
-  <div class="wholesale-overlay" aria-hidden="true"></div>
+{{-- Mobile Offcanvas Menu for Modules --}}
+<div class="offcanvas offcanvas-bottom fh-modules-offcanvas" tabindex="-1" id="modulesOffcanvas" aria-labelledby="modulesOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title fw-bold" id="modulesOffcanvasLabel">Select a Module</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body small">
+    <div class="list-group list-group-flush fh-oc-modules-list" id="fhMobileModulesList">
+      <button class="list-group-item list-group-item-action active" data-target="mod-dashboard" data-bs-dismiss="offcanvas">
+        <i class="bi bi-speedometer2 me-3 fs-5"></i> Dashboard
+      </button>
+      <button class="list-group-item list-group-item-action" data-target="mod-orders" data-bs-dismiss="offcanvas">
+        <i class="bi bi-cart3 me-3 fs-5"></i> Orders
+      </button>
+      <button class="list-group-item list-group-item-action" data-target="mod-products" data-bs-dismiss="offcanvas">
+        <i class="bi bi-box-seam me-3 fs-5"></i> Products
+      </button>
+      <button class="list-group-item list-group-item-action" data-target="mod-customers" data-bs-dismiss="offcanvas">
+        <i class="bi bi-people me-3 fs-5"></i> Customers
+      </button>
+      <button class="list-group-item list-group-item-action" data-target="mod-expenses" data-bs-dismiss="offcanvas">
+        <i class="bi bi-wallet2 me-3 fs-5"></i> Expenses
+      </button>
+      <button class="list-group-item list-group-item-action" data-target="mod-reports" data-bs-dismiss="offcanvas">
+        <i class="bi bi-bar-chart me-3 fs-5"></i> Reports
+      </button>
+    </div>
+  </div>
+</div>
+
+
+{{-- ══════════════════ STATS ══════════════════ --}}
+<section id="stats" class="fh-stats-section" aria-label="Statistics">
+  <div class="fh-stats-bg" aria-hidden="true"></div>
   <div class="container position-relative">
-    <div class="row justify-content-center text-center">
-      <div class="col-lg-8" data-aos="zoom-in">
-        <div class="section-label light" data-en="For Events &amp; Functions" data-gu="ઇવેન્ટ્સ અને ફંક્શન માટે">For Events &amp; Functions</div>
-        <h2 class="section-title text-white" id="wholesale-heading">
-          <span data-en="Wholesale &amp; Bulk " data-gu="જથ્થાબંધ &amp; મોટા ">Wholesale &amp; Bulk </span>
-          <span class="text-yellow" data-en="Orders" data-gu="ઓર્ડર">Orders</span>
-        </h2>
-        <p class="text-white-75 fs-5 mb-4" data-en="Planning a wedding, engagement, birthday party, or corporate event? We supply bulk Farsan orders with fresh preparation, timely delivery and best prices in Vadodara." data-gu="લગ્ન, સગાઈ, જન્મ-દિવસ અથવા ઇવેન્ટ? ફ્રેશ, સમયસર અને સૌથી સારા ભાવ સાથે જથ્થાબંધ ઓર્ડર.">
-          Planning a wedding, engagement, birthday party, or corporate event? We supply bulk Farsan orders with fresh preparation, timely delivery and best prices in Vadodara.
-        </p>
-        <div class="wholesale-features d-flex flex-wrap justify-content-center gap-3 mb-5">
-          <div class="ws-feature" data-en="🎊 Weddings" data-gu="🎊 લગ્ન">🎊 Weddings</div>
-          <div class="ws-feature" data-en="🎂 Birthday Parties" data-gu="🎂 જન્મ-દિવસ">🎂 Birthday Parties</div>
-          <div class="ws-feature" data-en="🏢 Corporate Events" data-gu="🏢 કોર્પોરેટ ઇવેન્ટ">🏢 Corporate Events</div>
-          <div class="ws-feature" data-en="🙏 Religious Functions" data-gu="🙏 ધાર્મિક કાર્યક્રમ">🙏 Religious Functions</div>
-          <div class="ws-feature" data-en="🎉 Engagement" data-gu="🎉 સગાઈ">🎉 Engagement</div>
+    <div class="fh-section-head text-center mb-5" data-aos="fade-up">
+      <span class="fh-section-badge light">Why FarsanHub</span>
+      <h2 class="fh-section-title text-white">Built For the Way<br><span class="fh-text-yellow">You Do Business</span></h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-3 col-sm-6" data-aos="zoom-in" data-aos-delay="0">
+        <div class="fh-stat-card">
+          <div class="fh-stat-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+          <div class="fh-stat-num" data-target="6">0</div>
+          <div class="fh-stat-plus">+</div>
+          <div class="fh-stat-label">Powerful Modules</div>
+          <p class="fh-stat-desc">Dashboard, Orders, Products, Customers, Expenses & Reports.</p>
         </div>
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
-          <a href="https://wa.me/919574659456?text=Hello%2C%20I%20need%20bulk%20order%20inquiry" class="btn btn-yellow btn-lg" target="_blank" rel="noopener noreferrer" data-en="Get Bulk Quote on WhatsApp" data-gu="WhatsApp પર ભાવ મેળવો">
-            <i class="bi bi-whatsapp me-2"></i>Get Bulk Quote on WhatsApp
-          </a>
-          <a href="#contact" class="btn btn-outline-white btn-lg" data-en="Send Inquiry" data-gu="ઇન્ક્વાયરી મોકલો">
-            <i class="bi bi-envelope me-2"></i>Send Inquiry
-          </a>
+      </div>
+      <div class="col-lg-3 col-sm-6" data-aos="zoom-in" data-aos-delay="80">
+        <div class="fh-stat-card">
+          <div class="fh-stat-icon"><i class="bi bi-translate"></i></div>
+          <div class="fh-stat-num" data-target="2">0</div>
+          <div class="fh-stat-plus"></div>
+          <div class="fh-stat-label">Languages</div>
+          <p class="fh-stat-desc">Full English & Gujarati support with instant language switching.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6" data-aos="zoom-in" data-aos-delay="160">
+        <div class="fh-stat-card">
+          <div class="fh-stat-icon"><i class="bi bi-phone-fill"></i></div>
+          <div class="fh-stat-num" data-target="100">0</div>
+          <div class="fh-stat-plus">%</div>
+          <div class="fh-stat-label">Mobile Responsive</div>
+          <p class="fh-stat-desc">Use it on any device — phone, tablet or desktop seamlessly.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6" data-aos="zoom-in" data-aos-delay="240">
+        <div class="fh-stat-card">
+          <div class="fh-stat-icon"><i class="bi bi-cloud-check-fill"></i></div>
+          <div class="fh-stat-num" data-target="24">0</div>
+          <div class="fh-stat-plus">/7</div>
+          <div class="fh-stat-label">Always Available</div>
+          <p class="fh-stat-desc">Access your data anytime from anywhere with a secure login.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-{{-- ===================== GALLERY ===================== --}}
-<section id="gallery" class="section-pad bg-white" aria-labelledby="gallery-heading">
+{{-- ══════════════════ HOW IT WORKS ══════════════════ --}}
+<section id="workflow" class="fh-section fh-workflow-section" aria-labelledby="workflow-heading">
   <div class="container">
-    <div class="text-center mb-5" data-aos="fade-up">
-      <div class="section-label" data-en="Visual Feast" data-gu="દ્રશ્ય તહેવાર">Visual Feast</div>
-      <h2 class="section-title" id="gallery-heading">
-        <span data-en="Our " data-gu="અમારી ">Our </span>
-        <span class="text-saffron" data-en="Gallery" data-gu="ગેલેરી">Gallery</span>
+    <div class="fh-section-head text-center" data-aos="fade-up">
+      <span class="fh-section-badge">Simple Process</span>
+      <h2 class="fh-section-title" id="workflow-heading">
+        Up & Running in<br><span class="fh-text-saffron">3 Simple Steps</span>
       </h2>
     </div>
-    <div class="gallery-grid" role="list" aria-label="Food gallery">
-      @php
-        $galleryItems = [
-                    ['file' => 'farsan/khandvi.png',  'emoji' => '🥗',  'en' => 'Khandavi',  'gu' => 'ખાંડવી',  'large' => true],
-          ['file' => 'farsan/samosa.png',    'emoji' => '🥟',  'en' => 'Samosa',    'gu' => 'સામોસા',   'large' => false],
-          ['file' => 'farsan/khaman.png',    'emoji' => '🍰',  'en' => 'Khaman',    'gu' => 'ખમણ',     'large' => false],
-          ['file' => 'farsan/dhokla.jpg',    'emoji' => '🟡',  'en' => 'Dhokla',    'gu' => 'ઢોકળા',   'large' => false],
-          ['file' => 'farsan/patra.png',     'emoji' => '🌿',  'en' => 'Patra',     'gu' => 'પાત્રા',   'large' => false],
-          ['file' => 'shop.webp','emoji' => '🏪',  'en' => 'Our Shop',  'gu' => 'અમારી દુકાન','large' => true],
-        ];
-      @endphp
-      @foreach($galleryItems as $i => $item)
-      <div class="gallery-item {{ $item['large'] ? 'gallery-item-large' : '' }}" data-aos="fade-up" data-aos-delay="{{ ($i % 3) * 100 }}" role="listitem">
-        <img src="{{ asset('images/' . $item['file']) }}" alt="{{ $item['en'] }}" loading="lazy"
-          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22><rect fill=%22%23FF993311%22 width=%22400%22 height=%22300%22/><text x=%2250%25%22 y=%2255%25%22 text-anchor=%22middle%22 font-size=%2280%22>{{ $item['emoji'] }}</text></svg>'" />
-        <div class="gallery-overlay">
-          <span class="gallery-caption" data-en="{{ $item['en'] }}" data-gu="{{ $item['gu'] }}">{{ $item['en'] }}</span>
+    <div class="row g-5 align-items-center mt-2">
+
+      <div class="col-lg-5" data-aos="fade-right">
+        <div class="fh-workflow-steps">
+
+          <div class="fh-step" id="wfStep1">
+            <div class="fh-step-num">01</div>
+            <div class="fh-step-body">
+              <h4>Login to Your Portal</h4>
+              <p>Sign in securely with your admin credentials or Google account. Your dashboard loads instantly with a full business overview.</p>
+            </div>
+          </div>
+
+          <div class="fh-step-connector" aria-hidden="true"></div>
+
+          <div class="fh-step" id="wfStep2">
+            <div class="fh-step-num">02</div>
+            <div class="fh-step-body">
+              <h4>Add Products & Customers</h4>
+              <p>Build your product catalogue with pricing, then add your customers with their shop details, location and custom product rates.</p>
+            </div>
+          </div>
+
+          <div class="fh-step-connector" aria-hidden="true"></div>
+
+          <div class="fh-step" id="wfStep3">
+            <div class="fh-step-num">03</div>
+            <div class="fh-step-body">
+              <h4>Manage Orders & Reports</h4>
+              <p>Record daily sell and purchase orders, track expenses, and generate monthly reports. Export to Excel whenever you need records.</p>
+            </div>
+          </div>
+
         </div>
       </div>
-      @endforeach
+
+      <div class="col-lg-7" data-aos="fade-left" data-aos-delay="100">
+        <div class="fh-workflow-cards">
+          <div class="fh-wf-card fh-wfc-login">
+            <div class="fh-wfc-icon"><i class="bi bi-shield-lock-fill"></i></div>
+            <div>
+              <strong>Secure Login</strong>
+              <p>Email / Google OAuth</p>
+            </div>
+          </div>
+          <div class="fh-wf-card fh-wfc-product">
+            <div class="fh-wfc-icon"><i class="bi bi-box-seam-fill"></i></div>
+            <div>
+              <strong>Khandavi</strong>
+              <p>₹120/kg · 3 customer rates</p>
+            </div>
+          </div>
+          <div class="fh-wf-card fh-wfc-customer">
+            <div class="fh-wfc-icon"><i class="bi bi-person-circle"></i></div>
+            <div>
+              <strong>Rameshbhai Patel</strong>
+              <p>Shubhanpura, Vadodara</p>
+            </div>
+          </div>
+          <div class="fh-wf-card fh-wfc-order">
+            <div class="fh-wfc-icon"><i class="bi bi-cart-check-fill"></i></div>
+            <div>
+              <strong>Order #1042</strong>
+              <p>Samosa · 8 kg · Sell · ₹960</p>
+            </div>
+          </div>
+          <div class="fh-wf-card fh-wfc-report">
+            <div class="fh-wfc-icon"><i class="bi bi-file-earmark-spreadsheet-fill"></i></div>
+            <div>
+              <strong>March Report</strong>
+              <p>Exported to Excel ✓</p>
+            </div>
+          </div>
+          <div class="fh-wf-card fh-wfc-expense">
+            <div class="fh-wfc-icon"><i class="bi bi-wallet2"></i></div>
+            <div>
+              <strong>Business Expense</strong>
+              <p>Packaging Material · ₹2,400</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-{{-- ===================== TESTIMONIALS ===================== --}}
-<section id="testimonials" class="section-pad bg-light-saffron" aria-labelledby="testimonials-heading">
+{{-- ══════════════════ HIGHLIGHTS ══════════════════ --}}
+<section class="fh-section fh-highlights-section" aria-label="Key highlights">
   <div class="container">
-    <div class="text-center mb-5" data-aos="fade-up">
-      <div class="section-label" data-en="What Customers Say" data-gu="ગ્રાહકો શું કહે છે">What Customers Say</div>
-      <h2 class="section-title" id="testimonials-heading">
-        <span data-en="Happy " data-gu="ખુશ ">Happy </span>
-        <span class="text-saffron" data-en="Customers" data-gu="ગ્રાહકો">Customers</span>
+    <div class="fh-section-head text-center mb-5" data-aos="fade-up">
+      <span class="fh-section-badge">Platform Highlights</span>
+      <h2 class="fh-section-title">
+        Everything You Need,<br><span class="fh-text-saffron">Nothing You Don't</span>
       </h2>
     </div>
     <div class="row g-4">
 
-      @php
-       $testimonials = [
-        [
-          'initial'=>'P',
-          'name_en'=>'Priya Shah',
-          'name_gu'=>'પ્રિયા શાહ',
-          'loc_en'=>'Regular Customer, Shubhanpura',
-          'loc_gu'=>'નિયમિત ગ્રાહક, શુભાનપુરા',
-          'stars'=>5,
-          'text_en'=>'"Bhramani’s Khandavi is truly one of the best in Vadodara. It is soft, fresh, and perfectly balanced in taste — just like homemade food. We trust them for our weekly orders because quality is always consistent."',
-          'text_gu'=>'"બ્રાહ્માણીની ખાંડવી વડોદરામાં શ્રેષ્ઠમાંથી એક છે. નરમ, તાજી અને ઘર જેવી સ્વાદિષ્ટ. અમે દર અઠવાડિયે ઓર્ડર કરીએ છીએ કારણ કે ગુણવત્તા હંમેશા ઉત્તમ રહે છે."'
-        ],
-        [
-          'initial'=>'R',
-          'name_en'=>'Rameshbhai Patel',
-          'name_gu'=>'રમેશભાઈ પટેલ',
-          'loc_en'=>'Wedding Client, Vadodara',
-          'loc_gu'=>'લગ્ન ક્લાઇન્ટ, વડોદરા',
-          'stars'=>5,
-          'text_en'=>'"We ordered 50 kg of farsan for our daughter’s wedding. Everything was freshly prepared, hygienically packed, and delivered on time. Our guests highly appreciated the taste and quality. Excellent service for large events."',
-          'text_gu'=>'"અમે અમારી દીકરીના લગ્ન માટે 50 કિલો ફરસાણ ઓર્ડર કર્યું. બધું તાજું, સ્વચ્છ પેકિંગ અને સમયસર ડિલિવરી. મહેમાનોએ ખૂબ વખાણ કર્યા. મોટા કાર્યક્રમ માટે ઉત્તમ સેવા."'
-        ],
-        [
-          'initial'=>'M',
-          'name_en'=>'Meena Desai',
-          'name_gu'=>'મીના દેસાઈ',
-          'loc_en'=>'Daily Customer, Vadodara',
-          'loc_gu'=>'દૈનિક ગ્રાહક, વડોદરા',
-          'stars'=>5,
-          'text_en'=>'"The samosas are always crispy and freshly made. The filling is perfectly spiced and full of flavor. It’s my go-to place for authentic Gujarati snacks."',
-          'text_gu'=>'"સામોસા હંમેશા ક્રિસ્પી અને તાજા. અંદરની ભરણી સ્વાદિષ્ટ અને યોગ્ય મસાલાવાળી. સાચા ગુજરાતી નાસ્તા માટે મારી પ્રથમ પસંદગી."'
-        ],
-        [
-          'initial'=>'K',
-          'name_en'=>'Kavita Joshi',
-          'name_gu'=>'કવિતા જોષી',
-          'loc_en'=>'Regular Customer, Vadodara',
-          'loc_gu'=>'નિયમિત ગ્રાહક, વડોદરા',
-          'stars'=>5,
-          'text_en'=>'"Patra and Dhokla are always fresh, soft, and prepared with high hygiene standards. The taste is consistent every time. A trusted shop in Shubhanpura for quality farsan."',
-          'text_gu'=>'"પાત્રા અને ઢોકળા હંમેશા તાજા અને સ્વચ્છ રીતે બનાવેલ. સ્વાદ હંમેશા એકસરખો રહે છે. શુભાનપુરામાં વિશ્વસનીય ફરસાણ દુકાન."'
-        ],
-        [
-          'initial'=>'A',
-          'name_en'=>'Amit Mehta',
-          'name_gu'=>'અમિત મહેતા',
-          'loc_en'=>'Customer, Vadodara',
-          'loc_gu'=>'ગ્રાહક, વડોદરા',
-          'stars'=>4,
-          'text_en'=>'"Excellent quality farsan at reasonable prices. The Mix Farsan Pack is perfect for family gatherings and gifting. Good taste, good value, and reliable service."',
-          'text_gu'=>'"ઉચ્ચ ગુણવત્તાવાળું ફરસાણ યોગ્ય કિંમતે. મિક્સ ફરસાણ પેક પરિવારિક મેળાવડા અને ભેટ માટે ઉત્તમ. સારો સ્વાદ અને વિશ્વસનીય સેવા."'
-        ],
-
-      ];
-      @endphp
-
-      @foreach($testimonials as $i => $t)
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ ($i % 3) * 100 }}">
-        <div class="testimonial-card">
-          <div class="stars" aria-label="{{ $t['stars'] }} out of 5 stars">
-            @for($s=1;$s<=5;$s++){{ $s <= $t['stars'] ? '★' : '☆' }}@endfor
-          </div>
-          <p class="testimonial-text" data-en="{{ $t['text_en'] }}" data-gu="{{ $t['text_gu'] }}">{{ $t['text_en'] }}</p>
-          <div class="testimonial-author">
-            <div class="author-avatar" aria-hidden="true">{{ $t['initial'] }}</div>
-            <div>
-              <strong data-en="{{ $t['name_en'] }}" data-gu="{{ $t['name_gu'] }}">{{ $t['name_en'] }}</strong>
-              <small data-en="{{ $t['loc_en'] }}" data-gu="{{ $t['loc_gu'] }}">{{ $t['loc_en'] }}</small>
-            </div>
-          </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="fh-highlight-card">
+          <div class="fh-hl-icon"><i class="bi bi-filetype-pdf"></i></div>
+          <h5>PDF Bill & Challan</h5>
+          <p>Generate professional PDF bills and order challans directly from the orders module. Print or share with customers instantly.</p>
         </div>
       </div>
-      @endforeach
 
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-        <div class="testimonial-card highlight-card">
-          <div class="quote-icon" aria-hidden="true"><i class="bi bi-quote"></i></div>
-          <p class="testimonial-highlight-text" data-en="&quot;The authentic taste of Gujarat in every bite!&quot;" data-gu="&quot;દરેક ટુકડામાં ગુજરાતનો અસ્સલ સ્વાદ!&quot;">
-            "The authentic taste of Gujarat in every bite!"
-          </p>
-          <div class="mt-3 text-center">
-            <a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20share%20feedback" class="btn btn-product-sm" target="_blank" rel="noopener noreferrer" data-en="Share Your Review" data-gu="સમીક્ષા શેર કરો">
-              <i class="bi bi-whatsapp me-1"></i>Share Your Review
-            </a>
-          </div>
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="60">
+        <div class="fh-highlight-card">
+          <div class="fh-hl-icon"><i class="bi bi-geo-alt-fill"></i></div>
+          <h5>Customer Map View</h5>
+          <p>See all your customers plotted on an interactive map. Understand your delivery zones and customer distribution at a glance.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="120">
+        <div class="fh-highlight-card">
+          <div class="fh-hl-icon"><i class="bi bi-arrow-repeat"></i></div>
+          <h5>Duplicate Order Check</h5>
+          <p>Smart detection alerts you before placing a duplicate order for the same customer and product on the same day.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="fh-highlight-card">
+          <div class="fh-hl-icon"><i class="bi bi-tag-fill"></i></div>
+          <h5>Customer-Specific Pricing</h5>
+          <p>Set different prices for different customers per product. FarsanHub automatically applies the right price when creating orders.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="60">
+        <div class="fh-highlight-card">
+          <div class="fh-hl-icon"><i class="bi bi-google"></i></div>
+          <h5>Google Login</h5>
+          <p>Sign in with your Google account for fast, secure access. No extra passwords to remember — one click and you're in.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="120">
+        <div class="fh-highlight-card">
+          <div class="fh-hl-icon"><i class="bi bi-file-earmark-excel-fill"></i></div>
+          <h5>Excel Export</h5>
+          <p>Export orders, customers, products and expenses to Excel (XLSX) format for offline analysis, accounting or sharing with your CA.</p>
         </div>
       </div>
 
@@ -620,235 +694,198 @@
   </div>
 </section>
 
-{{-- ===================== CONTACT ===================== --}}
-<section id="contact" class="section-pad bg-white" aria-labelledby="contact-heading">
+{{-- ══════════════════ CTA BAND ══════════════════ --}}
+<section class="fh-cta-section" aria-label="Call to action">
+  <div class="fh-cta-bg" aria-hidden="true"></div>
+  <div class="container position-relative text-center" data-aos="zoom-in">
+    <div class="fh-cta-icon"><i class="bi bi-rocket-takeoff-fill"></i></div>
+    <h2 class="fh-cta-title">Ready to Take Control of<br>Your Farsan Business?</h2>
+    <p class="fh-cta-sub">Login to your admin portal and start managing orders, products, customers and more — right now.</p>
+    <div class="fh-cta-btns">
+      <a href="{{ route('login') }}" class="fh-btn-primary fh-btn-lg">
+        <i class="bi bi-shield-lock-fill me-2"></i>Open Admin Portal
+      </a>
+      <a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20know%20more%20about%20FarsanHub" class="fh-btn-whatsapp fh-btn-lg" target="_blank" rel="noopener noreferrer">
+        <i class="bi bi-whatsapp me-2"></i>Chat on WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+{{-- ══════════════════ CONTACT ══════════════════ --}}
+<section id="contact" class="fh-section fh-contact-section" aria-labelledby="contact-heading">
   <div class="container">
-    <div class="text-center mb-5" data-aos="fade-up">
-      <div class="section-label" data-en="Find Us" data-gu="અમને શોધો">Find Us</div>
-      <h2 class="section-title" id="contact-heading">
-        <span data-en="Get In " data-gu="સંપર્ક ">Get In </span>
-        <span class="text-saffron" data-en="Touch" data-gu="કરો">Touch</span>
+    <div class="fh-section-head text-center" data-aos="fade-up">
+      <span class="fh-section-badge">Get In Touch</span>
+      <h2 class="fh-section-title" id="contact-heading">
+        Need Help or<br><span class="fh-text-saffron">Have a Question?</span>
       </h2>
     </div>
-    <div class="row g-5">
+    <div class="row g-5 mt-2 justify-content-center">
 
       <div class="col-lg-5" data-aos="fade-right">
-        <div class="contact-info-card mb-4">
-          <div class="contact-info-item">
-            <div class="contact-icon"><i class="bi bi-geo-alt-fill"></i></div>
+        <div class="fh-contact-info">
+          <div class="fh-ci-item">
+            <div class="fh-ci-icon"><i class="bi bi-whatsapp"></i></div>
             <div>
-              <strong data-en="Address" data-gu="સરનામું">Address</strong>
-              <p data-en="Shubhanpura Area, Vadodara (Baroda), Gujarat – 390023" data-gu="શુભાનપુરા વિસ્તાર, વડોદરા (બરોડા), ગુજરાત – 390023">Shubhanpura Area, Vadodara (Baroda), Gujarat – 390023</p>
+              <strong>WhatsApp Support</strong>
+              <p>Chat with us directly for quick help with your portal.</p>
+              <a href="https://wa.me/919574659456" class="fh-wa-link" target="_blank" rel="noopener noreferrer">
+                +91 95746 59456
+              </a>
             </div>
           </div>
-          <div class="contact-info-item">
-            <div class="contact-icon"><i class="bi bi-telephone-fill"></i></div>
+          <div class="fh-ci-item">
+            <div class="fh-ci-icon"><i class="bi bi-geo-alt-fill"></i></div>
             <div>
-              <strong data-en="Phone" data-gu="ફોન">Phone</strong>
-              <p><a href="tel:+919574659456" class="contact-link">+91 95746 59456</a></p>
+              <strong>Based In</strong>
+              <p>Shubhanpura, Vadodara, Gujarat – 390023</p>
             </div>
           </div>
-          <div class="contact-info-item">
-            <div class="contact-icon"><i class="bi bi-whatsapp"></i></div>
+          <div class="fh-ci-item">
+            <div class="fh-ci-icon"><i class="bi bi-clock-fill"></i></div>
             <div>
-              <strong>WhatsApp</strong>
-              <p>
-                <a href="https://wa.me/919574659456" class="btn btn-whatsapp-sm" target="_blank" rel="noopener noreferrer" data-en="Chat on WhatsApp" data-gu="WhatsApp પર ચેટ">
-                  <i class="bi bi-whatsapp me-1"></i>Chat on WhatsApp
-                </a>
-              </p>
-            </div>
-          </div>
-          <div class="contact-info-item">
-            <div class="contact-icon"><i class="bi bi-clock-fill"></i></div>
-            <div>
-              <strong data-en="Business Hours" data-gu="વ્યવસાય સમય">Business Hours</strong>
-              <p data-en="Mon–Sat: 7:00 AM – 9:00 PM" data-gu="સોમ–શનિ: સવારે 7:00 – રાત 9:00">Mon–Sat: 7:00 AM – 9:00 PM</p>
-              <p data-en="Sunday: 7:00 AM – 1:00 PM" data-gu="રવિ: સવારે 7:00 – બપોરે 1:00">Sunday: 7:00 AM – 1:00 PM</p>
+              <strong>Support Hours</strong>
+              <p>Mon–Sat: 9:00 AM – 7:00 PM</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-lg-7" data-aos="fade-left">
-        <div class="contact-form-card">
-          <h3 class="mb-4" data-en="Send Us a Message" data-gu="અમને સંદેશ મોકલો">Send Us a Message</h3>
-          <form id="contactForm" novalidate aria-label="Contact form">
-            @csrf
-            {{-- Honeypot anti-spam --}}
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="fh-contact-form-card">
+          <h4 class="mb-4">Send a Message</h4>
+          <form id="fhContactForm" novalidate>
             <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
             <div class="row g-3">
               <div class="col-sm-6">
-                <label for="contactName" class="form-label" data-en="Your Name *" data-gu="તમારું નામ *">Your Name *</label>
-                <input type="text" class="form-control" id="contactName" name="name" required minlength="2" maxlength="60" autocomplete="name" placeholder="Rameshbhai Patel" />
-                <div class="invalid-feedback" data-en="Please enter your name (2-60 characters)." data-gu="કૃપા કરી નામ દાખલ કરો.">Please enter your name.</div>
+                <label class="fh-form-label">Your Name *</label>
+                <input type="text" class="fh-form-control" id="fhName" name="name" required minlength="2" maxlength="60" placeholder="Rameshbhai Patel" />
+                <div class="fh-invalid">Please enter your name.</div>
               </div>
               <div class="col-sm-6">
-                <label for="contactPhone" class="form-label" data-en="Phone Number *" data-gu="ફોન નંબર *">Phone Number *</label>
-                <input type="tel" class="form-control" id="contactPhone" name="phone" required pattern="[0-9]{10}" maxlength="10" autocomplete="tel" placeholder="9876543210" />
-                <div class="invalid-feedback" data-en="Please enter a valid 10-digit phone number." data-gu="10 અંકનો ફોન નંબર.">Please enter a valid 10-digit number.</div>
+                <label class="fh-form-label">Phone Number *</label>
+                <input type="tel" class="fh-form-control" id="fhPhone" name="phone" required pattern="[0-9]{10}" maxlength="10" placeholder="9876543210" />
+                <div class="fh-invalid">Enter a valid 10-digit number.</div>
               </div>
               <div class="col-12">
-                <label for="contactEmail" class="form-label" data-en="Email (Optional)" data-gu="ઇ-મેઇલ (વૈકલ્પિક)">Email (Optional)</label>
-                <input type="email" class="form-control" id="contactEmail" name="email" maxlength="100" autocomplete="email" placeholder="your@email.com" />
-                <div class="invalid-feedback" data-en="Please enter a valid email." data-gu="યોગ્ય ઇ-મેઇલ.">Please enter a valid email.</div>
-              </div>
-              <div class="col-12">
-                <label for="contactSubject" class="form-label" data-en="Order Type" data-gu="ઓર્ડરનો પ્રકાર">Order Type</label>
-                <select class="form-select" id="contactSubject" name="subject">
-                  <option value="" data-en="Select order type..." data-gu="ઓર્ડર પ્રકાર...">Select order type...</option>
-                  <option value="retail"    data-en="Retail Order"              data-gu="છૂટક ઓર્ડર">Retail Order</option>
-                  <option value="wholesale" data-en="Wholesale / Bulk Order"   data-gu="જથ્થાબંધ ઓર્ડર">Wholesale / Bulk Order</option>
-                  <option value="wedding"   data-en="Wedding / Event Catering" data-gu="લગ્ન / ઇવેન્ટ">Wedding / Event Catering</option>
-                  <option value="inquiry"   data-en="General Inquiry"          data-gu="સામાન્ય ઇન્ક્વાયરી">General Inquiry</option>
+                <label class="fh-form-label">Query Type</label>
+                <select class="fh-form-control fh-form-select" id="fhSubject" name="subject">
+                  <option value="">Select query type...</option>
+                  <option value="portal">Portal Access / Login</option>
+                  <option value="feature">Feature Question</option>
+                  <option value="order">Order Module Help</option>
+                  <option value="report">Report & Export Help</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
               <div class="col-12">
-                <label for="contactMessage" class="form-label" data-en="Message *" data-gu="સંદેશ *">Message *</label>
-                <textarea class="form-control" id="contactMessage" name="message" rows="4" required minlength="10" maxlength="500" placeholder="Tell us what you need..."></textarea>
-                <div class="invalid-feedback" data-en="Please enter a message (10-500 characters)." data-gu="સંદેશ દાખલ કરો.">Please enter a message.</div>
+                <label class="fh-form-label">Message *</label>
+                <textarea class="fh-form-control" id="fhMessage" name="message" rows="4" required minlength="10" maxlength="500" placeholder="Describe your question or issue..."></textarea>
+                <div class="fh-invalid">Please enter a message (min 10 characters).</div>
               </div>
               <div class="col-12">
-                <button type="submit" class="btn btn-primary-custom w-100 btn-lg" id="submitBtn">
-                  <span class="btn-text" data-en="Send Message" data-gu="સંદેશ મોકલો"><i class="bi bi-send me-2"></i>Send Message</span>
-                  <span class="btn-loading d-none"><span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span><span data-en="Sending..." data-gu="મોકલી રહ્યા...">Sending...</span></span>
+                <button type="submit" class="fh-btn-primary w-100 fh-btn-lg" id="fhSubmitBtn">
+                  <span class="fh-btn-text"><i class="bi bi-send-fill me-2"></i>Send via WhatsApp</span>
+                  <span class="fh-btn-loading d-none">
+                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Sending…
+                  </span>
                 </button>
               </div>
               <div class="col-12">
-                <div id="formMsg" class="form-message d-none" role="alert" aria-live="polite"></div>
+                <div id="fhFormMsg" class="fh-form-msg d-none" role="alert" aria-live="polite"></div>
               </div>
             </div>
           </form>
         </div>
       </div>
 
-      <div class="col-12" data-aos="fade-up">
-        <div class="map-wrap rounded-4 overflow-hidden">
-          <iframe
-            title="Bhramani Khandavi House on Google Maps"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14742.64839786!2d73.1706!3d22.3219!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395fc5873b0edb31%3A0xb06e56c28d041ca6!2sShubhanpura%2C%20Vadodara%2C%20Gujarat!5e0!3m2!1sen!2sin!4v1699000000000!5m2!1sen!2sin"
-            width="100%" height="380" style="border:0;" allowfullscreen="" loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            aria-label="Map showing Shubhanpura, Vadodara"></iframe>
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
 
-{{-- ===================== FOOTER ===================== --}}
-<footer class="site-footer" aria-label="Site footer">
-  <div class="footer-top">
+{{-- ══════════════════ FOOTER ══════════════════ --}}
+<footer class="fh-footer" aria-label="Site footer">
+  <div class="fh-footer-top">
     <div class="container">
-      <div class="row g-4">
+      <div class="row g-5">
 
         <div class="col-lg-4 col-md-6">
-          <div class="footer-brand d-flex align-items-center gap-2 mb-3">
-            <!-- <svg width="38" height="38" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="21" cy="21" r="21" fill="#FF9933"/>
-              <text x="21" y="27" text-anchor="middle" font-size="20" font-family="serif" fill="white">ભ</text>
-            </svg> -->
-            <img src="{{ asset('images/logo.png') }}" alt="logo" width="38" height="38">
-            <div>
-              <span class="footer-brand-name"
-                    data-en="Bhramani Khandavi House"
-                    data-gu="બ્રાહ્માણી ખાંડવી હાઉસ">
-                    Bhramani Khandavi House
-              </span>
-
-              <small class="d-block"
-                    data-en="Prepared with Bhakti, Served with Blessings"
-                    data-gu="ભક્તિપૂર્વક તૈયાર કરેલું અને આશીર્વાદ સાથે અર્પિત">
-                    Prepared with Bhakti, Served with Blessings
-              </small>
+          <div class="fh-footer-brand mb-3">
+            <div class="brand-text-logo" style="font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; line-height: 1;">
+                <span style="color: #FF9933;">Farsan</span><span style="color: white;">Hub</span>
+            </div>
+            <div style="margin-top: 5px;">
+              <small>Smart Business Portal</small>
             </div>
           </div>
-          <p class="footer-text"
-            data-en="Serving authentic satvik Gujarati Farsan in Shubhanpura, Vadodara with devotion and tradition. Purity, taste, and blessings — our identity."
-            data-gu="શુભાનપુરા, વડોદરામાં ભક્તિ અને પ્રસાદની પરંપરા સાથે અસલી સાત્વિક ગુજરાતી ફરસાણ. શુદ્ધતા, સ્વાદ અને આશીર્વાદ — અમારી ઓળખ.">
-            શુભાનપુરા, વડોદરામાં ભક્તિ અને પ્રસાદની પરંપરા સાથે અસલી સાત્વિક ગુજરાતી ફરસાણ. શુદ્ધતા, સ્વાદ અને આશીર્વાદ — અમારી ઓળખ.
-          </p>
-          <div class="social-links mt-3" aria-label="Social media links">
-            <a href="https://wa.me/919574659456" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
-            <a href="#" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <p class="fh-footer-desc">A complete business management portal built for Farsan shops in Gujarat. Manage orders, customers, products, expenses and reports — all in one place.</p>
+          <div class="fh-footer-socials">
+            <a href="https://wa.me/919574659456" class="fh-social-btn" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer"><i class="bi bi-whatsapp"></i></a>
+            <a href="#" class="fh-social-btn" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="fh-social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
           </div>
         </div>
 
-        <div class="col-lg-2 col-md-6 col-sm-6">
-          <h4 class="footer-heading" data-en="Quick Links" data-gu="ઝડપી લિંક">Quick Links</h4>
-          <ul class="footer-links" role="list">
-            <li><a href="#home"        data-en="Home"       data-gu="હોમ">Home</a></li>
-            <li><a href="#about"       data-en="About Us"   data-gu="અમારા વિશે">About Us</a></li>
-            <li><a href="#products"    data-en="Products"   data-gu="ઉત્પાદનો">Products</a></li>
-            <li><a href="#wholesale"   data-en="Wholesale"  data-gu="જથ્થાબંધ">Wholesale</a></li>
-            <li><a href="#gallery"     data-en="Gallery"    data-gu="ગેલેરી">Gallery</a></li>
-            <li><a href="#contact"     data-en="Contact"    data-gu="સંપર્ક">Contact</a></li>
+        <div class="col-lg-2 col-md-3 col-6">
+          <h5 class="fh-footer-heading">Navigation</h5>
+          <ul class="fh-footer-list">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#modules">Features</a></li>
+            <li><a href="#workflow">How It Works</a></li>
+            <li><a href="#stats">Why Us</a></li>
+            <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-sm-6">
-          <h4 class="footer-heading" data-en="Our Products" data-gu="અમારા ઉત્પાદનો">Our Products</h4>
-          <ul class="footer-links" role="list">
-            <li><a href="#products" data-en="Khandavi"   data-gu="ખાંડવી">Khandavi</a></li>
-            <li><a href="#products" data-en="Samosa"     data-gu="સામોસા">Samosa</a></li>
-            <li><a href="#products" data-en="Khaman"     data-gu="ખમણ">Khaman</a></li>
-            <li><a href="#products" data-en="Patra"      data-gu="પાત્રા">Patra</a></li>
-            <li><a href="#products" data-en="Dhokla"     data-gu="ઢોકળા">Dhokla</a></li>
-            <li><a href="#products" data-en="Mix Farsan" data-gu="મિક્સ ફરસાણ">Mix Farsan</a></li>
+        <div class="col-lg-3 col-md-3 col-6">
+          <h5 class="fh-footer-heading">Modules</h5>
+          <ul class="fh-footer-list">
+            <li><a href="#modules">Dashboard</a></li>
+            <li><a href="#modules">Orders</a></li>
+            <li><a href="#modules">Products</a></li>
+            <li><a href="#modules">Customers</a></li>
+            <li><a href="#modules">Expenses</a></li>
+            <li><a href="#modules">Reports</a></li>
           </ul>
         </div>
 
         <div class="col-lg-3 col-md-6">
-          <h4 class="footer-heading" data-en="Business Hours" data-gu="વ્યવસાય સમય">Business Hours</h4>
-          <ul class="footer-hours" role="list">
-            <li>
-              <span data-en="Monday – Saturday" data-gu="સોમ – શનિ">Monday – Saturday</span>
-              <span>7:00 AM – 9:00 PM</span>
-            </li>
-            <li>
-              <span data-en="Sunday" data-gu="રવિ">Sunday</span>
-              <span>7:00 AM – 1:00 PM</span>
-            </li>
-          </ul>
-          <a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20order" class="btn btn-wa-footer mt-3" target="_blank" rel="noopener noreferrer" data-en="Order on WhatsApp" data-gu="WhatsApp પર ઓર્ડર">
-            <i class="bi bi-whatsapp me-2"></i>Order on WhatsApp
+          <h5 class="fh-footer-heading">Admin Portal</h5>
+          <p class="fh-footer-desc" style="font-size:.85rem;">Ready to manage your business? Log in to your secure admin portal.</p>
+          <a href="{{ route('login') }}" class="fh-btn-login mt-2 d-inline-flex">
+            <i class="bi bi-shield-lock-fill me-2"></i>Admin Login
           </a>
+          <div class="mt-3">
+            <a href="https://wa.me/919574659456" class="fh-wa-inline" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-whatsapp me-1"></i>+91 95746 59456
+            </a>
+          </div>
         </div>
 
       </div>
     </div>
   </div>
-  <div class="footer-bottom">
+  <div class="fh-footer-bottom">
     <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
-      <p class="mb-0">
-        &copy; <span id="currentYear"></span>
-        <span data-en="Bhramani Khandavi House. All Rights Reserved." data-gu="બ્રાહ્માણી ખાંડવી હાઉસ. સર્વ અધિકાર સુરક્ષિત.">Bhramani Khandavi House. All Rights Reserved.</span>
-      </p>
-      <p class="mb-0 footer-made">
-        <span data-en="Made with" data-gu="બનાવ્યું">Made with</span>
-        <i class="bi bi-heart-fill text-saffron" aria-hidden="true"></i>
-        <span data-en="in Vadodara, Gujarat" data-gu="વડોદરા, ગુજરાતમાં">in Vadodara, Gujarat</span>
-      </p>
+      <p class="mb-0">&copy; <span id="fhYear"></span> FarsanHub. All Rights Reserved.</p>
+      <p class="mb-0">Made with <i class="bi bi-heart-fill" style="color:#FF9933"></i> in Vadodara, Gujarat</p>
     </div>
   </div>
 </footer>
 
-{{-- ===================== FLOATING BUTTONS ===================== --}}
-<a href="https://wa.me/919574659456?text=Hello%2C%20I%20want%20to%20order%20Farsan" class="float-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-  <i class="bi bi-whatsapp" aria-hidden="true"></i>
+{{-- ══════════════════ FLOATING BUTTONS ══════════════════ --}}
+<a href="https://wa.me/919574659456?text=Hello%2C%20I%20need%20help%20with%20FarsanHub" class="fh-float-wa" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+  <i class="bi bi-whatsapp"></i>
+  <span class="fh-float-wa-pulse"></span>
 </a>
-<button class="back-to-top" id="backToTop" aria-label="Back to top">
-  <i class="bi bi-chevron-up" aria-hidden="true"></i>
+<button class="fh-back-top" id="fhBackTop" aria-label="Back to top">
+  <i class="bi bi-chevron-up"></i>
 </button>
 
-{{-- ===================== SCRIPTS ===================== --}}
+{{-- Scripts --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer></script>
-
-{{-- JS files from public/js/ --}}
-<script src="{{ asset('js/webpage-translations.js') }}" defer></script>
 <script src="{{ asset('js/webpage-main.js') }}" defer></script>
 
 </body>

@@ -60,8 +60,9 @@
     <div class="mobile-menu">
         <div class="mobile-sidemenu mb-md-4">
             <a href="{{ route('index') }}">
-                {{-- <b>FarsanHub</b> --}}
-                <img src="{{ asset('images/logo.png') }}" alt="logo" class="img-fluid rounded-circle shadow-5g">
+                <div class="brand-text-logo mx-auto d-flex flex-column align-items-center justify-content-center bg-white shadow-sm" style="width: 70px; height: 70px; border-radius: 50%; font-size: 1.1rem; font-weight: 800; letter-spacing: -1px; line-height: 1;">
+                    <span style="color: #FF9933;">Farsan</span><span style="color: #3d2200;">Hub</span>
+                </div>
             </a>
             <a aria-controls="offcanvas-1" aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="offcanvas" href="#offcanvas-1" role="button"></a>
         </div>
