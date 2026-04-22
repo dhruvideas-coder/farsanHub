@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +20,11 @@ use Illuminate\Support\Facades\Route;
 // Authentication Routes
 // Route::get('/register', [App\Http\Controllers\AuthController::class, 'showRegister'])->name('register');
 // Route::post('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register.post');
-Route::get('/admin', [App\Http\Controllers\AuthController::class, 'showLogin'])->name('login');
+Route::get('/admin', [App\Http\Controllers\AuthController::class, 'showLogin'])->middleware('guest')->name('login');
 Route::get('/', function () {
-    // return view('webpage');
+    if (Auth::check()) {
+        return redirect()->route('admin.dashboard');
+    }
     return redirect()->route('login');
 })->name('home');
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login.post');
