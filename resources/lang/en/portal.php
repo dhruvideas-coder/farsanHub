@@ -143,6 +143,8 @@ return [
     'all_types' => 'All Types',
     'sell' => 'Sell',
     'purchase' => 'Purchase',
+    'remaining' => 'Remaining',
+    'cash' => 'Cash',
     'start_date' => 'Start Date',
     'end_date' => 'End Date',
     'delete_order' => 'Delete Order',
@@ -189,6 +191,8 @@ return [
     'net_balance' => 'Net Balance',
     'sales' => 'Sales',
     'purchases' => 'Purchases',
+    'remaining_total' => 'Remaining',
+    'cash_total' => 'Cash',
     'home' => 'Home',
     'show' => 'Show',
     'whatsapp' => 'WhatsApp',
@@ -235,4 +239,6 @@ return [
     'select_month_year_error' => 'Please select a month and year before exporting.',
 
     'auto_translate_note' => 'Auto-translate note to English',
+    'kg' => 'kg',
+    'nang' => 'Nang',
 ];

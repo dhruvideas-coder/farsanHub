@@ -216,7 +216,9 @@
     align-items: center;
 }
 .status-pill.sell { background: #ecfdf5; color: #059669; }
-.status-pill.purchase { background: #fff1f2; color: #e11d48; }
+.status-pill.purchase { background: #eff2fe; color: #1e40af; }
+.status-pill.remaining { background: #fff1f2; color: #e11d48; }
+.status-pill.cash { background: #fffbeb; color: #f59e0b; }
 
 /* ── CUSTOMER LIST ────────────────────────────────── */
 .customer-row {
@@ -352,11 +354,47 @@
             </div>
         </div>
 
-        {{-- Total Expenses --}}
+        {{-- Total Remaining --}}
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon-box" style="background: #fff1f2; color: #ef4444;">
+                    <i class="fa fa-clock-o"></i>
+                </div>
+                @php
+                    $remDiff = $period['remainingRevenue'] - $period['prevRemainingRevenue'];
+                    $remPct = $period['prevRemainingRevenue'] > 0 ? round(abs($remDiff) / $period['prevRemainingRevenue'] * 100, 1) : 0;
+                @endphp
+                <div id="remainingTrendBadge" class="kpi-badge {{ $remDiff <= 0 ? '' : 'negative' }}">
+                    {{ $remDiff <= 0 ? '-' : '+' }}{{ $remPct }}%
+                </div>
+                <div class="kpi-label">{{ __('portal.remaining_total') }}</div>
+                <div class="kpi-value" id="remainingRevenueVal">₹{{ number_format($period['remainingRevenue'], 0) }}</div>
+            </div>
+        </div>
+
+        {{-- Total Cash --}}
         <div class="col-12 col-md-6 col-xl-3">
             <div class="kpi-card">
                 <div class="kpi-icon-box" style="background: #fffbeb; color: #f59e0b;">
                     <i class="fa fa-money"></i>
+                </div>
+                @php
+                    $cashDiff = $period['cashRevenue'] - $period['prevCashRevenue'];
+                    $cashPct = $period['prevCashRevenue'] > 0 ? round(abs($cashDiff) / $period['prevCashRevenue'] * 100, 1) : 0;
+                @endphp
+                <div id="cashTrendBadge" class="kpi-badge {{ $cashDiff >= 0 ? '' : 'negative' }}">
+                    {{ $cashDiff >= 0 ? '+' : '-' }}{{ $cashPct }}%
+                </div>
+                <div class="kpi-label">{{ __('portal.cash_total') }}</div>
+                <div class="kpi-value" id="cashRevenueVal">₹{{ number_format($period['cashRevenue'], 0) }}</div>
+            </div>
+        </div>
+
+        {{-- Total Expenses --}}
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="kpi-card">
+                <div class="kpi-icon-box" style="background: #f1f5f9; color: #475569;">
+                    <i class="fa fa-calculator"></i>
                 </div>
                 @php
                     $expenseDiff = $period['expenses'] - $period['prevExpenses'];
@@ -403,7 +441,13 @@
                             <span class="rounded-circle" style="width:8px; height:8px; background:var(--success);"></span> {{ __('portal.sales') }}
                         </div>
                         <div class="d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 800;">
-                            <span class="rounded-circle" style="width:8px; height:8px; background:var(--danger);"></span> {{ __('portal.purchases') }}
+                            <span class="rounded-circle" style="width:8px; height:8px; background:#3b82f6;"></span> {{ __('portal.purchases') }}
+                        </div>
+                        <div class="d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 800;">
+                            <span class="rounded-circle" style="width:8px; height:8px; background:var(--danger);"></span> {{ __('portal.remaining') }}
+                        </div>
+                        <div class="d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 800;">
+                            <span class="rounded-circle" style="width:8px; height:8px; background:var(--warning);"></span> {{ __('portal.cash') }}
                         </div>
                     </div>
                 </div>
@@ -467,7 +511,7 @@
                                 <td>
                                     <div class="fw-bold text-dark" style="font-size: 13.5px;">{{ $order->product_name }}</div>
                                     <div class="mt-1">
-                                        <span class="status-pill {{ $order->type === 'sell' ? 'sell' : 'purchase' }}" style="padding: 2px 8px; font-size: 9px;">
+                                        <span class="status-pill {{ $order->type }}" style="padding: 2px 8px; font-size: 9px;">
                                             {{ strtoupper($order->type) }}
                                         </span>
                                     </div>
@@ -557,24 +601,37 @@
                         tension: 0.45,
                         borderWidth: 4,
                         pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointHoverBorderWidth: 4,
-                        pointHoverBorderColor: '#fff',
-                        pointHoverBackgroundColor: COLORS.success
+                        pointHoverRadius: 6
                     },
                     {
-                        label: 'Purchases',
+                        label: '{{ __('portal.purchases') }}',
                         data: globalData.chartPurchaseRevenue,
+                        borderColor: COLORS.primary,
+                        backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                        fill: true,
+                        tension: 0.45,
+                        borderWidth: 4,
+                        pointRadius: 4
+                    },
+                    {
+                        label: '{{ __('portal.remaining') }}',
+                        data: globalData.chartRemainingRevenue,
                         borderColor: COLORS.danger,
                         backgroundColor: gradientP,
                         fill: true,
                         tension: 0.45,
                         borderWidth: 4,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointHoverBorderWidth: 4,
-                        pointHoverBorderColor: '#fff',
-                        pointHoverBackgroundColor: COLORS.danger
+                        pointRadius: 4
+                    },
+                    {
+                        label: '{{ __('portal.cash') }}',
+                        data: globalData.chartCashRevenue,
+                        borderColor: COLORS.warning,
+                        backgroundColor: 'rgba(245, 158, 11, 0.05)',
+                        fill: true,
+                        tension: 0.45,
+                        borderWidth: 4,
+                        pointRadius: 4
                     }
                 ]
             },
@@ -649,6 +706,8 @@
                 };
                 updateVal('sellRevenueVal', p.sellRevenue);
                 updateVal('purchaseRevenueVal', p.purchaseRevenue);
+                updateVal('remainingRevenueVal', p.remainingRevenue);
+                updateVal('cashRevenueVal', p.cashRevenue);
                 updateVal('expenseVal', p.expenses);
                 
                 const netProfit = p.sellRevenue - p.purchaseRevenue - p.expenses;
@@ -668,6 +727,8 @@
 
                 updateBadge('sellTrendBadge', p.sellRevenue, p.prevSellRevenue);
                 updateBadge('purchaseTrendBadge', p.purchaseRevenue, p.prevPurchaseRevenue, true);
+                updateBadge('remainingTrendBadge', p.remainingRevenue, p.prevRemainingRevenue, true);
+                updateBadge('cashTrendBadge', p.cashRevenue, p.prevCashRevenue);
                 updateBadge('expenseTrendBadge', p.expenses, p.prevExpenses, true);
                 
                 const prevNetProfit = p.prevSellRevenue - p.prevPurchaseRevenue - p.prevExpenses;
@@ -694,7 +755,7 @@
                         <td>
                             <div class="fw-bold text-dark" style="font-size: 13.5px;">${o.product_name}</div>
                             <div class="mt-1">
-                                <span class="status-pill ${o.type === 'sell' ? 'sell' : 'purchase'}" style="padding: 2px 8px; font-size: 9px;">${o.type.toUpperCase()}</span>
+                                <span class="status-pill ${o.type}" style="padding: 2px 8px; font-size: 9px;">${o.type.toUpperCase()}</span>
                             </div>
                         </td>
                         <td class="text-center">
@@ -727,6 +788,8 @@
                 charts.revenue.data.labels = data.global.chartLabels;
                 charts.revenue.data.datasets[0].data = data.global.chartSellRevenue;
                 charts.revenue.data.datasets[1].data = data.global.chartPurchaseRevenue;
+                charts.revenue.data.datasets[2].data = data.global.chartRemainingRevenue;
+                charts.revenue.data.datasets[3].data = data.global.chartCashRevenue;
                 charts.revenue.update();
 
                 // Update Pie Chart

@@ -61,8 +61,8 @@
                                             id="product_base_price" name="product_base_price" value="{{ old('product_base_price') }}"
                                             placeholder="0.00">
                                         <select id="unit" name="unit" class="input-group-text form-select ps-0" style="max-width:100px; border-left:1px solid #ced4da;">
-                                            <option value="kg"   {{ old('unit', 'kg') == 'kg'   ? 'selected' : '' }}>/ kg</option>
-                                            <option value="Nang" {{ old('unit') == 'Nang' ? 'selected' : '' }}>/ Nang</option>
+                                            <option value="kg"   {{ old('unit', 'kg') == 'kg'   ? 'selected' : '' }}>/ {{ __('portal.kg') }}</option>
+                                            <option value="Nang" {{ old('unit') == 'Nang' ? 'selected' : '' }}>/ {{ __('portal.nang') }}</option>
                                         </select>
                                         @error('product_base_price')
                                             <div class="invalid-feedback">{{ $message }}</div>

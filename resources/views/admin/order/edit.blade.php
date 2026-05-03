@@ -49,6 +49,18 @@
                                                     {{ @trans('portal.purchase') }}
                                                 </label>
                                             </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="type_remaining" value="remaining" {{ old('type', $order->type) === 'remaining' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="type_remaining">
+                                                    {{ @trans('portal.remaining') }}
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="type_cash" value="cash" {{ old('type', $order->type) === 'cash' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="type_cash">
+                                                    {{ @trans('portal.cash') }}
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -122,10 +134,16 @@
         </div>
     </div>
 <script>
+const unitTranslations = {
+    'kg': "{{ __('portal.kg') }}",
+    'Nang': "{{ __('portal.nang') }}"
+};
+
 function getSelectedUnit() {
     var sel = document.getElementById('product');
     var opt = sel.options[sel.selectedIndex];
-    return (opt && opt.getAttribute('data-unit')) || 'kg';
+    var unit = (opt && opt.getAttribute('data-unit')) || 'kg';
+    return unitTranslations[unit] || unit;
 }
 
 function updateTotal() {

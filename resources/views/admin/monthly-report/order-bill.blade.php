@@ -308,17 +308,20 @@
     @php
         $groupedOrders = [];
         foreach($orders as $order) {
-            $productName = $order->product->product_name;
-            if (!isset($groupedOrders[$productName])) {
-                $groupedOrders[$productName] = [
+            $type = $order->type ?? 'sell';
+            $productName = $order->product->product_name . ' (' . trans('portal.' . $type) . ')';
+            $key = $order->product->id . '_' . $type;
+            
+            if (!isset($groupedOrders[$key])) {
+                $groupedOrders[$key] = [
                     'product_name' => $productName,
                     'total_qty'    => 0,
                     'unit'         => $order->product->unit ?? 'kg',
                     'total_amount' => 0,
                 ];
             }
-            $groupedOrders[$productName]['total_qty']    += (float) $order->order_quantity;
-            $groupedOrders[$productName]['total_amount'] += (float) $order->order_quantity * (float) $order->order_price;
+            $groupedOrders[$key]['total_qty']    += (float) $order->order_quantity;
+            $groupedOrders[$key]['total_amount'] += (float) $order->order_quantity * (float) $order->order_price;
         }
     @endphp
 
@@ -335,7 +338,7 @@
             @foreach($groupedOrders as $item)
                 <tr>
                     <td class="col-desc">{{ $item['product_name'] }}</td>
-                    <td>{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }} {{ $item['unit'] }}</td>
+                    <td>{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }} {{ __('portal.' . strtolower($item['unit'])) }}</td>
                     <td>{{ $item['total_qty'] > 0 ? number_format($item['total_amount'] / $item['total_qty'], 2) : '0.00' }}</td>
                     <td>{{ number_format($item['total_amount'], 2) }}</td>
                 </tr>
@@ -347,10 +350,10 @@
                     GRAND TOTAL:
                     &nbsp;&nbsp;
                     @if($totalKg > 0)
-                        {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} KG
+                        {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} {{ __('portal.kg') }}
                     @endif
                     @if($totalNang > 0)
-                        &nbsp; {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} NANG
+                        &nbsp; {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} {{ __('portal.nang') }}
                     @endif
                 </td>
                 <td style="background:#fff; border:1px solid #000;"></td>

@@ -54,6 +54,18 @@ class AdminController extends Controller
             ->where('type', 'purchase')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
+
+        $allTimeRemainingOrders  = Order::where('user_id', $uid)->where('type', 'remaining')->count();
+        $allTimeRemainingRevenue = Order::where('user_id', $uid)
+            ->where('type', 'remaining')
+            ->selectRaw('SUM(order_quantity * order_price) as total')
+            ->value('total') ?? 0;
+
+        $allTimeCashOrders  = Order::where('user_id', $uid)->where('type', 'cash')->count();
+        $allTimeCashRevenue = Order::where('user_id', $uid)
+            ->where('type', 'cash')
+            ->selectRaw('SUM(order_quantity * order_price) as total')
+            ->value('total') ?? 0;
         
         $products = Product::where('user_id', $uid)->orderBy('product_name')->get(['id', 'product_name', 'unit']);
 
@@ -119,6 +131,18 @@ class AdminController extends Controller
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
+        // Period Remaining
+        $periodRemainingOrders = (clone $periodOrdersQuery)->where('type', 'remaining')->count();
+        $periodRemainingRevenue = (clone $periodOrdersQuery)->where('type', 'remaining')
+            ->selectRaw('SUM(order_quantity * order_price) as total')
+            ->value('total') ?? 0;
+
+        // Period Cash
+        $periodCashOrders = (clone $periodOrdersQuery)->where('type', 'cash')->count();
+        $periodCashRevenue = (clone $periodOrdersQuery)->where('type', 'cash')
+            ->selectRaw('SUM(order_quantity * order_price) as total')
+            ->value('total') ?? 0;
+
         // Expenses are usually not product-linked, but we keep them filtered by date
         $periodExpenses = Expense::where('user_id', $uid)
             ->whereBetween('date', [$start, $end])
@@ -139,6 +163,16 @@ class AdminController extends Controller
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
+        $prevPeriodRemainingOrders = (clone $prevPeriodQuery)->where('type', 'remaining')->count();
+        $prevPeriodRemainingRevenue = (clone $prevPeriodQuery)->where('type', 'remaining')
+            ->selectRaw('SUM(order_quantity * order_price) as total')
+            ->value('total') ?? 0;
+
+        $prevPeriodCashOrders = (clone $prevPeriodQuery)->where('type', 'cash')->count();
+        $prevPeriodCashRevenue = (clone $prevPeriodQuery)->where('type', 'cash')
+            ->selectRaw('SUM(order_quantity * order_price) as total')
+            ->value('total') ?? 0;
+
         $prevPeriodExpenses = Expense::where('user_id', $uid)
             ->whereBetween('date', [$pStart, $pEnd])
             ->sum('amount');
@@ -147,6 +181,8 @@ class AdminController extends Controller
         $chartLabels          = collect();
         $chartSellRevenue     = collect();
         $chartPurchaseRevenue = collect();
+        $chartRemainingRevenue = collect();
+        $chartCashRevenue     = collect();
         $chartOrders          = collect();
         $chartQuantity        = collect();
         
@@ -164,11 +200,15 @@ class AdminController extends Controller
                         ->whereRaw("HOUR(created_at) = ?", [$i])
                         ->selectRaw("
                             SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase
+                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
+                            SUM(CASE WHEN type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
+                            SUM(CASE WHEN type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
                         ")->first();
                     
                     $chartSellRevenue->push((float)($stats->sell ?? 0));
                     $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
+                    $chartRemainingRevenue->push((float)($stats->remaining ?? 0));
+                    $chartCashRevenue->push((float)($stats->cash ?? 0));
                 }
                 break;
 
@@ -182,11 +222,15 @@ class AdminController extends Controller
                         ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$day->toDateString()])
                         ->selectRaw("
                             SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase
+                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
+                            SUM(CASE WHEN type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
+                            SUM(CASE WHEN type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
                         ")->first();
                         
                     $chartSellRevenue->push((float)($stats->sell ?? 0));
                     $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
+                    $chartRemainingRevenue->push((float)($stats->remaining ?? 0));
+                    $chartCashRevenue->push((float)($stats->cash ?? 0));
                 }
                 break;
 
@@ -200,11 +244,15 @@ class AdminController extends Controller
                         ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$day->toDateString()])
                         ->selectRaw("
                             SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase
+                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
+                            SUM(CASE WHEN type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
+                            SUM(CASE WHEN type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
                         ")->first();
                         
                     $chartSellRevenue->push((float)($stats->sell ?? 0));
                     $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
+                    $chartRemainingRevenue->push((float)($stats->remaining ?? 0));
+                    $chartCashRevenue->push((float)($stats->cash ?? 0));
                 }
                 break;
 
@@ -219,11 +267,15 @@ class AdminController extends Controller
                         ->whereRaw("DATE_FORMAT(COALESCE(order_date, created_at), '%Y-%m') = ?", [$month->format('Y-m')])
                         ->selectRaw("
                             SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase
+                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
+                            SUM(CASE WHEN type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
+                            SUM(CASE WHEN type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
                         ")->first();
                         
                     $chartSellRevenue->push((float)($stats->sell ?? 0));
                     $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
+                    $chartRemainingRevenue->push((float)($stats->remaining ?? 0));
+                    $chartCashRevenue->push((float)($stats->cash ?? 0));
                 }
                 break;
         }
@@ -235,7 +287,9 @@ class AdminController extends Controller
             ->selectRaw('products.id, products.product_name, products.unit,
                          SUM(orders.order_quantity) as total_qty,
                          SUM(CASE WHEN orders.type = \'sell\' THEN orders.order_quantity ELSE 0 END) as total_sell_qty,
-                         SUM(CASE WHEN orders.type = \'purchase\' THEN orders.order_quantity ELSE 0 END) as total_purchase_qty')
+                         SUM(CASE WHEN orders.type = \'purchase\' THEN orders.order_quantity ELSE 0 END) as total_purchase_qty,
+                         SUM(CASE WHEN orders.type = \'remaining\' THEN orders.order_quantity ELSE 0 END) as total_remaining_qty,
+                         SUM(CASE WHEN orders.type = \'cash\' THEN orders.order_quantity ELSE 0 END) as total_cash_qty')
             ->groupBy('products.id', 'products.product_name', 'products.unit')
             ->orderByDesc('total_qty')
             ->limit(5)
@@ -293,11 +347,17 @@ class AdminController extends Controller
                 'allTimeSellRevenue'     => (float)$allTimeSellRevenue,
                 'allTimePurchaseOrders'  => $allTimePurchaseOrders,
                 'allTimePurchaseRevenue' => (float)$allTimePurchaseRevenue,
+                'allTimeRemainingOrders'  => $allTimeRemainingOrders,
+                'allTimeRemainingRevenue' => (float)$allTimeRemainingRevenue,
+                'allTimeCashOrders'       => $allTimeCashOrders,
+                'allTimeCashRevenue'      => (float)$allTimeCashRevenue,
                 
                 'chartLabels'          => $chartLabels,
                 'chartOrders'          => $chartOrders,
                 'chartSellRevenue'     => $chartSellRevenue,
                 'chartPurchaseRevenue' => $chartPurchaseRevenue,
+                'chartRemainingRevenue' => $chartRemainingRevenue,
+                'chartCashRevenue'     => $chartCashRevenue,
                 'chartQuantity'        => $chartQuantity,
                 'products'             => $products,
             ],
@@ -316,6 +376,16 @@ class AdminController extends Controller
                 'purchaseRevenue'  => (float)$periodPurchaseRevenue,
                 'prevPurchaseOrdersCount' => $prevPeriodPurchaseOrders,
                 'prevPurchaseRevenue' => (float)$prevPeriodPurchaseRevenue,
+
+                'remainingOrdersCount' => $periodRemainingOrders,
+                'remainingRevenue'  => (float)$periodRemainingRevenue,
+                'prevRemainingOrdersCount' => $prevPeriodRemainingOrders,
+                'prevRemainingRevenue' => (float)$prevPeriodRemainingRevenue,
+
+                'cashOrdersCount' => $periodCashOrders,
+                'cashRevenue'  => (float)$periodCashRevenue,
+                'prevCashOrdersCount' => $prevPeriodCashOrders,
+                'prevCashRevenue' => (float)$prevPeriodCashRevenue,
                 
                 'expenses'         => (float)$periodExpenses,
                 'prevExpenses'     => (float)$prevPeriodExpenses,

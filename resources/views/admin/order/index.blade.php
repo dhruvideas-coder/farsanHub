@@ -121,6 +121,8 @@
                                     <option value="">{{ __('portal.all_types') }}</option>
                                     <option value="sell">{{ __('portal.sell') }}</option>
                                     <option value="purchase">{{ __('portal.purchase') }}</option>
+                                    <option value="remaining">{{ __('portal.remaining') }}</option>
+                                    <option value="cash">{{ __('portal.cash') }}</option>
                                 </select>
                             </div>
                             <div class="filter-item" style="flex: 2 1 0;">
@@ -137,7 +139,7 @@
                                 <select id="product-filter" onchange="reloadTable()" class="form-select custom-select w-100">
                                     <option value="">{{ __('portal.all_products') }}</option>
                                     @foreach($products as $p)
-                                    <option value="{{ $p->id }}">{{ $p->product_name }} ({{ $p->unit }})</option>
+                                    <option value="{{ $p->id }}">{{ $p->product_name }} ({{ __('portal.' . strtolower($p->unit ?? 'kg')) }})</option>
                                     @endforeach
                                 </select>
                             </div>

@@ -76,10 +76,11 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
 
             return [
                 'sr_no' => $srNo++,
+                'type' => trans('portal.' . ($item->type ?? 'sell')),
                 'customer_name' => $item->customer->customer_name ?? '-',
                 'shop_name' => $item->customer->shop_name ?? '-',
                 'product_name' => $item->product->product_name ?? '-',
-                'order_quantity' => ($item->order_quantity ?? '0') . ' ' . ($item->product->unit ?? 'kg'),
+                'order_quantity' => ($item->order_quantity ?? '0') . ' ' . trans('portal.' . strtolower($item->product->unit ?? 'kg')),
                 'order_price' => '₹ ' . $item->order_price ?? '',
                 'total_amount' => '₹ ' . $totalAmount,
                 'date' => $item->order_date ? date('d-m-Y', strtotime($item->order_date)) : ($item->created_at ? date('d-m-Y', strtotime($item->created_at)) : '-'),
@@ -91,6 +92,7 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
     {
         return [
             'Sr. No.', 
+            trans('portal.type'),
             trans('portal.customer_name'),
             trans('portal.shop_name'),
             trans('portal.product_name'),
@@ -103,18 +105,18 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
 
     public function styles(Worksheet $sheet)
     {
-        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:I1')->getFont()->setBold(true);
         
         // Style for the grand total row
         $totalRow = $this->rowCount + 2; // +2 because of header row and 1-based indexing
-        $sheet->getStyle('A' . $totalRow . ':H' . $totalRow)->getFont()->setBold(true);
+        $sheet->getStyle('A' . $totalRow . ':I' . $totalRow)->getFont()->setBold(true);
     }
 
     public function columnFormats(): array
     {
         return [
-            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
             'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'H' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
         ];
     }
     
@@ -126,15 +128,15 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
 
                 // Add Grand Total row
                 $event->sheet->setCellValue('A' . $totalRow, 'Grand Total');
-                $event->sheet->setCellValue('E' . $totalRow, $this->totalKg . ' kg, ' . $this->totalNang . ' Nang');
-                $event->sheet->setCellValue('G' . $totalRow, '₹ ' . $this->totalOrderAmount); 
+                $event->sheet->setCellValue('F' . $totalRow, $this->totalKg . ' ' . trans('portal.kg') . ', ' . $this->totalNang . ' ' . trans('portal.nang'));
+                $event->sheet->setCellValue('H' . $totalRow, '₹ ' . $this->totalOrderAmount); 
 
-                $event->sheet->mergeCells('A' . $totalRow . ':D' . $totalRow);
+                $event->sheet->mergeCells('A' . $totalRow . ':E' . $totalRow);
                 
                 // Apply formatting
                 $event->sheet->getStyle('A' . $totalRow)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-                $event->sheet->getStyle('E' . $totalRow)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT); 
-                $event->sheet->getStyle('G' . $totalRow)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+                $event->sheet->getStyle('F' . $totalRow)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT); 
+                $event->sheet->getStyle('H' . $totalRow)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
             },
         ];
     }

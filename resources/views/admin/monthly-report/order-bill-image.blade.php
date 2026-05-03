@@ -10,10 +10,13 @@
     /* ── Group orders by product ── */
     $groupedOrders = [];
     foreach ($orders as $order) {
-        $key = $order->product_name;
+        $type = $order->type ?? 'sell';
+        $productName = $order->product_name . ' (' . trans('portal.' . $type) . ')';
+        $key = ($order->product_id ?? $order->product_name) . '_' . $type;
+        
         if (!isset($groupedOrders[$key])) {
             $groupedOrders[$key] = [
-                'product_name' => $order->product_name,
+                'product_name' => $productName,
                 'total_qty'    => 0,
                 'unit'         => $order->unit ?? 'kg',
                 'total_amount' => 0,
@@ -518,7 +521,7 @@ body {
                 @foreach($groupedOrders as $item)
                 <tr>
                     <td>{{ $item['product_name'] }}</td>
-                    <td>{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }} {{ $item['unit'] }}</td>
+                    <td>{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }} {{ __('portal.' . strtolower($item['unit'])) }}</td>
                     <td>{{ $item['total_qty'] > 0 ? number_format($item['total_amount'] / $item['total_qty'], 2) : '0.00' }}</td>
                     <td class="amount-cell">&#8377; {{ number_format($item['total_amount'], 2) }}</td>
                 </tr>
@@ -568,8 +571,8 @@ body {
                     <div class="grand-total-label">Grand Total</div>
                     @if($totalKg > 0)
                         <div style="font-size:11px; opacity:.65; margin-top:3px;">
-                            {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} KG
-                            @if($totalNang > 0) &nbsp;+&nbsp; {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} NANG @endif
+                            {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} {{ __('portal.kg') }}
+                            @if($totalNang > 0) &nbsp;+&nbsp; {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} {{ __('portal.nang') }} @endif
                         </div>
                     @endif
                 </div>

@@ -48,7 +48,7 @@
                         <td class="text-center" style="padding: 15px 20px;">
                             <div style="font-size:14px; font-weight:700; color:#1c1917;">
                                 <i class="fa fa-rupee text-muted small me-1"></i>{{ $product->effective_price ?? $product->product_base_price }}
-                                <span class="text-muted fw-normal" style="font-size:11px;">/ {{ $product->unit ?? 'kg' }}</span>
+                                <span class="text-muted fw-normal" style="font-size:11px;">/ {{ __('portal.' . strtolower($product->unit ?? 'kg')) }}</span>
                             </div>
                             @if(isset($product->specific_price) && $product->specific_price)
                                 <span class="badge" style="background:#fff7ed; color:#c2410c; font-size:10px; border:1px solid #ffedd5;">Specific</span>

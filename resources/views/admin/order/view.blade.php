@@ -25,9 +25,13 @@
                     <td style="font-size:13px; color:#78716c; font-weight:600;">{{ $orders->firstItem() + $index }}</td>
                     <td class="text-center">
                         @if(($order->type ?? 'sell') === 'purchase')
-                            <span class="badge" style="background:#dbeafe; color:#1e40af; font-size:11px;">Purchase</span>
+                            <span class="badge" style="background:#dbeafe; color:#1e40af; font-size:11px;">{{ __('portal.purchase') }}</span>
+                        @elseif($order->type === 'remaining')
+                            <span class="badge" style="background:#fee2e2; color:#991b1b; font-size:11px;">{{ __('portal.remaining') }}</span>
+                        @elseif($order->type === 'cash')
+                            <span class="badge" style="background:#fef3c7; color:#92400e; font-size:11px;">{{ __('portal.cash') }}</span>
                         @else
-                            <span class="badge" style="background:#d1fae5; color:#065f46; font-size:11px;">Sell</span>
+                            <span class="badge" style="background:#d1fae5; color:#065f46; font-size:11px;">{{ __('portal.sell') }}</span>
                         @endif
                     </td>
                     <td>
@@ -42,9 +46,9 @@
                     <td style="font-size:13px; color:#292524;">{{ optional($order->product)->product_name ?? 'N/A' }}</td>
                     <td class="text-center">
                         <span class="badge rounded-pill" style="background:#FFF7EE; color:#d97706; font-size:12px; font-weight:600; border:1px solid #fde68a;">
-                            {{ rtrim(rtrim(number_format($order->order_quantity, 4), '0'), '.') }} {{ optional($order->product)->unit ?? 'kg' }}
+                            {{ rtrim(rtrim(number_format($order->order_quantity, 4), '0'), '.') }} {{ __('portal.' . strtolower(optional($order->product)->unit ?? 'kg')) }}
                         </span>
-                    </td>
+                    </td>   
                     <td class="text-end" style="font-size:13px; font-weight:700; color:#d97706; white-space:nowrap;">
                         ₹{{ number_format($order->order_quantity * $order->order_price, 2) }}
                     </td>
@@ -75,10 +79,10 @@
                 <td class="text-center">
                     <div class="d-inline-flex flex-column align-items-center gap-1">
                         <span class="badge rounded-pill" style="background:#FF9933; color:#fff; font-size:12px; font-weight:700;">
-                            {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} kg
+                            {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} {{ __('portal.kg') }}
                         </span>
                         <span class="badge rounded-pill" style="background:#FF9933; color:#fff; font-size:12px; font-weight:700;">
-                            {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} Nang
+                            {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} {{ __('portal.nang') }}
                         </span>
                     </div>
                 </td>

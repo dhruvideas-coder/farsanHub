@@ -41,6 +41,18 @@
                                                 {{ @trans('portal.purchase') }}
                                             </label>
                                         </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="type" id="type_remaining" value="remaining" {{ old('type') === 'remaining' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="type_remaining">
+                                                {{ @trans('portal.remaining') }}
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="type" id="type_cash" value="cash" {{ old('type') === 'cash' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="type_cash">
+                                                {{ @trans('portal.cash') }}
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -127,10 +139,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
         function updateTotal() {
+            const unitTranslations = {
+                'kg': "{{ __('portal.kg') }}",
+                'Nang': "{{ __('portal.nang') }}"
+            };
+
             var selected = $('#product').find('option:selected');
+            var rawUnit  = selected.attr('data-unit') || '—';
+            var unit     = unitTranslations[rawUnit] || rawUnit;
             var price = parseFloat(selected.attr('data-price')) || 0;
             var qty   = parseFloat($('#order_quantity').val()) || 0;
-            var unit  = selected.attr('data-unit') || '—';
 
             if (price > 0 && qty > 0) {
                 var total = price * qty;
@@ -189,7 +207,12 @@
 
             $('#product, #order_date').on('change', function() {
                 permissionGranted = false; // Reset permission if product or date changes
-                var unit = $('#product').find('option:selected').attr('data-unit') || '—';
+                const unitTranslations = {
+                    'kg': "{{ __('portal.kg') }}",
+                    'Nang': "{{ __('portal.nang') }}"
+                };
+                var rawUnit = $('#product').find('option:selected').attr('data-unit') || '—';
+                var unit    = unitTranslations[rawUnit] || rawUnit;
                 $('#qty-unit-label').text(unit);
                 $('#qty-unit-badge').text(unit);
                 updateTotal();
