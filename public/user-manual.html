@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarsanHub — User Guide</title>
+  <style>
+    :root {
+      --brand: #e65c00;
+      --brand-light: #fff3e0;
+      --brand-dark: #b84600;
+      --sidebar-bg: #1a1a2e;
+      --sidebar-text: #e0e0e0;
+      --sidebar-active: #e65c00;
+      --body-bg: #f5f6fa;
+      --card-bg: #ffffff;
+      --text: #1e1e2f;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --green: #16a34a;
+      --blue: #2563eb;
+      --red: #dc2626;
+      --yellow: #d97706;
+      --radius: 10px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--body-bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    #sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      z-index: 100;
+      transition: transform .3s;
+    }
+
+    #sidebar .logo {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    #sidebar .logo h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--brand);
+      letter-spacing: -0.5px;
+    }
+
+    #sidebar .logo p {
+      font-size: 0.72rem;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    #sidebar nav {
+      padding: 16px 0;
+    }
+
+    #sidebar nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-left: 3px solid transparent;
+      transition: all .2s;
+    }
+
+    #sidebar nav a:hover,
+    #sidebar nav a.active {
+      background: rgba(230, 92, 0, 0.12);
+      border-left-color: var(--brand);
+      color: #fff;
+    }
+
+    #sidebar nav .section-label {
+      padding: 12px 20px 4px;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #6b7280;
+      font-weight: 700;
+    }
+
+    /* ── Main ── */
+    #main {
+      margin-left: 260px;
+      flex: 1;
+      padding: 32px 40px;
+      max-width: 1100px;
+    }
+
+    /* ── Top Banner ── */
+    .top-banner {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+      border-radius: var(--radius);
+      padding: 36px 40px;
+      color: #fff;
+      margin-bottom: 36px;
+    }
+
+    .top-banner h1 {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .top-banner p {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-top: 6px;
+    }
+
+    .top-banner .meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .top-banner .meta span {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+    }
+
+    /* ── Section headings ── */
+    .section {
+      margin-bottom: 48px;
+      scroll-margin-top: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--brand-light);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 24px 0 12px;
+    }
+
+    p {
+      line-height: 1.75;
+      color: #374151;
+      margin-bottom: 12px;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .stat-card .icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-card .value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--brand);
+      margin-top: 4px;
+    }
+
+    /* ── Step boxes ── */
+    .steps {
+      counter-reset: step;
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .step-num {
+      counter-increment: step;
+      width: 36px;
+      height: 36px;
+      background: var(--brand);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .step-body {
+      flex: 1;
+      padding-top: 6px;
+    }
+
+    .step-body strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    /* ── Tables ── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    thead th {
+      background: var(--brand);
+      color: #fff;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tbody td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      vertical-align: top;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    tbody tr:hover {
+      background: var(--brand-light);
+    }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-green {
+      background: #dcfce7;
+      color: var(--green);
+    }
+
+    .badge-blue {
+      background: #dbeafe;
+      color: var(--blue);
+    }
+
+    .badge-red {
+      background: #fee2e2;
+      color: var(--red);
+    }
+
+    .badge-orange {
+      background: #fff3e0;
+      color: var(--brand);
+    }
+
+    .badge-gray {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    /* ── Alerts ── */
+    .alert {
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin: 16px 0;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 0.875rem;
+    }
+
+    .alert-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .alert-info {
+      background: #dbeafe;
+      border-left: 4px solid var(--blue);
+    }
+
+    .alert-warning {
+      background: #fef9c3;
+      border-left: 4px solid var(--yellow);
+    }
+
+    .alert-success {
+      background: #dcfce7;
+      border-left: 4px solid var(--green);
+    }
+
+    .alert-danger {
+      background: #fee2e2;
+      border-left: 4px solid var(--red);
+    }
+
+    /* ── Suggestion cards ── */
+    .suggestion {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--brand);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+
+    .suggestion .s-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .suggestion .s-num {
+      width: 26px;
+      height: 26px;
+      background: var(--brand);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .suggestion .s-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .suggestion .s-body {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* ── Login flow ── */
+    .login-box {
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .login-box-header {
+      background: var(--sidebar-bg);
+      color: #fff;
+      padding: 14px 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .login-box-body {
+      padding: 20px;
+    }
+
+    /* ── Field list ── */
+    .field-list {
+      list-style: none;
+    }
+
+    .field-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+    }
+
+    .field-list li:last-child {
+      border-bottom: none;
+    }
+
+    .field-name {
+      min-width: 160px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .field-required {
+      color: var(--red);
+      font-size: 0.75rem;
+      margin-left: 4px;
+    }
+
+    .field-desc {
+      color: var(--muted);
+    }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 36px;
+      border: 1px solid var(--border);
+    }
+
+    .toc h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .toc ol {
+      columns: 2;
+      column-gap: 24px;
+      padding-left: 20px;
+    }
+
+    .toc li {
+      margin-bottom: 8px;
+      font-size: 0.875rem;
+      break-inside: avoid;
+    }
+
+    .toc a {
+      color: var(--brand);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Quick ref ── */
+    .quick-ref {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .qr-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .qr-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 60px;
+      padding: 24px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      #sidebar {
+        transform: translateX(-260px);
+      }
+
+      #sidebar.open {
+        transform: translateX(0);
+      }
+
+      #main {
+        margin-left: 0;
+        padding: 20px;
+      }
+
+      .toc ol {
+        columns: 1;
+      }
+
+      .quick-ref {
+        grid-template-columns: 1fr;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* ── Print ── */
+    @media print {
+      #sidebar {
+        display: none;
+      }
+
+      #main {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════════ SIDEBAR ═══════════════ -->
+  <nav id="sidebar">
+    <div class="logo">
+      <h1>FarsanHub</h1>
+      <p>Business Management Portal</p>
+    </div>
+    <nav>
+      <div class="section-label">Overview</div>
+      <a href="#intro">📋 What is FarsanHub?</a>
+      <a href="#users">👥 Who Uses It?</a>
+
+      <div class="section-label">Getting Started</div>
+      <a href="#login">🔐 Login Process</a>
+      <a href="#dashboard">📊 Dashboard</a>
+
+      <div class="section-label">Modules</div>
+      <a href="#customers">🏪 Customers</a>
+      <a href="#products">📦 Products</a>
+      <a href="#orders">🛒 Orders</a>
+      <a href="#expenses">💸 Expenses</a>
+      <a href="#reports">📄 Reports</a>
+      <a href="#map">🗺️ Customer Map</a>
+      <a href="#content">🖼️ Content</a>
+      <a href="#users-mgmt">⚙️ User Management</a>
+
+      <div class="section-label">Account</div>
+      <a href="#account">🔑 Account Settings</a>
+      <a href="#security">🛡️ Safety & Logout</a>
+
+      <div class="section-label">Improvements</div>
+      <a href="#suggestions">💡 Suggestions</a>
+    </nav>
+  </nav>
+
+  <!-- ═══════════════ MAIN ═══════════════ -->
+  <main id="main">
+
+    <!-- Top Banner -->
+    <div class="top-banner">
+      <h1>FarsanHub — User Guide</h1>
+      <p>Complete step-by-step documentation for Brahmani Khandvi &amp; Farsan House</p>
+      <div class="meta">
+        <span>📦 Version 1.6</span>
+        <span>📅 May 2026</span>
+        <span>🏢 Vadodara, Gujarat</span>
+        <span>🌐 Laravel 9 · PHP 8</span>
+      </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="toc">
+      <h2>📑 Table of Contents</h2>
+      <ol>
+        <li><a href="#intro">What is FarsanHub?</a></li>
+        <li><a href="#users">Who Uses This System?</a></li>
+        <li><a href="#login">How to Log In</a></li>
+        <li><a href="#dashboard">Dashboard Overview</a></li>
+        <li><a href="#customers">Customers Module</a></li>
+        <li><a href="#products">Products Module</a></li>
+        <li><a href="#orders">Orders Module</a></li>
+        <li><a href="#expenses">Expenses Module</a></li>
+        <li><a href="#reports">Reports Module</a></li>
+        <li><a href="#map">Customer Map</a></li>
+        <li><a href="#content">Content Module</a></li>
+        <li><a href="#users-mgmt">User Management</a></li>
+        <li><a href="#account">Account Settings</a></li>
+        <li><a href="#security">Safety &amp; Auto-Logout</a></li>
+        <li><a href="#suggestions">Suggestions for Improvement</a></li>
+      </ol>
+    </div>
+
+    <!-- ─── 1. INTRO ─── -->
+    <div class="section" id="intro">
+      <div class="section-header">
+        <div class="section-icon">📋</div>
+        <h2>1. What is FarsanHub?</h2>
+      </div>
+      <p><strong>FarsanHub</strong> is an all-in-one business management portal built for <strong>Brahmani Khandvi &amp;
+          Farsan House</strong>. It replaces paper registers and spreadsheets with a clean, digital system you can use
+        from any web browser.</p>
+
+      <div class="card-grid">
+        <div class="stat-card">
+          <div class="icon">🏪</div>
+          <div class="label">Customer Profiles</div>
+          <div class="value">Full contact &amp; location data</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">📦</div>
+          <div class="label">Product Catalog</div>
+          <div class="value">kg &amp; Nang units</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">🛒</div>
+          <div class="label">Orders</div>
+          <div class="value">Sell, Purchase, Remaining &amp; Cash</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">💸</div>
+          <div class="label">Expenses</div>
+          <div class="value">Business &amp; Personal</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">📄</div>
+          <div class="label">Reports</div>
+          <div class="value">PDF &amp; Excel exports</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">🗺️</div>
+          <div class="label">Customer Map</div>
+          <div class="value">Live location pins</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 2. WHO ─── -->
+    <div class="section" id="users">
+      <div class="section-header">
+        <div class="section-icon">👥</div>
+        <h2>2. Who Uses This System?</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>What They Can Do</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-blue">Admin</span></td>
+              <td>Full access to Customers, Products, Orders, Expenses, Reports, Map, and Content</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-orange">Super Admin</span></td>
+              <td>Everything an Admin can do, <strong>plus</strong> manage other user accounts</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>Only users with admin access can log in. Regular visitors cannot register themselves — accounts must be
+          created by a Super Admin.</div>
+      </div>
+    </div>
+
+    <!-- ─── 3. LOGIN ─── -->
+    <div class="section" id="login">
+      <div class="section-header">
+        <div class="section-icon">🔐</div>
+        <h2>3. How to Log In — Step by Step</h2>
+      </div>
+
+      <!-- Option A -->
+      <div class="login-box">
+        <div class="login-box-header">
+          <span>📧</span> Option A — Login with Email &amp; Password
+        </div>
+        <div class="login-box-body">
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <strong>Open the Login Page</strong>
+                Open your web browser and navigate to the FarsanHub URL. You will see the Login screen.
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <strong>Enter Your Email Address</strong>
+                Type your registered email (e.g., <code>admin@farsanhub.com</code>) in the Email field.
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div class="step-body">
+                <strong>Enter Your Password</strong>
+                Type your password in the Password field. It is hidden as you type.
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div class="step-body">
+                <strong>Click the "Login" Button</strong>
+                Press the orange <strong>Login</strong> button.
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">5</div>
+              <div class="step-body">
+                <strong>You Are In!</strong>
+                You are taken directly to the <strong>Create Order</strong> page — ready to work.
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-danger">
+            <span class="alert-icon">🔒</span>
+            <div><strong>Security:</strong> After <strong>5 wrong attempts</strong> with the same email, the account is
+              blocked for <strong>1 hour</strong>. The screen will show how many attempts remain. Wait 1 hour or contact
+              the Super Admin if locked out.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Option B -->
+      <div class="login-box">
+        <div class="login-box-header">
+          <span>🌐</span> Option B — Login with Google (Faster)
+        </div>
+        <div class="login-box-body">
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <strong>Click "Login with Google"</strong>
+                Click the Google button on the Login page.
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <strong>Choose Your Google Account</strong>
+                A Google window opens. Choose the account whose email matches your FarsanHub account.
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div class="step-body">
+                <strong>You Are Logged In Automatically</strong>
+                No password needed — Google confirms your identity and you are taken to the dashboard.
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-warning">
+            <span class="alert-icon">⚠️</span>
+            <div>Google login <strong>only works</strong> if your Google email matches an existing FarsanHub account.
+              New accounts cannot be created via Google login.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <h3>How to Log Out</h3>
+      <div class="card">
+        <p><strong>Manual logout:</strong> Click your name or profile icon in the top-right corner → click
+          <strong>"Logout"</strong></p>
+        <p><strong>Auto-logout:</strong> If you leave FarsanHub idle for <strong>5 minutes</strong>, a warning popup
+          appears. If ignored for 30 more seconds, you are logged out automatically.</p>
+      </div>
+    </div>
+
+    <!-- ─── 4. DASHBOARD ─── -->
+    <div class="section" id="dashboard">
+      <div class="section-header">
+        <div class="section-icon">📊</div>
+        <h2>4. Dashboard — Your Home Screen</h2>
+      </div>
+      <p>The Dashboard gives you a live business snapshot. Click <strong>"Dashboard"</strong> in the left sidebar to
+        access it.</p>
+
+      <h3>Time Period Filter</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Filter</th>
+              <th>What It Shows</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-blue">Today</span></td>
+              <td>Only today's data</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue">Yesterday</span></td>
+              <td>Only yesterday's data</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue">This Week</span></td>
+              <td>Monday through today</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue">This Month</span></td>
+              <td>Current calendar month</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue">This Year</span></td>
+              <td>January to today</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>The 4 Summary Cards</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Card</th>
+              <th>What It Shows</th>
+              <th>Clicking Opens</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🏪 Total Customers</td>
+              <td>How many customers you have</td>
+              <td>Customers list</td>
+            </tr>
+            <tr>
+              <td>🛒 Total Orders</td>
+              <td>Orders in selected period (filterable by product)</td>
+              <td>Orders list</td>
+            </tr>
+            <tr>
+              <td>📦 Total Products</td>
+              <td>Products in your catalog</td>
+              <td>Products list</td>
+            </tr>
+            <tr>
+              <td>💰 Revenue</td>
+              <td>Total income from sell orders</td>
+              <td>Orders list</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Charts</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Chart</th>
+              <th>What It Shows</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>📈 Revenue Trend (Line)</td>
+              <td>Sell &amp; purchase totals for the last 6 months</td>
+            </tr>
+            <tr>
+              <td>🍩 Top Products (Doughnut)</td>
+              <td>Which 5 products sell the most by quantity</td>
+            </tr>
+            <tr>
+              <td>📊 Monthly Quantity (Bar)</td>
+              <td>How much was dispatched each month</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Top 5 Customers</h3>
+      <p>A ranked table of your best customers by total business value — includes order count, total amount, and
+        breakdown of kg vs. Nang quantities.</p>
+    </div>
+
+    <!-- ─── 5. CUSTOMERS ─── -->
+    <div class="section" id="customers">
+      <div class="section-header">
+        <div class="section-icon">🏪</div>
+        <h2>5. Customers Module</h2>
+      </div>
+      <p>Stores all shops and buyers you do business with. Go to <strong>Customers</strong> in the sidebar.</p>
+
+      <h3>How to Add a New Customer</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>Click "Customers" in the sidebar</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>Click "Add Customer" button (top right)</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Fill in the form</strong>
+            <ul class="field-list" style="margin-top:10px;">
+              <li><span class="field-name">Customer Name <span class="field-required">*</span></span><span
+                  class="field-desc">Person's full name</span></li>
+              <li><span class="field-name">Phone Number <span class="field-required">*</span></span><span
+                  class="field-desc">10-digit mobile number (country code stripped automatically)</span></li>
+              <li><span class="field-name">Shop Name <span class="field-required">*</span></span><span
+                  class="field-desc">Name of the shop</span></li>
+              <li><span class="field-name">Shop Address</span><span class="field-desc">Full address of the shop</span>
+              </li>
+              <li><span class="field-name">City</span><span class="field-desc">City name</span></li>
+              <li><span class="field-name">Email</span><span class="field-desc">Customer's email address</span></li>
+              <li><span class="field-name">Latitude / Longitude</span><span class="field-desc">For the customer map pin
+                  (get from Google Maps)</span></li>
+              <li><span class="field-name">Customer Photo</span><span class="field-desc">Photo of the person (JPG/PNG,
+                  max 5MB)</span></li>
+              <li><span class="field-name">Shop Photo</span><span class="field-desc">Photo of the shop front</span></li>
+              <li><span class="field-name">Status <span class="field-required">*</span></span><span
+                  class="field-desc">Active or Inactive</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body"><strong>Click "Save"</strong> — the customer appears in your list</div>
+        </div>
+      </div>
+
+      <h3>How to Search for a Customer</h3>
+      <p>Use the search box on the Customers list page. You can search by <strong>name, phone, shop name, city, or
+          address</strong>. Results update automatically.</p>
+
+      <div class="alert alert-info">
+        <span class="alert-icon">🗑️</span>
+        <div>Deleted customers are <strong>soft-deleted</strong> — they disappear from your list but their order history
+          is preserved for reports.</div>
+      </div>
+    </div>
+
+    <!-- ─── 6. PRODUCTS ─── -->
+    <div class="section" id="products">
+      <div class="section-header">
+        <div class="section-icon">📦</div>
+        <h2>6. Products Module</h2>
+      </div>
+      <p>Manage your product catalog — what you sell or buy, at what price, and in which unit.</p>
+
+      <h3>How to Add a New Product</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>Click "Products" in the sidebar</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>Click "Add Product"</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Fill in the form</strong>
+            <ul class="field-list" style="margin-top:10px;">
+              <li><span class="field-name">Product Name <span class="field-required">*</span></span><span
+                  class="field-desc">e.g., "Khandvi", "Chakli", "Gathiya"</span></li>
+              <li><span class="field-name">Base Price <span class="field-required">*</span></span><span
+                  class="field-desc">Default price per unit (used if no customer-specific price is set)</span></li>
+              <li><span class="field-name">Unit <span class="field-required">*</span></span><span
+                  class="field-desc"><span class="badge badge-green">kg</span> or <span
+                    class="badge badge-blue">Nang</span> (Displays as <strong>કિગ્રા</strong> / <strong>નંગ</strong> in
+                  Gujarati)</span></li>
+              <li><span class="field-name">Product Image</span><span class="field-desc">Photo of the product (max
+                  5MB)</span></li>
+              <li><span class="field-name">Status <span class="field-required">*</span></span><span
+                  class="field-desc">Active or Inactive</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body"><strong>Click "Save"</strong></div>
+        </div>
+      </div>
+
+      <h3>Customer-Specific Pricing</h3>
+      <div class="card">
+        <p>Some customers get a <strong>special price</strong> for a product, different from the base price. Set it like
+          this:</p>
+        <ol style="padding-left:20px; font-size:.875rem; line-height:2;">
+          <li>Go to <strong>Products → Edit</strong> on the product</li>
+          <li>Scroll to the <strong>"Customer Pricing"</strong> section</li>
+          <li>Choose a customer and enter their special price</li>
+          <li>Click <strong>"Add Price"</strong></li>
+        </ol>
+        <div class="alert alert-success" style="margin-top:12px;">
+          <span class="alert-icon">✅</span>
+          <div><strong>Automatic!</strong> When you create an order for that customer and select this product, the
+            system automatically uses the correct price — no manual lookup needed.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 7. ORDERS ─── -->
+    <div class="section" id="orders">
+      <div class="section-header">
+        <div class="section-icon">🛒</div>
+        <h2>7. Orders Module</h2>
+      </div>
+      <p>Record every sale (sell order) and every purchase (purchase order).</p>
+
+      <h3>Order Types</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>When to Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-green">Sell</span></td>
+              <td>You are selling products to a customer / shop</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue">Purchase</span></td>
+              <td>You are buying products from a supplier</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-red">Remaining</span></td>
+              <td>For balance remaining amount in pending payment</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-orange">Cash</span></td>
+              <td>For direct cash transactions</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>How to Create a New Order</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Choose the Customer</strong>
+            Select a customer from the dropdown. The product list will load automatically with that customer's prices.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Choose the Product</strong>
+            After selecting a customer, choose a product. The correct price (base or customer-specific) is filled in
+            automatically.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Fill in the remaining fields</strong>
+            <ul class="field-list" style="margin-top:10px;">
+              <li><span class="field-name">Order Date <span class="field-required">*</span></span><span
+                  class="field-desc">Pick a date using the date picker</span></li>
+              <li><span class="field-name">Quantity <span class="field-required">*</span></span><span
+                  class="field-desc">Can be decimal, e.g., 2.5 kg</span></li>
+              <li><span class="field-name">Price <span class="field-required">*</span></span><span
+                  class="field-desc">Auto-filled — can be manually adjusted</span></li>
+              <li><span class="field-name">Order Type <span class="field-required">*</span></span><span
+                  class="field-desc">Sell or Purchase</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>See the Live Total</strong>
+            As you type Quantity and Price, the <strong>Total Amount updates live on screen</strong> — no manual
+            calculation needed.
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body"><strong>Click "Save Order"</strong></div>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <span class="alert-icon">⚠️</span>
+        <div><strong>Duplicate Check:</strong> The system warns you if an order already exists for the same customer +
+          product + date. You can still save it if you confirm.</div>
+      </div>
+
+      <h3>Filtering Orders</h3>
+      <p>On the Orders list, filter by: <span class="badge badge-gray">Order Type</span> <span
+          class="badge badge-gray">Customer</span> <span class="badge badge-gray">Date Range</span> <span
+          class="badge badge-gray">Search</span></p>
+    </div>
+
+    <!-- ─── 8. EXPENSES ─── -->
+    <div class="section" id="expenses">
+      <div class="section-header">
+        <div class="section-icon">💸</div>
+        <h2>8. Expenses Module</h2>
+      </div>
+      <p>Track all money spent — business costs or personal withdrawals.</p>
+
+      <h3>How to Add an Expense</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>Click "Expenses" in the sidebar</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>Click "Add Expense"</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Fill in the form</strong>
+            <ul class="field-list" style="margin-top:10px;">
+              <li><span class="field-name">Purpose <span class="field-required">*</span></span><span
+                  class="field-desc">What was the expense for? e.g., "Delivery fuel"</span></li>
+              <li><span class="field-name">Amount <span class="field-required">*</span></span><span
+                  class="field-desc">Amount in rupees (numbers only)</span></li>
+              <li><span class="field-name">Type <span class="field-required">*</span></span><span
+                  class="field-desc"><span class="badge badge-blue">Business</span> or <span
+                    class="badge badge-gray">Personal</span></span></li>
+              <li><span class="field-name">Date <span class="field-required">*</span></span><span
+                  class="field-desc">When the expense occurred</span></li>
+              <li><span class="field-name">Comment</span><span class="field-desc">Any extra notes</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body"><strong>Click "Save"</strong></div>
+        </div>
+      </div>
+
+      <h3>Filtering Expenses</h3>
+      <p>Filter by <strong>month</strong>, <strong>type</strong> (Business / Personal / All), or use the search box.</p>
+    </div>
+
+    <!-- ─── 9. REPORTS ─── -->
+    <div class="section" id="reports">
+      <div class="section-header">
+        <div class="section-icon">📄</div>
+        <h2>9. Reports Module</h2>
+      </div>
+      <p>Generate and download professional reports. Click <strong>"Reports"</strong> in the sidebar.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Report</th>
+              <th>Format</th>
+              <th>What's Included</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Order Report</strong></td>
+              <td><span class="badge badge-red">PDF</span></td>
+              <td>All orders for a customer in a selected month — summary stats + full table with totals</td>
+            </tr>
+            <tr>
+              <td><strong>Expense Report</strong></td>
+              <td><span class="badge badge-green">Excel</span></td>
+              <td>All expenses for the selected month — purpose, amount, comment, date</td>
+            </tr>
+            <tr>
+              <td><strong>Customer Report</strong></td>
+              <td><span class="badge badge-green">Excel</span></td>
+              <td>Complete customer directory — name, shop, phone, address, city, email</td>
+            </tr>
+            <tr>
+              <td><strong>Product Report</strong></td>
+              <td><span class="badge badge-green">Excel</span></td>
+              <td>All products with base price + every customer's special price per column</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>How to Download an Order Report (PDF)</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>Click "Reports" in the sidebar</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>In the Order Report card, select the Customer and Month</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body"><strong>Click "Download PDF"</strong> — the file downloads automatically</div>
+        </div>
+      </div>
+      <p>The PDF includes: company header, summary (total orders, qty, revenue), full order table, and grand total.</p>
+    </div>
+
+    <!-- ─── 10. MAP ─── -->
+    <div class="section" id="map">
+      <div class="section-header">
+        <div class="section-icon">🗺️</div>
+        <h2>10. Customer Map</h2>
+      </div>
+      <p>See all customers plotted on an interactive map. Click <strong>"Customer Map"</strong> in the sidebar.</p>
+      <div class="card">
+        <p>The map shows a <strong>pin</strong> for every customer that has latitude/longitude saved. Click any pin to
+          see:</p>
+        <ul style="padding-left:20px; line-height:2;">
+          <li>Customer name</li>
+          <li>Shop name</li>
+          <li>Phone number</li>
+        </ul>
+      </div>
+      <div class="alert alert-info">
+        <span class="alert-icon">📍</span>
+        <div><strong>To add a customer's location:</strong> Go to Customers → Edit → enter Latitude &amp; Longitude. Get
+          coordinates from Google Maps (right-click a location → "What's here?").</div>
+      </div>
+    </div>
+
+    <!-- ─── 11. CONTENT ─── -->
+    <div class="section" id="content">
+      <div class="section-header">
+        <div class="section-icon">🖼️</div>
+        <h2>11. Content Module</h2>
+      </div>
+      <p>Upload and manage promotional images — banners, product photos, etc.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>Click "Content" in the sidebar</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>Click "Add Content"</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body"><strong>Choose an image file</strong> (JPG, PNG, GIF — max 5 MB) and set the upload
+            date</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body"><strong>Click "Save"</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 12. USERS ─── -->
+    <div class="section" id="users-mgmt">
+      <div class="section-header">
+        <div class="section-icon">⚙️</div>
+        <h2>12. User Management <span class="badge badge-orange" style="font-size:0.8rem; vertical-align:middle;">Super
+            Admin Only</span></h2>
+      </div>
+      <p>Manage who can log into FarsanHub. Only visible to Super Admins in the sidebar.</p>
+
+      <h3>How to Create a New User</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>Click "Users" in the sidebar</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>Click "Add User"</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Fill in the form</strong>
+            <ul class="field-list" style="margin-top:10px;">
+              <li><span class="field-name">Name</span><span class="field-desc">User's full name</span></li>
+              <li><span class="field-name">Email</span><span class="field-desc">Will be used to log in</span></li>
+              <li><span class="field-name">Role</span><span class="field-desc">Admin or Super Admin</span></li>
+              <li><span class="field-name">Webpage URL</span><span class="field-desc">Optional — where to redirect after
+                  logout</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body"><strong>Click "Save"</strong></div>
+        </div>
+      </div>
+      <div class="alert alert-warning">
+        <span class="alert-icon">🔑</span>
+        <div><strong>Default Password:</strong> New users are created with the password <code>12345678</code>. Ask them
+          to change it immediately after their first login.</div>
+      </div>
+    </div>
+
+    <!-- ─── 13. ACCOUNT ─── -->
+    <div class="section" id="account">
+      <div class="section-header">
+        <div class="section-icon">🔑</div>
+        <h2>13. Account Settings</h2>
+      </div>
+
+      <h3>How to Change Your Password</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>Click your name / profile icon in the top header → Change Password</strong>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>Enter your Current Password</strong></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body"><strong>Enter your New Password</strong> and confirm it</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body"><strong>Click "Update Password"</strong></div>
+        </div>
+      </div>
+
+      <h3>Language Switch</h3>
+      <p>FarsanHub supports <strong>English</strong> and <strong>Gujarati (ગુજરાતી)</strong>. Click the language toggle
+        in the top header to switch. Your preference is remembered for the session.</p>
+
+      <div class="card" style="margin-top:16px;">
+        <p><strong>Localized Units:</strong> When you switch to Gujarati, all units are automatically translated:</p>
+        <ul style="padding-left:20px; line-height:2; font-size:.875rem;">
+          <li><strong>kg</strong> becomes <span class="badge badge-orange">કિગ્રા</span></li>
+          <li><strong>Nang</strong> becomes <span class="badge badge-blue">નંગ</span></li>
+        </ul>
+        <p style="font-size:0.875rem; margin-top:8px;">This change applies to all screens, PDF bills, and Excel exports.
+        </p>
+      </div>
+
+      <h3 style="margin-top:32px;">Smart Auto-Translation Feature</h3>
+      <p>To make business management easier, FarsanHub includes an <strong>Auto-Translation</strong> feature. When you
+        add or update a record in English, the system automatically generates its Gujarati equivalent for use in
+        reports:</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Module</th>
+              <th>Auto-Translated Fields</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🏪 Customers</td>
+              <td>Customer Name &amp; Shop Name</td>
+            </tr>
+            <tr>
+              <td>📦 Products</td>
+              <td>Product Name</td>
+            </tr>
+            <tr>
+              <td>👤 Users</td>
+              <td>Full Name</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-success">
+        <span class="alert-icon">✨</span>
+        <div><strong>Example:</strong> If you add a product named <code>Chakli</code>, the system automatically
+          translates and stores it as <code>ચકરી</code> for Gujarati bills.</div>
+      </div>
+    </div>
+
+    <!-- ─── 14. SECURITY ─── -->
+    <div class="section" id="security">
+      <div class="section-header">
+        <div class="section-icon">🛡️</div>
+        <h2>14. Safety &amp; Auto-Logout</h2>
+      </div>
+
+      <h3>Auto-Logout After 5 Minutes of Inactivity</h3>
+      <div class="card">
+        <p>If you leave FarsanHub open in your browser without doing anything for <strong>5 minutes</strong>, a warning
+          popup appears:</p>
+        <blockquote
+          style="border-left:4px solid var(--brand); padding:10px 16px; margin:12px 0; font-style:italic; background:var(--brand-light); border-radius:6px;">
+          "Your session is about to expire. You will be logged out in 30 seconds."
+        </blockquote>
+        <p><strong>What to do:</strong></p>
+        <ul style="padding-left:20px; line-height:2; font-size:.875rem;">
+          <li>Click <strong>"Stay Logged In"</strong> or simply move your mouse / type anything → the timer resets</li>
+          <li>If ignored for 30 seconds → you are logged out automatically</li>
+        </ul>
+        <div class="alert alert-info" style="margin-top:12px;">
+          <span class="alert-icon">🔒</span>
+          <div>This protects your business data if you forget to log out on a shared computer.</div>
+        </div>
+      </div>
+
+      <h3>Login Attempt Protection</h3>
+      <div class="card">
+        <ul style="padding-left:20px; line-height:2; font-size:.875rem;">
+          <li>After <strong>5 failed login attempts</strong> with the same email → account blocked for <strong>1
+              hour</strong></li>
+          <li>Prevents unauthorized people from guessing your password</li>
+          <li>If locked out by mistake → wait 1 hour or ask the Super Admin</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ─── 15. SUGGESTIONS ─── -->
+    <div class="section" id="suggestions">
+      <div class="section-header">
+        <div class="section-icon">💡</div>
+        <h2>15. Suggestions for Improvement</h2>
+      </div>
+      <p>The following additions would make FarsanHub more powerful and user-friendly:</p>
+
+      <h3>User Experience</h3>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">1</div>
+          <div class="s-title">Forgot Password link on the Login page</div>
+        </div>
+        <div class="s-body">Users locked out can reset their own password without contacting the admin.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">2</div>
+          <div class="s-title">Force password change on first login</div>
+        </div>
+        <div class="s-body">New users are created with the default password <code>12345678</code>. The system should
+          require them to change it immediately — this is a key security gap.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">3</div>
+          <div class="s-title">Breadcrumb navigation on every page</div>
+        </div>
+        <div class="s-body">e.g., Dashboard › Orders › Create — users always know where they are and can go back easily.
+        </div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">4</div>
+          <div class="s-title">Quick Add button directly from the Dashboard</div>
+        </div>
+        <div class="s-body">A prominent "New Order" button on the dashboard reduces clicks for the most common daily
+          task.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">5</div>
+          <div class="s-title">Dark mode toggle</div>
+        </div>
+        <div class="s-body">Easier on the eyes during long working sessions or in low-light environments.</div>
+      </div>
+
+      <h3>New Features</h3>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">6</div>
+          <div class="s-title">Customer payment tracking &amp; outstanding dues</div>
+        </div>
+        <div class="s-body">Track which customers have paid, what is due, and send reminders. Currently FarsanHub only
+          records orders, not payments.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">7</div>
+          <div class="s-title">Stock / Inventory module</div>
+        </div>
+        <div class="s-body">Track how much of each product is available. Subtract on sell orders, add on purchase
+          orders.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">8</div>
+          <div class="s-title">WhatsApp / SMS order confirmation</div>
+        </div>
+        <div class="s-body">Send customers an instant confirmation message when their order is recorded.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">9</div>
+          <div class="s-title">Order copy / repeat feature</div>
+        </div>
+        <div class="s-body">If the same customer orders the same product every week, one click to copy the last order —
+          saves time on repetitive data entry.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">10</div>
+          <div class="s-title">Mobile app or PWA (Progressive Web App)</div>
+        </div>
+        <div class="s-body">Use FarsanHub on a phone without a browser — add to home screen, works even with slow
+          internet.</div>
+      </div>
+
+      <h3>Reporting</h3>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">11</div>
+          <div class="s-title">Customer account statement report</div>
+        </div>
+        <div class="s-body">A full statement for one customer — all orders, payments, and outstanding balance — useful
+          for month-end collection.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">12</div>
+          <div class="s-title">Profit &amp; Loss summary</div>
+        </div>
+        <div class="s-body">Sell revenue minus purchase costs minus expenses = net profit. Currently these numbers exist
+          but are not combined in one view.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">13</div>
+          <div class="s-title">Automatic monthly email report</div>
+        </div>
+        <div class="s-body">Automatically email a summary report to the owner on the 1st of every month — no manual
+          download needed.</div>
+      </div>
+
+      <h3>Security &amp; Technical</h3>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">14</div>
+          <div class="s-title">Activity log / audit trail</div>
+        </div>
+        <div class="s-body">See who changed what and when (e.g., "Admin A edited order #123 on 15 April"). Important for
+          accountability in a team.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">15</div>
+          <div class="s-title">Clear error messages for users</div>
+        </div>
+        <div class="s-body">When something goes wrong, show friendly guidance ("Please fill in the customer name")
+          instead of technical server errors.</div>
+      </div>
+
+      <div class="suggestion">
+        <div class="s-header">
+          <div class="s-num">16</div>
+          <div class="s-title">Data export / backup feature</div>
+        </div>
+        <div class="s-body">A one-click full data export (all orders, customers, products) as Excel so the business
+          owner always has an offline backup.</div>
+      </div>
+    </div>
+
+    <!-- ─── QUICK REF ─── -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">⚡</div>
+        <h2>Quick Reference</h2>
+      </div>
+      <div class="quick-ref">
+        <div class="qr-item"><span class="qr-icon">🔐</span>
+          <div>Switch language → top header language button</div>
+        </div>
+        <div class="qr-item"><span class="qr-icon">🏠</span>
+          <div>Go to dashboard → "Dashboard" in left sidebar</div>
+        </div>
+        <div class="qr-item"><span class="qr-icon">🛒</span>
+          <div>New order → Orders → Add Order → select customer first</div>
+        </div>
+        <div class="qr-item"><span class="qr-icon">🔍</span>
+          <div>Find a customer → Customers page → search box</div>
+        </div>
+        <div class="qr-item"><span class="qr-icon">📄</span>
+          <div>Month report → Reports → select customer &amp; month → Download</div>
+        </div>
+        <div class="qr-item"><span class="qr-icon">🗺️</span>
+          <div>View all shops → Customer Map in sidebar</div>
+        </div>
+        <div class="qr-item"><span class="qr-icon">🚪</span>
+          <div>Log out safely → your name (top right) → Logout</div>
+        </div>
+        <div class="qr-item"><span class="qr-icon">🔑</span>
+          <div>Change password → top header → Change Password</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Prepared for <strong>Brahmani Khandvi &amp; Farsan House</strong>, Vadodara, Gujarat</p>
+      <p style="margin-top:6px;">FarsanHub v1.6 &nbsp;·&nbsp; Built with Laravel 9 &nbsp;·&nbsp; Generated: May 2026</p>
+    </footer>
+
+  </main>
+
+  <script>
+    // Sidebar active state on scroll
+    const sections = document.querySelectorAll('.section[id]');
+    const navLinks = document.querySelectorAll('#sidebar nav a');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`#sidebar nav a[href="#${entry.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+
+</html>

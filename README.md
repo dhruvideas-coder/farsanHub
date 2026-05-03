@@ -208,7 +208,7 @@ farsanhub/
 | user_id | BIGINT (FK → users) | Multi-user isolation |
 | product_name | VARCHAR | |
 | product_base_price | DECIMAL | Default price (overridden by product_prices) |
-| unit | VARCHAR(20) | `kg` or `Nang` — default `kg` ← **NEW** |
+| unit | VARCHAR(20) | `kg` or `Nang` — supports localized display (કિગ્રા / નંગ) ← **UPDATED** |
 | status | VARCHAR | Active/Inactive |
 | product_image | VARCHAR | File path |
 | deleted_at | TIMESTAMP | Soft delete |
@@ -240,7 +240,7 @@ farsanhub/
 | order_quantity | FLOAT(8,2) | Supports decimals (e.g. 2.5) |
 | order_price | DECIMAL(10,2) | Auto-resolved: customer price or base price |
 | order_date | DATE | Explicit date field |
-| type | ENUM('sell','purchase') | Default `sell` ← **NEW** |
+| type | ENUM('sell','purchase','remaining','cash') | Default `sell` ← **UPDATED** |
 | status | VARCHAR | |
 | created_at / updated_at | TIMESTAMP | |
 
@@ -628,6 +628,19 @@ GET /admin/lang/en   → sets English
 GET /admin/lang/gu   → sets Gujarati
 ```
 
+**Localized Units:**
+The system dynamically translates product units across all UI components, PDF reports, and Excel exports based on the active locale:
+- **English:** `kg`, `Nang`
+- **Gujarati:** `કિગ્રા`, `નંગ`
+
+**Auto-Translation (English to Gujarati):**
+To ensure a consistent bilingual database, the system automatically translates key fields from English to Gujarati upon saving or updating records:
+- **Customers:** Customer Name, Shop Name
+- **Products:** Product Name
+- **Users:** Full Name
+
+This feature uses the `stichoza/google-translate-php` package to provide seamless Gujarati equivalents for administrative records.
+
 ---
 
 ## 13. Multi-User Architecture
@@ -772,8 +785,8 @@ resources/views/
 
 ### Orders Module
 - Full CRUD (hard delete)
-- **Order Type** — Sell (default) or Purchase, selected via radio buttons on create/edit
-- Type badge shown in listing (green Sell / blue Purchase)
+- **Order Type** — Sell (default), Purchase, Remaining, or Cash, selected via radio buttons on create/edit
+- Type badge shown in listing (green Sell / blue Purchase / red Remaining / yellow Cash)
 - **Type filter** and **Customer filter** dropdowns in listing
 - **AJAX product loading** based on selected customer (with resolved price)
 - Unit label and badge update live when product is selected (uses `getAttribute('data-unit')`)
