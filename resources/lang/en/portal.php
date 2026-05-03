@@ -233,4 +233,6 @@ return [
     'please_wait' => 'Please wait',
     'export_generating' => 'Your exported file is being generated...',
     'select_month_year_error' => 'Please select a month and year before exporting.',
+
+    'auto_translate_note' => 'Auto-translate note to English',
 ];

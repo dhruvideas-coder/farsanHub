@@ -32,17 +32,8 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
 
     public function collection()
     {
-        $query = Order::join('products', 'orders.product_id', '=', 'products.id')
-            ->join('customers', 'orders.customer_id', '=', 'customers.id')
-            ->where('orders.user_id', auth()->id())
-            ->select(
-                'orders.*',
-                'products.product_name',
-                'products.product_base_price',
-                'products.unit',
-                'customers.customer_name',
-                'customers.shop_name'
-            );
+        $query = Order::with(['product', 'customer'])
+            ->where('user_id', auth()->id());
 
         // Filter by customer if provided
         if ($this->customerId) {
@@ -76,7 +67,7 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
             $this->totalOrderAmount += $totalAmount;
             $this->totalOrderQuantity += $item->order_quantity;
 
-            $unit = strtolower($item->unit ?? 'kg');
+            $unit = strtolower($item->product->unit ?? 'kg');
             if ($unit === 'nang') {
                 $this->totalNang += $item->order_quantity;
             } else {
@@ -85,10 +76,10 @@ class OrderExport implements FromCollection, WithHeadings, WithStyles, WithColum
 
             return [
                 'sr_no' => $srNo++,
-                'customer_name' => $item->customer_name ?? '-',
-                'shop_name' => $item->shop_name ?? '-',
-                'product_name' => $item->product_name ?? '-',
-                'order_quantity' => ($item->order_quantity ?? '0') . ' ' . ($item->unit ?? 'kg'),
+                'customer_name' => $item->customer->customer_name ?? '-',
+                'shop_name' => $item->customer->shop_name ?? '-',
+                'product_name' => $item->product->product_name ?? '-',
+                'order_quantity' => ($item->order_quantity ?? '0') . ' ' . ($item->product->unit ?? 'kg'),
                 'order_price' => '₹ ' . $item->order_price ?? '',
                 'total_amount' => '₹ ' . $totalAmount,
                 'date' => $item->order_date ? date('d-m-Y', strtotime($item->order_date)) : ($item->created_at ? date('d-m-Y', strtotime($item->created_at)) : '-'),

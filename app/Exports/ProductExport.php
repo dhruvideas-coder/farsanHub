@@ -23,22 +23,12 @@ class ProductExport implements FromCollection, WithHeadings, WithStyles, WithCol
             ->get();
 
         // Fetch all customer-specific prices for this user
-        $prices = ProductPrice::join('customers', 'product_prices.customer_id', '=', 'customers.id')
-            ->join('products', 'product_prices.product_id', '=', 'products.id')
-            ->where('product_prices.user_id', auth()->id())
-            ->select(
-                'product_prices.product_id',
-                'product_prices.customer_id',
-                'product_prices.price',
-                'customers.customer_name',
-                'customers.shop_name',
-                'products.product_name',
-                'products.product_base_price',
-                'products.unit'
-            )
-            ->orderBy('products.product_name')
-            ->orderBy('customers.customer_name')
+        $prices = ProductPrice::with(['customer', 'product'])
+            ->where('user_id', auth()->id())
             ->get()
+            ->sortBy(function($price) {
+                return $price->product->product_name;
+            })
             ->groupBy('product_id');
 
         $rows = collect();
@@ -65,7 +55,7 @@ class ProductExport implements FromCollection, WithHeadings, WithStyles, WithCol
                     'product_name'   => $product->product_name,
                     'unit'           => $product->unit ?? '-',
                     'base_price'     => $product->product_base_price,
-                    'customer_name'  => $first->customer_name . ($first->shop_name ? ' (' . $first->shop_name . ')' : ''),
+                    'customer_name'  => $first->customer->customer_name . ($first->customer->shop_name ? ' (' . $first->customer->shop_name . ')' : ''),
                     'customer_price' => $first->price,
                 ]);
 
@@ -76,7 +66,7 @@ class ProductExport implements FromCollection, WithHeadings, WithStyles, WithCol
                         'product_name'   => '',
                         'unit'           => '',
                         'base_price'     => '',
-                        'customer_name'  => $cp->customer_name . ($cp->shop_name ? ' (' . $cp->shop_name . ')' : ''),
+                        'customer_name'  => $cp->customer->customer_name . ($cp->customer->shop_name ? ' (' . $cp->customer->shop_name . ')' : ''),
                         'customer_price' => $cp->price,
                     ]);
                 }

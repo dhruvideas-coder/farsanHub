@@ -27,7 +27,7 @@
                             <div class="row">
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="customer_name" class="form-label">{{ @trans('portal.customer_name') }} <span class="text-danger">*</span></label>
+                                    <label for="customer_name" class="form-label">{{ @trans('portal.customer_name') }} (English) <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('customer_name') is-invalid @enderror"
                                         id="customer_name" name="customer_name" value="{{ old('customer_name') }}">
                                     @error('customer_name')
@@ -36,7 +36,14 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="shop_name" class="form-label">{{ @trans('portal.shop_name') }} <span class="text-danger">*</span></label>
+                                    <label for="customer_name_gu" class="form-label">{{ @trans('portal.customer_name') }} (ગુજરાતી) <small class="text-muted">({{ __('portal.optional') }})</small></label>
+                                    <input type="text" class="form-control @error('customer_name_gu') is-invalid @enderror"
+                                        id="customer_name_gu" name="customer_name_gu" value="{{ old('customer_name_gu') }}" placeholder="મોહનભાઇ">
+                                    <small class="text-muted">{{ __('portal.auto_translate_note') ?? 'Leave blank to auto-translate from English' }}</small>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="shop_name" class="form-label">{{ @trans('portal.shop_name') }} (English) <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('shop_name') is-invalid @enderror"
                                         id="shop_name" name="shop_name" value="{{ old('shop_name') }}">
                                     @error('shop_name')
@@ -44,10 +51,16 @@
                                     @enderror
                                 </div>
 
+                                <div class="col-md-6 mb-3">
+                                    <label for="shop_name_gu" class="form-label">{{ @trans('portal.shop_name') }} (ગુજરાતી) <small class="text-muted">({{ __('portal.optional') }})</small></label>
+                                    <input type="text" class="form-control @error('shop_name_gu') is-invalid @enderror"
+                                        id="shop_name_gu" name="shop_name_gu" value="{{ old('shop_name_gu') }}">
+                                </div>
+
                                 {{-- Address with Leaflet map picker --}}
                                 <div class="col-md-6 mb-3">
                                     <label for="shop_address" class="form-label">
-                                        {{ @trans('portal.shop_address') }} <span class="text-danger">*</span>
+                                        {{ @trans('portal.shop_address') }} (English) <span class="text-danger">*</span>
                                     </label>
                                     {{-- Full-width input; dropdown anchors to this wrapper --}}
                                     <div class="position-relative">
@@ -80,6 +93,11 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3">
+                                    <label for="shop_address_gu" class="form-label">{{ @trans('portal.shop_address') }} (ગુજરાતી)</label>
+                                    <input type="text" class="form-control" id="shop_address_gu" name="shop_address_gu" value="{{ old('shop_address_gu') }}">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
                                     <label for="customer_number" class="form-label">{{ @trans('portal.mobile') }} <span class="text-danger">*</span></label>
                                     <input type="tel" class="form-control @error('customer_number') is-invalid @enderror"
                                         id="customer_number" name="customer_number"
@@ -104,12 +122,17 @@
                                 <input type="hidden" name="status" value="Active">
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="city" class="form-label">{{ @trans('portal.city') }} <span class="text-danger">*</span></label>
+                                    <label for="city" class="form-label">{{ @trans('portal.city') }} (English) <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('city') is-invalid @enderror"
                                         id="city" name="city" value="{{ old('city') }}">
                                     @error('city')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="city_gu" class="form-label">{{ @trans('portal.city') }} (ગુજરાતી)</label>
+                                    <input type="text" class="form-control" id="city_gu" name="city_gu" value="{{ old('city_gu') }}">
                                 </div>
 
                                 <div class="mb-3 col-md-6">

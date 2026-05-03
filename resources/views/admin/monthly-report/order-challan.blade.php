@@ -197,10 +197,10 @@
         <tr>
             <td class="info-box">
                 <div class="info-label">Bill To</div>
-                <div class="info-value-main">{{ $customerInfo->customer_name }}</div>
-                <div class="info-value-sub">{{ $customerInfo->shop_name }}</div>
+                <div class="info-value-main">{{ $customerInfo->getTranslation('customer_name', App::getLocale()) }}</div>
+                <div class="info-value-sub">{{ $customerInfo->getTranslation('shop_name', App::getLocale()) }}</div>
                 @if($customerInfo->shop_address)
-                    <div class="info-value-small">{{ $customerInfo->shop_address }}{{ $customerInfo->city ? ', '.$customerInfo->city : '' }}</div>
+                    <div class="info-value-small">{{ $customerInfo->getTranslation('shop_address', App::getLocale()) }}{{ $customerInfo->city ? ', '.$customerInfo->getTranslation('city', App::getLocale()) : '' }}</div>
                 @endif
                 @if($customerInfo->customer_number)
                     <div class="info-value-small" style="margin-top:3px;"><strong>Phone:</strong> {{ $customerInfo->customer_number }}</div>
@@ -296,12 +296,12 @@
                 <td class="td-no">{{ $i + 1 }}</td>
                 <td class="td-date">{{ $dispDate }}</td>
                 <td>
-                    <div class="td-cust">{{ $order->customer_name }}</div>
-                    <div class="td-shop">{{ $order->shop_name }}</div>
+                    <div class="td-cust">{{ $order->customer->customer_name }}</div>
+                    <div class="td-shop">{{ $order->customer->shop_name }}</div>
                 </td>
-                <td class="td-prod">{{ $order->product_name }}</td>
+                <td class="td-prod">{{ $order->product->product_name }}</td>
                 <td class="td-qty">{{ rtrim(rtrim(number_format($order->order_quantity, 4), '0'), '.') }}
-                    <span style="font-size:8px; font-weight:normal;">{{ $order->unit ?? 'kg' }}</span>
+                    <span style="font-size:8px; font-weight:normal;">{{ $order->product->unit ?? 'kg' }}</span>
                 </td>
                 <td class="td-rate">{{ number_format($order->order_price, 2) }}</td>
                 <td class="td-amt">{{ number_format($lineAmount, 2) }}</td>

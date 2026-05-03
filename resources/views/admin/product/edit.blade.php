@@ -37,12 +37,18 @@
                             <div class="row">
 
                                 <div class="col-md-4 mb-3">
-                                    <label for="product_name" class="form-label">{{ @trans('portal.product_name') }} <span class="text-danger">*</span></label>
+                                    <label for="product_name" class="form-label">{{ @trans('portal.product_name') }} (English) <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('product_name') is-invalid @enderror"
-                                        id="product_name" name="product_name" value="{{ old('product_name', $product->product_name) }}">
+                                        id="product_name" name="product_name" value="{{ old('product_name', $product->getTranslation('product_name', 'en')) }}">
                                     @error('product_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="product_name_gu" class="form-label">{{ @trans('portal.product_name') }} (ગુજરાતી)</label>
+                                    <input type="text" class="form-control" id="product_name_gu" name="product_name_gu" 
+                                        value="{{ old('product_name_gu', $product->getTranslation('product_name', 'gu')) }}">
                                 </div>
 
                                 <div class="col-md-5 mb-3">
@@ -74,6 +80,22 @@
                                     @error('status')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <div class="mb-3 col-md-6">
+                                    <label for="product_image" class="form-label">{{ @trans('portal.product_image') }}</label>
+                                    <div class="mb-2">
+                                        <img id="product_image_preview"
+                                            src="{{ $product->product_image ? Storage::url($product->product_image) : '#' }}"
+                                            alt="{{ $product->product_name }}" class="img-thumbnail {{ $product->product_image ? '' : 'd-none' }}" style="max-width: 200px;">
+                                    </div>
+                                    <input type="file" class="form-control @error('product_image') is-invalid @enderror"
+                                        id="product_image" name="product_image" accept="image/*"
+                                        onchange="previewImage(this, 'product_image_preview')">
+                                    @error('product_image')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text text-muted">{{ @trans('portal.accepted_formats') }}</small>
                                 </div>
 
                                 <div class="col-sm-12 col-md-8 col-lg-6 mb-3">

@@ -27,7 +27,7 @@
                     <td style="padding: 15px 20px;">
                         <div class="d-flex align-items-center gap-3">
                             <div style="width: 35px; height: 35px; border-radius: 8px; background: #FF9933; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">
-                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                                {{ mb_strtoupper(mb_substr($user->name, 0, 1)) }}
                             </div>
                             <div>
                                 <div style="font-size:13px; font-weight:600; color:#1c1917;">{{ $user->name }}</div>

@@ -25,7 +25,8 @@ class ProductController extends Controller
 
             if ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('products.product_name', 'like', "%{$search}%")
+                    $q->where('products.product_name->en', 'like', "%{$search}%")
+                        ->orWhere('products.product_name->gu', 'like', "%{$search}%")
                         ->orWhere('products.product_base_price', 'like', "%{$search}%");
                 });
             }
@@ -98,9 +99,20 @@ class ProductController extends Controller
                 );
             }
 
+            $enName = $request->product_name;
+            $guName = $request->product_name_gu;
+
+            if (empty($guName) && !empty($enName)) {
+                try {
+                    $guName = \Stichoza\GoogleTranslate\GoogleTranslate::trans($enName, 'gu', 'en');
+                } catch (\Exception $e) {
+                    $guName = $enName;
+                }
+            }
+
             $product = Product::create([
                 'user_id'            => auth()->id(),
-                'product_name'       => $request->product_name,
+                'product_name'       => ['en' => $enName, 'gu' => $guName],
                 'product_base_price' => $request->product_base_price,
                 'unit'               => $request->unit,
                 'status'             => $request->status,
@@ -155,8 +167,19 @@ class ProductController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
+            $enName = $request->product_name;
+            $guName = $request->product_name_gu;
+
+            if (empty($guName) && !empty($enName)) {
+                try {
+                    $guName = \Stichoza\GoogleTranslate\GoogleTranslate::trans($enName, 'gu', 'en');
+                } catch (\Exception $e) {
+                    $guName = $enName;
+                }
+            }
+
             $data = [
-                'product_name'       => $request->product_name,
+                'product_name'       => ['en' => $enName, 'gu' => $guName],
                 'product_base_price' => $request->product_base_price,
                 'unit'               => $request->unit,
                 'status'             => $request->status,

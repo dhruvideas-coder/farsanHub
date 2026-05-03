@@ -23,11 +23,17 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <label for="name" class="form-label fw-bold">{{ __('portal.name') }} <span class="text-danger">*</span></label>
+                                <label for="name" class="form-label fw-bold">{{ __('portal.name') }} (English) <span class="text-danger">*</span></label>
                                 <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="{{ __('portal.enter_full_name') }}" required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="name_gu" class="form-label fw-bold">{{ __('portal.name') }} (ગુજરાતી)</label>
+                                <input type="text" name="name_gu" id="name_gu" class="form-control" value="{{ old('name_gu') }}" placeholder="મોહનભાઇ">
+                                <small class="text-muted">{{ __('portal.auto_translate_note') ?? 'Leave blank to auto-translate' }}</small>
                             </div>
 
                             <div class="col-md-6 mb-4">

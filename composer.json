@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.7",
         "maatwebsite/excel": "^3.1",
         "proengsoft/laravel-jsvalidation": "^4.9",
+        "spatie/laravel-translatable": "6.0",
         "stichoza/google-translate-php": "^5.2"
     },
     "require-dev": {

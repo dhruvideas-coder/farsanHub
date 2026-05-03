@@ -26,33 +26,45 @@
                             <div class="row">
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="customer_name" class="form-label">{{ @trans('portal.customer_name') }} <span class="text-danger">*</span></label>
+                                    <label for="customer_name" class="form-label">{{ @trans('portal.customer_name') }} (English) <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('customer_name') is-invalid @enderror"
-                                        id="customer_name" name="customer_name" value="{{ old('customer_name', $customer->customer_name) }}">
+                                        id="customer_name" name="customer_name" value="{{ old('customer_name', $customer->getTranslation('customer_name', 'en')) }}">
                                     @error('customer_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="shop_name" class="form-label">{{ @trans('portal.shop_name') }} <span class="text-danger">*</span></label>
+                                    <label for="customer_name_gu" class="form-label">{{ @trans('portal.customer_name') }} (ગુજરાતી)</label>
+                                    <input type="text" class="form-control" id="customer_name_gu" name="customer_name_gu" 
+                                        value="{{ old('customer_name_gu', $customer->getTranslation('customer_name', 'gu')) }}">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="shop_name" class="form-label">{{ @trans('portal.shop_name') }} (English) <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('shop_name') is-invalid @enderror"
-                                        id="shop_name" name="shop_name" value="{{ old('shop_name', $customer->shop_name) }}">
+                                        id="shop_name" name="shop_name" value="{{ old('shop_name', $customer->getTranslation('shop_name', 'en')) }}">
                                     @error('shop_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6 mb-3">
+                                    <label for="shop_name_gu" class="form-label">{{ @trans('portal.shop_name') }} (ગુજરાતી)</label>
+                                    <input type="text" class="form-control" id="shop_name_gu" name="shop_name_gu" 
+                                        value="{{ old('shop_name_gu', $customer->getTranslation('shop_name', 'gu')) }}">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
                                     <label for="shop_address" class="form-label">
-                                        {{ @trans('portal.shop_address') }} <span class="text-danger">*</span>
+                                        {{ @trans('portal.shop_address') }} (English) <span class="text-danger">*</span>
                                     </label>
                                     {{-- Full-width input; dropdown anchors to this wrapper --}}
                                     <div class="position-relative">
                                         <input type="text" class="form-control @error('shop_address') is-invalid @enderror"
                                             id="shop_address" name="shop_address"
                                             placeholder="{{ __('portal.type_to_search') }}"
-                                            value="{{ old('shop_address', $customer->shop_address) }}" autocomplete="off">
+                                            value="{{ old('shop_address', $customer->getTranslation('shop_address', 'en')) }}" autocomplete="off">
                                     </div>
                                     {{-- Action row: [Pick on Map + badge] LEFT · [Clear] RIGHT --}}
                                     <div class="d-flex align-items-center justify-content-between mt-2 gap-1">
@@ -77,6 +89,12 @@
                                     @error('shop_address')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="shop_address_gu" class="form-label">{{ @trans('portal.shop_address') }} (ગુજરાતી)</label>
+                                    <input type="text" class="form-control" id="shop_address_gu" name="shop_address_gu" 
+                                        value="{{ old('shop_address_gu', $customer->getTranslation('shop_address', 'gu')) }}">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -114,20 +132,26 @@
                                 </div>
 
                                 <div class="mb-3 col-md-6">
-                                    <label for="city" class="form-label">{{ @trans('portal.city') }} <span class="text-danger">*</span></label>
+                                    <label for="city" class="form-label">{{ @trans('portal.city') }} (English) <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('city') is-invalid @enderror"
-                                        id="city" name="city" value="{{ old('city', $customer->city) }}">
+                                        id="city" name="city" value="{{ old('city', $customer->getTranslation('city', 'en')) }}">
                                     @error('city')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="city_gu" class="form-label">{{ @trans('portal.city') }} (ગુજરાતી)</label>
+                                    <input type="text" class="form-control" id="city_gu" name="city_gu" 
+                                        value="{{ old('city_gu', $customer->getTranslation('city', 'gu')) }}">
                                 </div>
 
                                 <div class="mb-3 col-md-6">
                                     <label for="customer_image" class="form-label">{{ @trans('portal.customer_image') }}</label>
                                     <div class="mb-2">
                                         <img id="customer_image_preview"
-                                            src="{{ ($customer->customer_image && file_exists(public_path('storage/' . $customer->customer_image))) ? asset('storage/' . $customer->customer_image) : '#' }}"
-                                            alt="{{ $customer->customer_name }}" class="img-thumbnail {{ ($customer->customer_image && file_exists(public_path('storage/' . $customer->customer_image))) ? '' : 'd-none' }}" style="max-width: 200px;">
+                                            src="{{ $customer->customer_image ? Storage::url($customer->customer_image) : '#' }}"
+                                            alt="{{ $customer->customer_name }}" class="img-thumbnail {{ $customer->customer_image ? '' : 'd-none' }}" style="max-width: 200px;">
                                     </div>
                                     <input type="file" class="form-control @error('customer_image') is-invalid @enderror"
                                         id="customer_image" name="customer_image" accept="image/*"
@@ -142,8 +166,8 @@
                                     <label for="shop_image" class="form-label">{{ @trans('portal.shop_image') }}</label>
                                     <div class="mb-2">
                                         <img id="shop_image_preview"
-                                            src="{{ ($customer->shop_image && file_exists(public_path('storage/' . $customer->shop_image))) ? asset('storage/' . $customer->shop_image) : '#' }}"
-                                            alt="{{ $customer->customer_name }}" class="img-thumbnail {{ ($customer->shop_image && file_exists(public_path('storage/' . $customer->shop_image))) ? '' : 'd-none' }}" style="max-width: 200px;">
+                                            src="{{ $customer->shop_image ? Storage::url($customer->shop_image) : '#' }}"
+                                            alt="{{ $customer->customer_name }}" class="img-thumbnail {{ $customer->shop_image ? '' : 'd-none' }}" style="max-width: 200px;">
                                     </div>
                                     <input type="file" class="form-control @error('shop_image') is-invalid @enderror"
                                         id="shop_image" name="shop_image" accept="image/*"

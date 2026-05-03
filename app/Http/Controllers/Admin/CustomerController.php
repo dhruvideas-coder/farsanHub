@@ -21,11 +21,15 @@ class CustomerController extends Controller
             $query = Customer::where('user_id', auth()->id());
             if ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('customer_name', 'like', "%{$search}%")
+                    $q->where('customer_name->en', 'like', "%{$search}%")
+                        ->orWhere('customer_name->gu', 'like', "%{$search}%")
                         ->orWhere('customer_number', 'like', "%{$search}%")
-                        ->orWhere('shop_name', 'like', "%{$search}%")
-                        ->orWhere('city', 'like', "%{$search}%")
-                        ->orWhere('shop_address', 'like', "%{$search}%");
+                        ->orWhere('shop_name->en', 'like', "%{$search}%")
+                        ->orWhere('shop_name->gu', 'like', "%{$search}%")
+                        ->orWhere('city->en', 'like', "%{$search}%")
+                        ->orWhere('city->gu', 'like', "%{$search}%")
+                        ->orWhere('shop_address->en', 'like', "%{$search}%")
+                        ->orWhere('shop_address->gu', 'like', "%{$search}%");
                 });
             }
 
@@ -98,20 +102,40 @@ class CustomerController extends Controller
                 );
             }
 
-            Customer::create([
+            // Prepare translatable fields
+            $languages = ['en', 'gu'];
+            $translatableFields = ['customer_name', 'shop_name', 'shop_address', 'city'];
+            $data = [
                 'user_id'         => auth()->id(),
-                'customer_name'   => $request->customer_name,
-                'shop_name'       => $request->shop_name,
-                'shop_address'    => $request->shop_address,
                 'customer_number' => $normalizedPhone,
                 'customer_email'  => $request->customer_email ?? '',
                 'status'          => $request->status,
-                'city'            => $request->city,
                 'customer_image'  => $customerimagePath,
                 'shop_image'      => $shopimagePath,
                 'latitude'        => $request->latitude ?: null,
                 'longitude'       => $request->longitude ?: null,
-            ]);
+            ];
+
+            foreach ($translatableFields as $field) {
+                $translations = [];
+                $enValue = $request->input($field);
+                $guValue = $request->input($field . '_gu');
+
+                $translations['en'] = $enValue;
+                
+                // Auto-translate if Gujarati is missing
+                if (empty($guValue) && !empty($enValue)) {
+                    try {
+                        $guValue = \Stichoza\GoogleTranslate\GoogleTranslate::trans($enValue, 'gu', 'en');
+                    } catch (\Exception $e) {
+                        $guValue = $enValue;
+                    }
+                }
+                $translations['gu'] = $guValue;
+                $data[$field] = $translations;
+            }
+
+            Customer::create($data);
 
             return redirect()->route('admin.customer.index')
                 ->with('success', __('portal.customer_created'));
@@ -162,16 +186,33 @@ class CustomerController extends Controller
             }
 
             $data = [
-                'customer_name'   => $request->customer_name,
-                'shop_name'       => $request->shop_name,
-                'shop_address'    => $request->shop_address,
                 'customer_number' => $normalizedPhone,
                 'customer_email'  => $request->customer_email ?? '',
-                'city'            => $request->city,
                 'status'          => $request->status,
                 'latitude'        => $request->latitude ?: null,
                 'longitude'       => $request->longitude ?: null,
             ];
+
+            // Prepare translatable fields
+            $translatableFields = ['customer_name', 'shop_name', 'shop_address', 'city'];
+            foreach ($translatableFields as $field) {
+                $translations = [];
+                $enValue = $request->input($field);
+                $guValue = $request->input($field . '_gu');
+
+                $translations['en'] = $enValue;
+                
+                // Auto-translate if Gujarati is missing
+                if (empty($guValue) && !empty($enValue)) {
+                    try {
+                        $guValue = \Stichoza\GoogleTranslate\GoogleTranslate::trans($enValue, 'gu', 'en');
+                    } catch (\Exception $e) {
+                        $guValue = $enValue;
+                    }
+                }
+                $translations['gu'] = $guValue;
+                $data[$field] = $translations;
+            }
 
             if ($request->hasFile('customer_image')) {
                 if ($customer->customer_image) {

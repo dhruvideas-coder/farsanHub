@@ -8,14 +8,32 @@
             <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
                 <div class="card customer-card shadow-md h-100 border-0 mb-0">
                     <div class="card-body text-center pb-0">
-                        @if ($customer->customer_image && file_exists(public_path('storage/' . $customer->customer_image)))
-                            <img src="{{ asset('storage/' . $customer->customer_image) }}" alt="Profile"
-                                class="rounded-circle clickable-image shadow" width="100" height="100"
-                                data-bs-toggle="modal" data-bs-target="#imageModal"
-                                data-image="{{ asset('storage/' . $customer->customer_image) }}">
-                        @else
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width:100px; height:100px; background-color:#FF9933; color:white; font-weight:800; font-size:36px; letter-spacing:-1px;">{{ ucfirst(substr($customer->shop_name, 0, 2)) }}</div>
-                        @endif
+                        <div class="d-flex justify-content-center gap-3 mb-3">
+                            <div class="position-relative">
+                                @if ($customer->customer_image)
+                                    <img src="{{ Storage::url($customer->customer_image) }}" alt="Customer"
+                                        class="rounded-circle clickable-image shadow" width="80" height="80"
+                                        data-bs-toggle="modal" data-bs-target="#imageModal"
+                                        data-image="{{ Storage::url($customer->customer_image) }}">
+                                    <small class="d-block text-muted mt-1">{{ __('portal.owner') }}</small>
+                                @else
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width:80px; height:80px; background-color:#FF9933; color:white; font-weight:800; font-size:28px; letter-spacing:-1px;">{{ mb_strtoupper(mb_substr($customer->customer_name ?? 'C', 0, 1)) }}</div>
+                                    <small class="d-block text-muted mt-1">{{ __('portal.owner') }}</small>
+                                @endif
+                            </div>
+                            <div class="position-relative">
+                                @if ($customer->shop_image)
+                                    <img src="{{ Storage::url($customer->shop_image) }}" alt="Shop"
+                                        class="rounded clickable-image shadow" width="80" height="80"
+                                        data-bs-toggle="modal" data-bs-target="#imageModal"
+                                        data-image="{{ Storage::url($customer->shop_image) }}">
+                                    <small class="d-block text-muted mt-1">{{ __('portal.shop') }}</small>
+                                @else
+                                    <div class="rounded d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width:80px; height:80px; background-color:#33CCFF; color:white; font-weight:800; font-size:28px; letter-spacing:-1px;">{{ mb_strtoupper(mb_substr($customer->shop_name ?? 'S', 0, 1)) }}</div>
+                                    <small class="d-block text-muted mt-1">{{ __('portal.shop') }}</small>
+                                @endif
+                            </div>
+                        </div>
 
                         {{-- Title: Shop Name --}}
                         <h5 class="mt-3 text-danger fw-bold">{{ ucfirst($customer->shop_name ?? $customer->customer_name ?? '-') }}</h5>

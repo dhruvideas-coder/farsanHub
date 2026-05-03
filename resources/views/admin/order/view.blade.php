@@ -1,4 +1,4 @@
-﻿<div class="table-responsive mb-2">
+<div class="table-responsive mb-2">
 <table class="table table-hover align-middle mb-0" id="logs-table" style="min-width:600px;">
     <thead style="background:#FFF7EE;">
         <tr>
@@ -31,12 +31,18 @@
                         @endif
                     </td>
                     <td>
-                        <span style="font-size:13px; font-weight:600; color:#1c1917;">{{ $order->shop_name }}</span>
+                        <span style="font-size:13px; font-weight:600; color:#1c1917;">
+                            @if($order->customer)
+                                {{ $order->customer->shop_name ?: $order->customer->customer_name }}
+                            @else
+                                N/A
+                            @endif
+                        </span>
                     </td>
-                    <td style="font-size:13px; color:#292524;">{{ $order->product_name }}</td>
+                    <td style="font-size:13px; color:#292524;">{{ optional($order->product)->product_name ?? 'N/A' }}</td>
                     <td class="text-center">
                         <span class="badge rounded-pill" style="background:#FFF7EE; color:#d97706; font-size:12px; font-weight:600; border:1px solid #fde68a;">
-                            {{ rtrim(rtrim(number_format($order->order_quantity, 4), '0'), '.') }} {{ $order->unit ?? 'kg' }}
+                            {{ rtrim(rtrim(number_format($order->order_quantity, 4), '0'), '.') }} {{ optional($order->product)->unit ?? 'kg' }}
                         </span>
                     </td>
                     <td class="text-end" style="font-size:13px; font-weight:700; color:#d97706; white-space:nowrap;">
@@ -61,8 +67,8 @@
                 </tr>
             @endforeach
             @php
-                $totalKg = $orders->filter(fn($o) => strtolower($o->unit ?? 'kg') === 'kg')->sum('order_quantity');
-                $totalNang = $orders->filter(fn($o) => strtolower($o->unit ?? '') === 'nang')->sum('order_quantity');
+                $totalKg = $orders->filter(fn($o) => strtolower(optional($o->product)->unit ?? 'kg') === 'kg')->sum('order_quantity');
+                $totalNang = $orders->filter(fn($o) => strtolower(optional($o->product)->unit ?? '') === 'nang')->sum('order_quantity');
             @endphp
             <tr style="background:#FFF7EE; font-weight:700;">
                 <td colspan="4" class="text-end" style="font-size:13px; color:#92400e;">{{ @trans('portal.total') }}:</td>

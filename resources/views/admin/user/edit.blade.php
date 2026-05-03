@@ -24,11 +24,16 @@
                         @method('PUT')
                         <div class="row">
                             <div class="col-md-6 mb-4">
-                                <label for="name" class="form-label fw-bold">{{ __('portal.name') }} <span class="text-danger">*</span></label>
-                                <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $user->name) }}" required>
+                                <label for="name" class="form-label fw-bold">{{ __('portal.name') }} (English) <span class="text-danger">*</span></label>
+                                <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $user->getTranslation('name', 'en')) }}" required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="name_gu" class="form-label fw-bold">{{ __('portal.name') }} (ગુજરાતી)</label>
+                                <input type="text" name="name_gu" id="name_gu" class="form-control" value="{{ old('name_gu', $user->getTranslation('name', 'gu')) }}">
                             </div>
 
                             <div class="col-md-6 mb-4">

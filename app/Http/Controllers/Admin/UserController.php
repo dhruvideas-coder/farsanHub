@@ -16,7 +16,8 @@ class UserController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q->where('name->en', 'like', "%{$search}%")
+                  ->orWhere('name->gu', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%");
             });
         }
@@ -45,8 +46,19 @@ class UserController extends Controller
             'webpage_url' => 'nullable|url'
         ]);
 
+        $enName = $request->name;
+        $guName = $request->name_gu;
+
+        if (empty($guName) && !empty($enName)) {
+            try {
+                $guName = \Stichoza\GoogleTranslate\GoogleTranslate::trans($enName, 'gu', 'en');
+            } catch (\Exception $e) {
+                $guName = $enName;
+            }
+        }
+
         User::create([
-            'name' => $request->name,
+            'name' => ['en' => $enName, 'gu' => $guName],
             'email' => $request->email,
             'password' => Hash::make('12345678'), // Default password
             'role' => $request->role,
@@ -79,7 +91,18 @@ class UserController extends Controller
             'webpage_url' => 'nullable|url'
         ]);
 
-        $user->name = $request->name;
+        $enName = $request->name;
+        $guName = $request->name_gu;
+
+        if (empty($guName) && !empty($enName)) {
+            try {
+                $guName = \Stichoza\GoogleTranslate\GoogleTranslate::trans($enName, 'gu', 'en');
+            } catch (\Exception $e) {
+                $guName = $enName;
+            }
+        }
+
+        $user->name = ['en' => $enName, 'gu' => $guName];
         $user->email = $request->email;
         $user->role = $request->role;
         $user->webpage_url = $request->webpage_url;

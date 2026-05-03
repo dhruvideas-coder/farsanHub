@@ -99,38 +99,26 @@ class ReportController extends Controller
                 return redirect()->back()->with('error', 'Please select a month and year before exporting.');
             }
 
-            // Get filtered orders (same as before but improved with joins)
-            $orders = Order::join('products', 'orders.product_id', '=', 'products.id')
-                ->join('customers', 'orders.customer_id', '=', 'customers.id')
-                ->where('orders.user_id', auth()->id())
+            // Get filtered orders using Eloquent relations
+            $orders = Order::with(['product', 'customer'])
+                ->where('user_id', auth()->id())
                 ->when($customerId, function ($query) use ($customerId) {
-                    $query->where('orders.customer_id', $customerId);
+                    $query->where('customer_id', $customerId);
                 })
                 ->when($monthYear, function ($query) use ($monthYear) {
                     $start = Carbon::parse($monthYear . '-01')->startOfMonth()->toDateString();
                     $end   = Carbon::parse($monthYear . '-01')->endOfMonth()->toDateString();
                     $query->where(function ($q) use ($start, $end) {
-                        $q->whereBetween('orders.order_date', [$start, $end])
+                        $q->whereBetween('order_date', [$start, $end])
                           ->orWhere(function ($q2) use ($start, $end) {
-                              $q2->whereNull('orders.order_date')
-                                 ->whereDate('orders.created_at', '>=', $start)
-                                 ->whereDate('orders.created_at', '<=', $end);
+                              $q2->whereNull('order_date')
+                                 ->whereDate('created_at', '>=', $start)
+                                 ->whereDate('created_at', '<=', $end);
                           });
                     });
                 })
-                ->select(
-                    'orders.*',
-                    'products.product_name',
-                    'products.unit',
-                    'customers.customer_name',
-                    'customers.shop_name',
-                    'customers.customer_number',
-                    'customers.shop_address',
-                    'customers.city',
-                    'customers.customer_email'
-                )
-                ->orderBy('orders.order_date', 'asc')
-                ->orderBy('orders.created_at', 'asc')
+                ->orderBy('order_date', 'asc')
+                ->orderBy('created_at', 'asc')
                 ->get();
 
             if ($orders->isEmpty()) {
@@ -156,7 +144,7 @@ class ReportController extends Controller
                     $totalOrderAmount += $order->calculated_total;
                     $totalOrderQuantity += $order->order_quantity;
 
-                    $unit = strtolower($order->unit ?? 'kg');
+                    $unit = strtolower($order->product->unit ?? 'kg');
                     if ($unit === 'nang') {
                         $totalNang += $order->order_quantity;
                     } else {

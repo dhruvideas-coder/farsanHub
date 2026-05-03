@@ -20,10 +20,11 @@ class OrderController extends Controller
             $search = $request->has('search') && !empty($request->search) ? $request->search : null;
             $limit  = $request->has('limit') ? (int) $request->limit : 10;
 
-            $query = Order::join('products', 'orders.product_id', '=', 'products.id')
-                ->join('customers', 'orders.customer_id', '=', 'customers.id')
-                ->where('orders.user_id', auth()->id())
-                ->select('orders.*', 'products.product_name', 'products.unit', 'customers.customer_name', 'customers.shop_name');
+            $query = Order::with([
+                'product' => function($q) { $q->withTrashed(); },
+                'customer' => function($q) { $q->withTrashed(); }
+            ])
+                ->where('user_id', auth()->id());
 
             if ($request->start_date) {
                 $query->whereDate('orders.order_date', '>=', $request->start_date);
@@ -42,9 +43,17 @@ class OrderController extends Controller
             }
             if (!empty($search)) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('products.product_name', 'like', "%{$search}%")
-                        ->orWhere('customers.customer_name', 'like', "%{$search}%")
-                        ->orWhere('orders.order_quantity', 'like', "%{$search}%");
+                    $q->whereHas('product', function($pq) use ($search) {
+                        $pq->where('product_name->en', 'like', "%{$search}%")
+                           ->orWhere('product_name->gu', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('customer', function($cq) use ($search) {
+                        $cq->where('customer_name->en', 'like', "%{$search}%")
+                           ->orWhere('customer_name->gu', 'like', "%{$search}%")
+                           ->orWhere('shop_name->en', 'like', "%{$search}%")
+                           ->orWhere('shop_name->gu', 'like', "%{$search}%");
+                    })
+                    ->orWhere('order_quantity', 'like', "%{$search}%");
                 });
             }
 
@@ -79,19 +88,17 @@ class OrderController extends Controller
     public function getProductsByCustomer(Request $request)
     {
         $customerId = $request->customer_id;
-        $products = Product::where('products.user_id', auth()->id())
-            ->where('products.status', 'Active')
-            ->leftJoin('product_prices', function($join) use ($customerId) {
-                $join->on('products.id', '=', 'product_prices.product_id')
-                     ->where('product_prices.customer_id', '=', $customerId);
-            })
-            ->select(
-                'products.id',
-                'products.product_name',
-                'products.unit',
-                DB::raw('COALESCE(product_prices.price, products.product_base_price) as product_base_price')
-            )
-            ->get();
+        $products = Product::where('user_id', auth()->id())
+            ->where('status', 'Active')
+            ->get()
+            ->map(function($product) use ($customerId) {
+                return [
+                    'id' => $product->id,
+                    'product_name' => $product->product_name, // Translatable
+                    'unit' => $product->unit,
+                    'product_base_price' => $this->getEffectivePrice($product->id, $customerId)
+                ];
+            });
         
         return response()->json($products);
     }

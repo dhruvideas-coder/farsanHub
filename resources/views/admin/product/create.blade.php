@@ -38,12 +38,18 @@
                             <div class="row">
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="product_name" class="form-label">{{ @trans('portal.product_name') }} <span class="text-danger">*</span></label>
+                                    <label for="product_name" class="form-label">{{ @trans('portal.product_name') }} (English) <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('product_name') is-invalid @enderror"
                                         id="product_name" name="product_name" value="{{ old('product_name') }}">
                                     @error('product_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="product_name_gu" class="form-label">{{ @trans('portal.product_name') }} (ગુજરાતી)</label>
+                                    <input type="text" class="form-control" id="product_name_gu" name="product_name_gu" value="{{ old('product_name_gu') }}">
+                                    <small class="text-muted">{{ __('portal.auto_translate_note') ?? 'Leave blank to auto-translate' }}</small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -64,17 +70,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label for="status" class="form-label">{{ @trans('portal.status') }} <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
-                                        <option value="">-- {{ @trans('portal.status') }} --</option>
-                                        <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>{{ @trans('portal.active') }}</option>
-                                        <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>{{ @trans('portal.inactive') }}</option>
-                                    </select>
-                                    @error('status')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                <input type="hidden" name="status" value="Active">
 
                                 <div class="mb-3 col-md-6">
                                     <label for="product_image" class="form-label">{{ @trans('portal.product_image') }}</label>
@@ -158,6 +154,25 @@ document.getElementById('unit').addEventListener('change', function () {
     var label = '/ ' + this.value;
     document.querySelectorAll('.unit-label').forEach(function (el) {
         el.textContent = label;
+    });
+});
+
+document.getElementById('product_base_price').addEventListener('input', function() {
+    var basePrice = this.value;
+    document.querySelectorAll('input[name^="customer_prices"]').forEach(function(input) {
+        if (!input.dataset.manual) {
+            input.value = basePrice;
+        }
+    });
+});
+
+document.querySelectorAll('input[name^="customer_prices"]').forEach(function(input) {
+    input.addEventListener('input', function() {
+        if (this.value !== '') {
+            this.dataset.manual = 'true';
+        } else {
+            delete this.dataset.manual;
+        }
     });
 });
 </script>

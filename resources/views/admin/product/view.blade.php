@@ -32,13 +32,13 @@
                             {{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}
                         </td>
                         <td style="padding: 15px 20px;">
-                            @if ($product->product_image && file_exists(public_path('storage/' . $product->product_image)))
-                                <img src="{{ asset('storage/' . $product->product_image) }}" alt="img"
+                            @if ($product->product_image)
+                                <img src="{{ Storage::url($product->product_image) }}" alt="img"
                                     class="rounded clickable-image border shadow-sm" width="45" height="45" style="object-fit:cover;"
-                                    data-image="{{ asset('storage/' . $product->product_image) }}">
+                                    data-image="{{ Storage::url($product->product_image) }}">
                             @else
                                 <div class="rounded d-flex align-items-center justify-content-center shadow-sm"
-                                    style="width:45px; height:45px; background: linear-gradient(135deg, #FF9933, #d35400); color:white; font-weight:800; font-size:14px;">{{ ucfirst(substr($product->product_name, 0, 2)) }}</div>
+                                    style="width:45px; height:45px; background: linear-gradient(135deg, #FF9933, #d35400); color:white; font-weight:800; font-size:14px;">{{ mb_strtoupper(mb_substr($product->product_name, 0, 1)) }}</div>
                             @endif
                         </td>
                         <td style="padding: 15px 20px;">

@@ -288,9 +288,9 @@
             <td class="party-left">
                 <span class="party-label">Bill To:</span>
                 @if($customerInfo)
-                    <span class="party-title">{{ $customerInfo->customer_name }}</span>
-                    <div class="party-detail">{{ $customerInfo->shop_name }}</div>
-                    <div class="party-detail"><span class="label">Address:</span> {{ $customerInfo->shop_address }}{{ $customerInfo->city ? ', '.$customerInfo->city : '' }}</div>
+                    <span class="party-title">{{ $customerInfo->getTranslation('customer_name', App::getLocale()) }}</span>
+                    <div class="party-detail">{{ $customerInfo->getTranslation('shop_name', App::getLocale()) }}</div>
+                    <div class="party-detail"><span class="label">Address:</span> {{ $customerInfo->getTranslation('shop_address', App::getLocale()) }}{{ $customerInfo->city ? ', '.$customerInfo->getTranslation('city', App::getLocale()) : '' }}</div>
                     <div class="party-detail"><span class="label">Phone:</span> {{ $customerInfo->customer_number }}</div>
                 @else
                     <span class="party-title">All Customers</span>
@@ -308,17 +308,17 @@
     @php
         $groupedOrders = [];
         foreach($orders as $order) {
-            $key = $order->product_name;
-            if (!isset($groupedOrders[$key])) {
-                $groupedOrders[$key] = [
-                    'product_name' => $order->product_name,
+            $productName = $order->product->product_name;
+            if (!isset($groupedOrders[$productName])) {
+                $groupedOrders[$productName] = [
+                    'product_name' => $productName,
                     'total_qty'    => 0,
-                    'unit'         => $order->unit ?? 'kg',
+                    'unit'         => $order->product->unit ?? 'kg',
                     'total_amount' => 0,
                 ];
             }
-            $groupedOrders[$key]['total_qty']    += (float) $order->order_quantity;
-            $groupedOrders[$key]['total_amount'] += (float) $order->order_quantity * (float) $order->order_price;
+            $groupedOrders[$productName]['total_qty']    += (float) $order->order_quantity;
+            $groupedOrders[$productName]['total_amount'] += (float) $order->order_quantity * (float) $order->order_price;
         }
     @endphp
 
