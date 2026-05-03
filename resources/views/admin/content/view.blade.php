@@ -47,7 +47,7 @@
             <td style="white-space: nowrap;">{{ date('d-m-Y', strtotime($content->upload_date)) }}</td>
             <td class="text-center">
                 <div class="btn-group">
-                    <a class="secondary edit-technician-btn me-2" href="{{ route('admin.contents.edit', $content->id) }}"><i class="fa fa-edit"></i></a>
+                    <a class="secondary edit-technician-btn me-2" href="{{ route('admin.contents.edit', [$content->id, 'page' => $contents->currentPage()]) }}"><i class="fa fa-edit"></i></a>
                     <a class="primary user-delete-btn" data-bs-toggle="modal" data-bs-target="#user-delete" data-content-id="{{ $content->id }}">
                         <i class="fa fa-trash-o"></i>
                     </a>

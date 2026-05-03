@@ -74,10 +74,11 @@ class UserController extends Controller
         return redirect()->route('admin.user.edit', $id);
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        return view('admin.user.edit', compact('user'));
+        $page = $request->page;
+        return view('admin.user.edit', compact('user', 'page'));
     }
 
     public function update(Request $request, $id)
@@ -109,7 +110,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('admin.user.index')->with('success', 'User updated successfully.');
+        return redirect()->route('admin.user.index', ['page' => $request->page])->with('success', 'User updated successfully.');
     }
 
     public function destroy($id)

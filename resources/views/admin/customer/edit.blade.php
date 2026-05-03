@@ -9,7 +9,7 @@
         </div>
         <div class="ms-auto pageheader-btn d-none d-xl-flex d-lg-flex">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('admin.customer.index') }}">{{ __('portal.home') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.customer.index', ['page' => $page]) }}">{{ __('portal.home') }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ @trans('portal.customers') }}</li>
             </ol>
         </div>
@@ -23,6 +23,7 @@
                         <form action="{{ route('admin.customer.update', $customer) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
+                            <input type="hidden" name="page" value="{{ $page }}">
                             <div class="row">
 
                                 <div class="col-md-6 mb-3">
@@ -182,7 +183,7 @@
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fa fa-save"></i> {{ @trans('portal.update') }}
                                     </button>
-                                    <a href="{{ route('admin.customer.index') }}" class="btn btn-secondary">
+                                    <a href="{{ route('admin.customer.index', ['page' => $page]) }}" class="btn btn-secondary">
                                         <i class="fa fa-arrow-left"></i> {{ @trans('portal.cancel') }}
                                     </a>
                                 </div>

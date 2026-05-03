@@ -66,10 +66,11 @@ class ContentController extends Controller
         }
     }
 
-    public function edit(Content $content)
+    public function edit(Request $request, Content $content)
     {
         abort_if($content->user_id !== auth()->id(), 403);
-        return view('admin.content.edit', compact('content'));
+        $page = $request->page;
+        return view('admin.content.edit', compact('content', 'page'));
     }
 
     public function update(Request $request, Content $content)
@@ -106,7 +107,7 @@ class ContentController extends Controller
 
             $content->update($data);
 
-            return redirect()->route('admin.contents.index')
+            return redirect()->route('admin.contents.index', ['page' => $request->page])
                 ->with('success', __('portal.content_updated'));
         } catch (\Throwable $th) {
             Log::error('ContentController@update Error: ' . $th->getMessage());

@@ -173,9 +173,10 @@ class OrderController extends Controller
         }
     }
 
-    public function edit(Order $order)
+    public function edit(Request $request, Order $order)
     {
         abort_if($order->user_id !== auth()->id(), 403);
+        $page = $request->page;
         $products = Product::where('products.user_id', auth()->id())
             ->leftJoin('product_prices', function($join) use ($order) {
                 $join->on('products.id', '=', 'product_prices.product_id')
@@ -189,7 +190,7 @@ class OrderController extends Controller
             )
             ->get();
         $customers = Customer::select('shop_name', 'customer_name', 'id')->where('user_id', auth()->id())->get();
-        return view('admin.order.edit', compact('order', 'products', 'customers'));
+        return view('admin.order.edit', compact('order', 'products', 'customers', 'page'));
     }
 
     public function update(Request $request, Order $order)
@@ -218,7 +219,7 @@ class OrderController extends Controller
                 'type'           => $request->type ?? $order->type,
             ]);
 
-            return redirect()->route('admin.order.index')->with('success', __('portal.order_updated'));
+            return redirect()->route('admin.order.index', ['page' => $request->page])->with('success', __('portal.order_updated'));
         } catch (\Throwable $th) {
             Log::error('OrderController@update Error: ' . $th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());

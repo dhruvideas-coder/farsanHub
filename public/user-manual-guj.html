@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="gu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarsanHub — વપરાશકર્તા માર્ગદર્શિકા</title>
+    <style>
+        :root {
+            --brand: #e65c00;
+            --brand-light: #fff3e0;
+            --brand-dark: #b84600;
+            --bg: #f9fafb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Shruti', 'Gujarati Sangam MN';
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header Section */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+            color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Navigation / TOC */
+        .toc {
+            background: var(--card);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+        }
+
+        .toc h2 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            color: var(--brand);
+            border-bottom: 2px solid var(--brand-light);
+            padding-bottom: 10px;
+        }
+
+        .toc ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc a:hover {
+            color: var(--brand);
+        }
+
+        /* Content Sections */
+        section {
+            background: var(--card);
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            scroll-margin-top: 20px;
+        }
+
+        section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--brand);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        section h3 {
+            font-size: 1.3rem;
+            margin: 25px 0 15px;
+            color: var(--text);
+            border-left: 4px solid var(--brand);
+            padding-left: 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: var(--brand-light);
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .feature-title {
+            font-weight: 700;
+            color: var(--brand-dark);
+            font-size: 1rem;
+        }
+
+        /* Steps */
+        .steps {
+            margin: 20px 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            background: var(--brand);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: #f3f4f6;
+            padding: 12px 15px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        td {
+            padding: 12px 15px;
+            border-top: 1px solid var(--border);
+            color: #4b5563;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-admin { background: #dbeafe; color: #1e40af; }
+        .badge-super { background: #ffedd5; color: #9a3412; }
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-info { background: #e0f2fe; color: #075985; }
+
+        /* Alerts */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .alert-info { background: #eff6ff; border-left: 4px solid #3b82f6; }
+        .alert-warning { background: #fffbeb; border-left: 4px solid #f59e0b; }
+        .alert-danger { background: #fef2f2; border-left: 4px solid #ef4444; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            header { padding: 30px 20px; }
+            header h1 { font-size: 1.8rem; }
+            section { padding: 25px; }
+            .toc ul { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>FarsanHub — વપરાશકર્તા માર્ગદર્શિકા</h1>
+            <p>બ્રહ્માણી ખાંડવી અને ફરસાણ હાઉસ માટે સંપૂર્ણ સ્ટેપ-બાય-સ્ટેપ ડોક્યુમેન્ટેશન</p>
+            <div class="meta-info">
+                <span class="meta-item">📦 આવૃત્તિ ૧.૬</span>
+                <span class="meta-item">📅 મે ૨૦૨૬</span>
+                <span class="meta-item">🏢 વડોદરા, ગુજરાત</span>
+            </div>
+        </header>
+
+        <div class="toc">
+            <h2>📑 વિષય સૂચિ</h2>
+            <ul>
+                <li><a href="#intro">૧. FarsanHub શું છે?</a></li>
+                <li><a href="#users">૨. આ સિસ્ટમનો ઉપયોગ કોણ કરે છે?</a></li>
+                <li><a href="#login">૩. લોગિન કેવી રીતે કરવું</a></li>
+                <li><a href="#dashboard">૪. ડેશબોર્ડની વિગતો</a></li>
+                <li><a href="#customers">૫. ગ્રાહકોનું સંચાલન</a></li>
+                <li><a href="#products">૬. પ્રોડક્ટ્સ (વસ્તુઓ)</a></li>
+                <li><a href="#orders">૭. ઓર્ડર્સ (વેચાણ/ખરીદી)</a></li>
+                <li><a href="#expenses">૮. ખર્ચની નોંધણી</a></li>
+                <li><a href="#reports">૯. રિપોર્ટ્સ ડાઉનલોડ કરવા</a></li>
+                <li><a href="#map">૧૦. ગ્રાહક નકશો</a></li>
+                <li><a href="#content">૧૧. સામગ્રી (કન્ટેન્ટ) મેનેજમેન્ટ</a></li>
+                <li><a href="#users-mgmt">૧૨. વપરાશકર્તા વ્યવસ્થાપન</a></li>
+                <li><a href="#account">૧૩. એકાઉન્ટ સેટિંગ્સ</a></li>
+                <li><a href="#security">૧૪. સુરક્ષા અને લોગઆઉટ</a></li>
+                <li><a href="#suggestions">૧૫. સુધારણા માટેના સૂચનો</a></li>
+            </ul>
+        </div>
+
+        <!-- 1. INTRO -->
+        <section id="intro">
+            <h2><span>📋</span> ૧. FarsanHub શું છે?</h2>
+            <p><strong>FarsanHub</strong> એ બ્રહ્માણી ખાંડવી અને ફરસાણ હાઉસ માટે બનાવવામાં આવેલ એક ઓલ-ઈન-વન બિઝનેસ મેનેજમેન્ટ પોર્ટલ છે. તે કાગળના રજિસ્ટર અને સ્પ્રેડશીટ્સને ડિજિટલ સિસ્ટમમાં બદલે છે, જેનો ઉપયોગ તમે કોઈપણ વેબ બ્રાઉઝર પરથી કરી શકો છો.</p>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <span class="feature-icon">🏪</span>
+                    <span class="feature-title">ગ્રાહકોની વિગત</span>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📦</span>
+                    <span class="feature-title">પ્રોડક્ટ કેટલોગ</span>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🛒</span>
+                    <span class="feature-title">ઓર્ડર મેનેજમેન્ટ</span>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💸</span>
+                    <span class="feature-title">ખર્ચની નોંધણી</span>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📄</span>
+                    <span class="feature-title">રિપોર્ટ્સ (PDF/Excel)</span>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🗺️</span>
+                    <span class="feature-title">ગ્રાહક નકશો</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. USERS -->
+        <section id="users">
+            <h2><span>👥</span> ૨. આ સિસ્ટમનો ઉપયોગ કોણ કરે છે?</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ભૂમિકા (Role)</th>
+                            <th>તેઓ શું કરી શકે છે</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-admin">Admin</span></td>
+                            <td>ગ્રાહકો, પ્રોડક્ટ્સ, ઓર્ડર્સ, ખર્ચ, રિપોર્ટ્સ અને નકશાની સંપૂર્ણ ઍક્સેસ.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-super">Super Admin</span></td>
+                            <td>Admin ની તમામ સત્તાઓ + અન્ય વપરાશકર્તાઓના એકાઉન્ટનું સંચાલન.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert alert-info">
+                <span>ℹ️</span>
+                <p>ફક્ત એડમિન ઍક્સેસ ધરાવતા વપરાશકર્તાઓ જ લોગિન કરી શકે છે. નવા એકાઉન્ટ ફક્ત સુપર એડમિન દ્વારા જ બનાવી શકાય છે.</p>
+            </div>
+        </section>
+
+        <!-- 3. LOGIN -->
+        <section id="login">
+            <h2><span>🔐</span> ૩. લોગિન કેવી રીતે કરવું — સ્ટેપ બાય સ્ટેપ</h2>
+            
+            <h3>વિકલ્પ અ — ઇમેઇલ અને પાસવર્ડ દ્વારા</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">૧</div>
+                    <div class="step-content">
+                        <strong>લોગિન પેજ ખોલો</strong>
+                        તમારા બ્રાઉઝરમાં FarsanHub ની લિંક ખોલો.
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">૨</div>
+                    <div class="step-content">
+                        <strong>ઇમેઇલ એડ્રેસ દાખલ કરો</strong>
+                        તમારો રજિસ્ટર્ડ ઇમેઇલ (દા.ત. admin@farsanhub.com) ટાઈપ કરો.
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">૩</div>
+                    <div class="step-content">
+                        <strong>પાસવર્ડ દાખલ કરો</strong>
+                        તમારો પાસવર્ડ ટાઈપ કરો. સુરક્ષા માટે તે દેખાશે નહીં.
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">૪</div>
+                    <div class="step-content">
+                        <strong>"Login" બટન પર ક્લિક કરો</strong>
+                        નારંગી રંગના લોગિન બટનને દબાવો.
+                    </div>
+                </div>
+            </div>
+
+            <h3>વિકલ્પ બ — Google દ્વારા લોગિન (ઝડપી)</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">૧</div>
+                    <div class="step-content"><strong>"Login with Google" પર ક્લિક કરો</strong></div>
+                </div>
+                <div class="step">
+                    <div class="step-num">૨</div>
+                    <div class="step-content"><strong>તમારું Google એકાઉન્ટ પસંદ કરો</strong></div>
+                </div>
+            </div>
+            <div class="alert alert-warning">
+                <span>⚠️</span>
+                <p>Google લોગિન ફક્ત ત્યારે જ કામ કરશે જો તમારું Google ઇમેઇલ FarsanHub માં પહેલેથી નોંધાયેલું હોય.</p>
+            </div>
+        </section>
+
+        <!-- 4. DASHBOARD -->
+        <section id="dashboard">
+            <h2><span>📊</span> ૪. ડેશબોર્ડ — તમારી હોમ સ્ક્રીન</h2>
+            <p>ડેશબોર્ડ તમને વ્યવસાયની લાઈવ સ્થિતિ બતાવે છે. ડાબી બાજુના મેનુમાં "ડેશબોર્ડ" પર ક્લિક કરીને તેને જોઈ શકાય છે.</p>
+
+            <h3>સમયગાળાના ફિલ્ટર્સ</h3>
+            <p>તમે આજનો, ગઈકાલનો, આ અઠવાડિયાનો, આ મહિનાનો કે આ વર્ષનો ડેટા જોવા માટે ફિલ્ટર્સનો ઉપયોગ કરી શકો છો.</p>
+
+            <h3>૪ મુખ્ય માહિતી કાર્ડ્સ:</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>કાર્ડ</th>
+                            <th>શું બતાવે છે</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🏪 કુલ ગ્રાહકો</td>
+                            <td>તમારા કુલ નોંધાયેલા ગ્રાહકોની સંખ્યા.</td>
+                        </tr>
+                        <tr>
+                            <td>🛒 કુલ ઓર્ડર્સ</td>
+                            <td>પસંદ કરેલ સમયગાળામાં થયેલા કુલ ઓર્ડર્સ.</td>
+                        </tr>
+                        <tr>
+                            <td>📦 કુલ પ્રોડક્ટ્સ</td>
+                            <td>તમારી કેટલી પ્રોડક્ટ્સ લિસ્ટમાં છે.</td>
+                        </tr>
+                        <tr>
+                            <td>💰 કુલ આવક</td>
+                            <td>વેચાણ (Sell) માંથી થયેલી કુલ કમાણી.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 5. CUSTOMERS -->
+        <section id="customers">
+            <h2><span>🏪</span> ૫. ગ્રાહકોનું મોડ્યુલ</h2>
+            <p>અહીં તમે તમામ દુકાનો અને ખરીદદારોની માહિતી સાચવી શકો છો.</p>
+
+            <h3>નવા ગ્રાહકને કેવી રીતે ઉમેરવા:</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">૧</div>
+                    <div class="step-content"><strong>"Customers" મેનુમાં જાઓ</strong></div>
+                </div>
+                <div class="step">
+                    <div class="step-num">૨</div>
+                    <div class="step-content"><strong>"Add Customer" બટન પર ક્લિક કરો</strong></div>
+                </div>
+                <div class="step">
+                    <div class="step-num">૩</div>
+                    <div class="step-content"><strong>ફોર્મ ભરો:</strong> નામ, ફોન નંબર, દુકાનનું નામ, સરનામું અને ફોટો વગેરે વિગતો દાખલ કરો.</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">૪</div>
+                    <div class="step-content"><strong>"Save" પર ક્લિક કરો.</strong></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. PRODUCTS -->
+        <section id="products">
+            <h2><span>📦</span> ૬. પ્રોડક્ટ્સ (વસ્તુઓ)</h2>
+            <p>તમારી પ્રોડક્ટ કેટલોગનું સંચાલન કરો — જેમ કે કઈ વસ્તુ વેચવી, શું કિંમત રાખવી અને કયા યુનિટ (કિગ્રા કે નંગ) માં વેચવી.</p>
+            
+            <div class="alert alert-success">
+                <span>✅</span>
+                <p><strong>ગ્રાહક મુજબ કિંમત:</strong> જો કોઈ ચોક્કસ ગ્રાહક માટે અલગ કિંમત રાખવી હોય, તો તમે પ્રોડક્ટ એડિટમાં જઈને "Customer Pricing" માં સેટ કરી શકો છો.</p>
+            </div>
+        </section>
+
+        <!-- 7. ORDERS -->
+        <section id="orders">
+            <h2><span>🛒</span> ૭. ઓર્ડર્સ (વેચાણ અને ખરીદી)</h2>
+            <p>દરેક વેચાણ (Sell) અને દરેક ખરીદી (Purchase) ની નોંધ અહીં કરો.</p>
+
+            <h3>ઓર્ડરના પ્રકાર:</h3>
+            <ul>
+                <li><strong>Sell:</strong> જ્યારે તમે ગ્રાહકને માલ વેચો છો.</li>
+                <li><strong>Purchase:</strong> જ્યારે તમે માલ ખરીદો છો.</li>
+                <li><strong>Remaining:</strong> બાકી પેમેન્ટની એન્ટ્રી માટે.</li>
+                <li><strong>Cash:</strong> સીધા રોકડ વ્યવહાર માટે.</li>
+            </ul>
+
+            <div class="alert alert-info">
+                <span>✨</span>
+                <p><strong>ઓટોમેટિક ગણતરી:</strong> જેમ તમે જથ્થો (Quantity) અને કિંમત નાખશો, સિસ્ટમ જાતે જ કુલ રકમ ગણી લેશે.</p>
+            </div>
+        </section>
+
+        <!-- 8. EXPENSES -->
+        <section id="expenses">
+            <h2><span>💸</span> ૮. ખર્ચની નોંધણી</h2>
+            <p>વ્યવસાયના ખર્ચ (દા.ત. ડીઝલનો ખર્ચ) અથવા વ્યક્તિગત ખર્ચની નોંધ અહીં કરો.</p>
+            <p>તમે મહિના મુજબ ખર્ચ જોઈ શકો છો અને તેને Excel ફાઇલમાં ડાઉનલોડ પણ કરી શકો છો.</p>
+        </section>
+
+        <!-- 9. REPORTS -->
+        <section id="reports">
+            <h2><span>📄</span> ૯. રિપોર્ટ્સ (અહેવાલ)</h2>
+            <p>તમારા વ્યવસાયના વ્યાવસાયિક રિપોર્ટ્સ ડાઉનલોડ કરો:</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>રિપોર્ટ</th>
+                            <th>ફોર્મેટ</th>
+                            <th>વિગત</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ઓર્ડર રિપોર્ટ</td>
+                            <td><span class="badge badge-info">PDF</span></td>
+                            <td>ગ્રાહક મુજબ આખા મહિનાના ઓર્ડર અને બિલ.</td>
+                        </tr>
+                        <tr>
+                            <td>ખર્ચ રિપોર્ટ</td>
+                            <td><span class="badge badge-success">Excel</span></td>
+                            <td>આખા મહિનામાં થયેલ તમામ ખર્ચની યાદી.</td>
+                        </tr>
+                        <tr>
+                            <td>ગ્રાહક રિપોર્ટ</td>
+                            <td><span class="badge badge-success">Excel</span></td>
+                            <td>તમામ ગ્રાહકોની ડિરેક્ટરી.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 10. MAP -->
+        <section id="map">
+            <h2><span>🗺️</span> ૧૦. ગ્રાહક નકશો</h2>
+            <p>નકશા પર તમારા બધા ગ્રાહકોને જુઓ. જો તમે ગ્રાહકની વિગતમાં લોકેશન (Latitude/Longitude) નાખેલું હશે, તો નકશા પર પિન દેખાશે.</p>
+        </section>
+
+        <!-- 11. CONTENT -->
+        <section id="content">
+            <h2><span>🖼️</span> ૧૧. સામગ્રી (કન્ટેન્ટ) મેનેજમેન્ટ</h2>
+            <p>તમારા પ્રમોશનલ ફોટા, બેનરો અને પ્રોડક્ટના ફોટા અપલોડ અને મેનેજ કરો.</p>
+        </section>
+
+        <!-- 12. USERS MGMT -->
+        <section id="users-mgmt">
+            <h2><span>⚙️</span> ૧૨. વપરાશકર્તા વ્યવસ્થાપન</h2>
+            <p><span class="badge badge-super">ફક્ત સુપર એડમિન માટે</span></p>
+            <p>FarsanHub માં કોણ લોગિન કરી શકે તે નક્કી કરો. નવા વપરાશકર્તા બનાવો અને તેમને એડમિન કે સુપર એડમિન ની સત્તા આપો.</p>
+            <div class="alert alert-warning">
+                <span>🔑</span>
+                <p><strong>ડિફોલ્ટ પાસવર્ડ:</strong> નવા યુઝર માટે પાસવર્ડ <code>12345678</code> હોય છે, જે તેમણે પ્રથમ લોગિન પછી બદલી નાખવો જોઈએ.</p>
+            </div>
+        </section>
+
+        <!-- 13. ACCOUNT -->
+        <section id="account">
+            <h2><span>🔑</span> ૧૩. એકાઉન્ટ સેટિંગ્સ</h2>
+            <h3>પાસવર્ડ બદલવો</h3>
+            <p>ઉપરના મેનુમાં તમારા નામ પર ક્લિક કરીને "Change Password" માં જઈ પાસવર્ડ બદલી શકાય છે.</p>
+
+            <h3>ભાષા બદલવી</h3>
+            <p>તમે અંગ્રેજી (English) અને ગુજરાતી ભાષા વચ્ચે સ્વિચ કરી શકો છો. ગુજરાતી પસંદ કરવાથી યુનિટ પણ બદલાઈ જશે:</p>
+            <ul>
+                <li><strong>kg</strong> -> કિગ્રા</li>
+                <li><strong>Nang</strong> -> નંગ</li>
+            </ul>
+        </section>
+
+        <!-- 14. SECURITY -->
+        <section id="security">
+            <h2><span>🛡️</span> ૧૪. સુરક્ષા અને ઓટો-લોગઆઉટ</h2>
+            <h3>ઓટો-લોગઆઉટ (૫ મિનિટ)</h3>
+            <p>જો તમે ૫ મિનિટ સુધી કંઈ જ કામ ન કરો, તો સિસ્ટમ સુરક્ષા માટે તમને ઓટોમેટિક લોગઆઉટ કરી દેશે.</p>
+            
+            <h3>લોગિન પ્રોટેક્શન</h3>
+            <p>જો ૫ વખત ખોટો પાસવર્ડ નાખવામાં આવે, તો એકાઉન્ટ ૧ કલાક માટે બ્લોક થઈ જશે.</p>
+        </section>
+
+        <!-- 15. SUGGESTIONS -->
+        <section id="suggestions">
+            <h2><span>💡</span> ૧૫. સુધારણા માટેના સૂચનો</h2>
+            <p>સિસ્ટમને વધુ સારી બનાવવા માટેના કેટલાક સૂચનો:</p>
+            <ol style="padding-left: 20px;">
+                <li>પાસવર્ડ ભૂલી ગયા હોય ત્યારે 'Forgot Password' લિંક.</li>
+                <li>નવા યુઝર માટે પ્રથમ લોગિન વખતે પાસવર્ડ બદલવો ફરજિયાત કરવો.</li>
+                <li>ડેશબોર્ડ પરથી જ સીધો નવો ઓર્ડર બનાવવાનું બટન.</li>
+                <li>ગ્રાહકોના બાકી પેમેન્ટનું ટ્રેકિંગ (Payment Tracking).</li>
+                <li>સ્ટોક મેનેજમેન્ટ (Inventory).</li>
+            </ol>
+        </section>
+
+        <footer>
+            <p>&copy; ૨૦૨૬ બ્રહ્માણી ખાંડવી અને ફરસાણ હાઉસ — વડોદરા</p>
+            <p>FarsanHub Business Management Portal</p>
+        </footer>
+    </div>
+</body>
+
+</html>

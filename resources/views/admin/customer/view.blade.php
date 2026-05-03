@@ -95,7 +95,7 @@
                         </ul>
 
                         <div class="mt-3 d-flex justify-content-center gap-2">
-                            <a class="btn btn-secondary" href="{{ route('admin.customer.edit', $customer->id) }}">
+                            <a class="btn btn-secondary" href="{{ route('admin.customer.edit', [$customer->id, 'page' => $customers->currentPage()]) }}">
                                 <i class="fa fa-edit"></i>
                             </a>
                             <a class="btn btn-primary"

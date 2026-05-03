@@ -7,8 +7,8 @@
     </div>
     <div class="ms-auto pageheader-btn d-none d-xl-flex d-lg-flex">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">{{ __('portal.home') }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">{{ __('portal.manage_users') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.user.index', ['page' => $page]) }}">{{ __('portal.home') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.user.index', ['page' => $page]) }}">{{ __('portal.manage_users') }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ __('portal.edit') }}</li>
         </ol>
     </div>
@@ -22,6 +22,7 @@
                     <form action="{{ route('admin.user.update', $user->id) }}" method="POST">
                         @csrf
                         @method('PUT')
+                        <input type="hidden" name="page" value="{{ $page }}">
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <label for="name" class="form-label fw-bold">{{ __('portal.name') }} (English) <span class="text-danger">*</span></label>
@@ -67,7 +68,7 @@
                                 <button type="submit" class="btn btn-primary px-4">
                                     <i class="fa fa-save me-1"></i> {{ __('portal.update_user') }}
                                 </button>
-                                <a href="{{ route('admin.user.index') }}" class="btn btn-secondary px-4 ms-2">
+                                <a href="{{ route('admin.user.index', ['page' => $page]) }}" class="btn btn-secondary px-4 ms-2">
                                     <i class="fa fa-arrow-left me-1"></i> {{ __('portal.cancel') }}
                                 </a>
                             </div>

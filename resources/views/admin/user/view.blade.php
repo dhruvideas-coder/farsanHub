@@ -56,7 +56,7 @@
                     </td>
                     <td class="text-center" style="padding: 15px 20px;">
                         <div class="d-flex justify-content-center gap-2">
-                            <a href="{{ route('admin.user.edit', $user->id) }}"
+                             <a href="{{ route('admin.user.edit', [$user->id, 'page' => $users->currentPage()]) }}"
                                class="btn btn-sm" style="background:#FFF7EE; color:#d97706; border:1px solid #fde68a; padding:4px 10px;">
                                 <i class="fa fa-edit"></i>
                             </a>

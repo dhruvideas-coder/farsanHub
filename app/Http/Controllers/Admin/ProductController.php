@@ -141,11 +141,12 @@ class ProductController extends Controller
         }
     }
 
-    public function edit(Product $product)
+    public function edit(Request $request, Product $product)
     {
         abort_if($product->user_id !== auth()->id(), 403);
+        $page = $request->page;
         $customers = Customer::where('user_id', auth()->id())->select('id', 'customer_name', 'shop_name')->get();
-        return view('admin.product.edit', compact('product', 'customers'));
+        return view('admin.product.edit', compact('product', 'customers', 'page'));
     }
 
     public function update(Request $request, Product $product)
@@ -211,7 +212,7 @@ class ProductController extends Controller
                 }
             }
 
-            return redirect()->route('admin.product.index')
+            return redirect()->route('admin.product.index', ['page' => $request->page])
                 ->with('success', __('portal.product_updated'));
         } catch (\Throwable $th) {
             Log::error('ProductController@update Error: ' . $th->getMessage());

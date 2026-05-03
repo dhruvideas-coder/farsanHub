@@ -145,10 +145,11 @@ class CustomerController extends Controller
         }
     }
 
-    public function edit(Customer $customer)
+    public function edit(Request $request, Customer $customer)
     {
         abort_if($customer->user_id !== auth()->id(), 403);
-        return view('admin.customer.edit', compact('customer'));
+        $page = $request->page;
+        return view('admin.customer.edit', compact('customer', 'page'));
     }
 
     public function update(Request $request, Customer $customer)
@@ -234,7 +235,7 @@ class CustomerController extends Controller
 
             $customer->update($data);
 
-            return redirect()->route('admin.customer.index')
+            return redirect()->route('admin.customer.index', ['page' => $request->page])
                 ->with('success', __('portal.customer_updated'));
         } catch (\Throwable $th) {
             Log::error('CustomerController@update Error: ' . $th->getMessage());

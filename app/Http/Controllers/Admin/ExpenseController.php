@@ -110,10 +110,11 @@ class ExpenseController extends Controller
         }
     }
 
-    public function edit(Expense $expense)
+    public function edit(Request $request, Expense $expense)
     {
         abort_if($expense->user_id !== auth()->id(), 403);
-        return view('admin.expense.edit', compact('expense'));
+        $page = $request->page;
+        return view('admin.expense.edit', compact('expense', 'page'));
     }
 
     public function update(Request $request, Expense $expense)
@@ -142,7 +143,7 @@ class ExpenseController extends Controller
             $expense->update($data);
 
             Log::info('expense update : ' . $expense->id);
-            return redirect()->route('admin.expense.index')
+            return redirect()->route('admin.expense.index', ['page' => $request->page])
                 ->with('success', __('portal.expense_updated'));
         } catch (\Throwable $th) {
             Log::error('expenseController@update Error: ' . $th->getMessage());
