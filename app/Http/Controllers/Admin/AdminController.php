@@ -67,7 +67,12 @@ class AdminController extends Controller
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
         
-        $products = Product::where('user_id', $uid)->orderBy('product_name')->get(['id', 'product_name', 'unit']);
+        $products = Product::where('user_id', $uid)
+            ->orderBy('product_name->' . app()->getLocale())
+            ->get(['id', 'product_name', 'unit'])
+            ->each(function($p) {
+                $p->product_name = $this->translate($p->product_name);
+            });
 
         // ── BUILD DATE RANGE FOR FILTER ──────────────────────────────
         switch ($filter) {
@@ -293,7 +298,10 @@ class AdminController extends Controller
             ->groupBy('products.id', 'products.product_name', 'products.unit')
             ->orderByDesc('total_qty')
             ->limit(5)
-            ->get();
+            ->get()
+            ->each(function($p) {
+                $p->product_name = $this->translate($p->product_name);
+            });
 
         // ── TOP 5 CUSTOMERS (filtered by date & product) ─────────────
         $topCustomers = Order::where('orders.user_id', $uid)
@@ -310,7 +318,11 @@ class AdminController extends Controller
             ->groupBy('customers.customer_name', 'customers.shop_name')
             ->orderByDesc('total_amount')
             ->limit(5)
-            ->get();
+            ->get()
+            ->each(function($c) {
+                $c->customer_name = $this->translate($c->customer_name);
+                $c->shop_name = $this->translate($c->shop_name);
+            });
 
         // ── RECENT 8 ORDERS (filtered by date & product) ─────────────
         $recentOrders = Order::where('orders.user_id', $uid)
@@ -336,6 +348,9 @@ class AdminController extends Controller
             ->each(function ($o) {
                 $o->calculated_total = (float)($o->order_quantity * $o->order_price);
                 $o->display_date = date('d M Y', strtotime($o->order_date ?: $o->created_at));
+                $o->product_name = $this->translate($o->product_name);
+                $o->customer_name = $this->translate($o->customer_name);
+                $o->shop_name = $this->translate($o->shop_name);
             });
 
         return [
@@ -417,5 +432,16 @@ class AdminController extends Controller
         return redirect()->back()->withErrors([
             'current_password' => __('portal.current_password_incorrect'),
         ])->withInput($request->only('current_password'));
+    }
+
+    private function translate($json)
+    {
+        if (empty($json)) return '';
+        if (is_array($json)) {
+            return $json[app()->getLocale()] ?? $json['en'] ?? '';
+        }
+        $data = json_decode($json, true);
+        if (!is_array($data)) return $json;
+        return $data[app()->getLocale()] ?? $data['en'] ?? '';
     }
 }
