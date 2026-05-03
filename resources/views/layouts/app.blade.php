@@ -106,7 +106,7 @@
         function handleLanguageChange(selectElement) {
             const selectedLang = selectElement.value;
             // Redirect to the same page with the new language code in the URL
-            window.location.href = 'lang/' + selectedLang;
+            window.location.href = '/admin/lang/' + selectedLang;
         }
     </script>
 

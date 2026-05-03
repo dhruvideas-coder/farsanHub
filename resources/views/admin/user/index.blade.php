@@ -56,12 +56,12 @@
 @section('content')
 <div class="page-header d-flex flex-wrap justify-content-between align-items-center my-0">
     <div>
-        <h1 class="page-title">Manage Users</h1>
+        <h1 class="page-title">{{ @trans('portal.users') }}</h1>
     </div>
     <div class="ms-auto pageheader-btn d-none d-xl-flex d-lg-flex mt-3">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Manage Users</li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">{{ @trans('portal.home') }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ @trans('portal.users') }}</li>
         </ol>
     </div>
     <div class="ms-auto pageheader-btn d-flex d-md-none mt-0">
@@ -82,7 +82,7 @@
                         
                         {{-- Per-page --}}
                         <div class="filter-item narrow">
-                            <label class="filter-group-label d-md-none">Show</label>
+                        <label class="filter-group-label d-md-none">{{ @trans('portal.show') }}</label>
                             <select id="selected_data" onchange="reloadTable()" class="form-select custom-select w-100">
                                 <option value="10" {{ request('limit') == 10 ? 'selected' : '' }}>10</option>
                                 <option value="25" {{ request('limit') == 25 ? 'selected' : '' }}>25</option>
@@ -93,7 +93,7 @@
 
                         {{-- Search --}}
                         <div class="filter-item">
-                            <label class="filter-group-label d-md-none">Search</label>
+                            <label class="filter-group-label d-md-none">{{ @trans('portal.search') }}</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0" style="border-radius:8px 0 0 8px;">
                                     <i class="fa fa-search text-muted"></i>
@@ -112,7 +112,7 @@
                                class="btn btn-secondary w-100 d-flex align-items-center justify-content-center gap-1"
                                style="height:38px; border-radius:8px;">
                                 <i class="fa fa-plus"></i>
-                                <span class="d-none d-lg-inline">Add</span>
+                                <span class="d-none d-lg-inline">{{ @trans('portal.add') }}</span>
                             </a>
                         </div>
 

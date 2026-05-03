@@ -3,7 +3,7 @@
     <thead style="background:#FFF7EE;">
         <tr>
             <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap;">#</th>
-            <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap;">Type</th>
+            <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.type') }}</th>
             <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.shop_name') }}</th>
             <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.product_name') }}</th>
             <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.order_quantity') }}</th>
@@ -65,7 +65,7 @@
                 $totalNang = $orders->filter(fn($o) => strtolower($o->unit ?? '') === 'nang')->sum('order_quantity');
             @endphp
             <tr style="background:#FFF7EE; font-weight:700;">
-                <td colspan="4" class="text-end" style="font-size:13px; color:#92400e;">Total:</td>
+                <td colspan="4" class="text-end" style="font-size:13px; color:#92400e;">{{ @trans('portal.total') }}:</td>
                 <td class="text-center">
                     <div class="d-inline-flex flex-column align-items-center gap-1">
                         <span class="badge rounded-pill" style="background:#FF9933; color:#fff; font-size:12px; font-weight:700;">

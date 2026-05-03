@@ -29,7 +29,7 @@
     <div><h1 class="page-title">{{ @trans('portal.customers') }}</h1></div>
     <div class="ms-auto pageheader-btn d-none d-xl-flex d-lg-flex mt-3">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('login') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('login') }}">{{ __('portal.home') }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ @trans('portal.customers') }}</li>
         </ol>
     </div>
@@ -54,7 +54,7 @@
                     </select>
                     <input type="text" name="search" class="form-control" id="search-val"
                            onkeyup="reloadTable()" style="flex:1 1 0; min-width:0;"
-                           @if (empty($search)) placeholder="Search..."
+                           @if (empty($search)) placeholder="{{ __('portal.search') }}"
                            @else value="{{ $search }}" @endif>
                     <a href="{{ route('admin.customer.create') }}" class="btn btn-secondary flex-shrink-0 d-none d-md-flex align-items-center gap-1">
                         <i class="fa fa-plus"></i> <span>{{ @trans('portal.add') }}</span>
@@ -74,7 +74,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-success text-white py-2">
-                <h6 class="modal-title mb-0"><i class="fa fa-share-alt me-2"></i>Share Customer Details</h6>
+                <h6 class="modal-title mb-0"><i class="fa fa-share-alt me-2"></i>{{ __('portal.share_customer_details') }}</h6>
                 <button type="button" class="btn btn-sm ms-auto p-0 lh-1 text-white" data-bs-dismiss="modal"
                         style="background:none; border:none; font-size:18px;" aria-label="Close">
                     <i class="fa fa-times"></i>
@@ -85,32 +85,32 @@
                 <div id="share-map-wrapper">
                     <div id="share-map-loader" class="text-center p-3" style="display:none;">
                         <div class="spinner-border text-success spinner-border-sm" role="status"></div>
-                        <small class="ms-2 text-muted">Loading map...</small>
+                        <small class="ms-2 text-muted">{{ __('portal.loading_map') }}</small>
                     </div>
                     <div id="share-map" style="height:220px; border-radius:0;"></div>
                     <div id="share-map-nocoord" class="text-center text-muted py-3 small d-none">
-                        <i class="fa fa-map-o me-1"></i> No location set for this customer
+                        <i class="fa fa-map-o me-1"></i> {{ __('portal.no_location_set') }}
                     </div>
                 </div>
                 {{-- Customer Info --}}
                 <div class="p-3">
                     <h6 id="share-shop-name" class="text-danger fw-bold mb-1"></h6>
                     <ul class="list-unstyled small text-secondary mb-0">
-                        <li class="mb-1"><i class="fa fa-user me-2 text-primary"></i><span id="share-owner-name"></span></li>
-                        <li class="mb-1" id="share-addr-row"><i class="fa fa-map-marker me-2 text-danger"></i><span id="share-address"></span></li>
-                        <li id="share-phone-row"><i class="fa fa-phone me-2 text-success"></i><span id="share-phone"></span></li>
+                        <li class="mb-1"><i class="fa fa-user me-2 text-primary"></i>{{ __('portal.owner') }}: <span id="share-owner-name"></span></li>
+                        <li class="mb-1" id="share-addr-row"><i class="fa fa-map-marker me-2 text-danger"></i>{{ __('portal.address') }}: <span id="share-address"></span></li>
+                        <li id="share-phone-row"><i class="fa fa-phone me-2 text-success"></i>{{ __('portal.phone') }}: <span id="share-phone"></span></li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer pt-2 gap-2 flex-wrap justify-content-center">
                 <a id="btn-open-maps" href="#" target="_blank" class="btn btn-danger btn-sm d-none">
-                    <i class="fa fa-map-marker me-1"></i>Open Maps
+                    <i class="fa fa-map-marker me-1"></i>{{ __('portal.open_maps') }}
                 </a>
                 <button class="btn btn-success btn-sm" id="btn-whatsapp-share">
-                    <i class="fa fa-whatsapp me-1"></i>WhatsApp
+                    <i class="fa fa-whatsapp me-1"></i>{{ __('portal.whatsapp') }}
                 </button>
                 <button class="btn btn-secondary btn-sm" id="btn-copy-details">
-                    <i class="fa fa-copy me-1"></i>Copy
+                    <i class="fa fa-copy me-1"></i>{{ __('portal.copy') }}
                 </button>
             </div>
         </div>
@@ -122,18 +122,18 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Delete customer</h5>
+                <h5 class="modal-title">{{ __('portal.delete_customer') }}</h5>
             </div>
             <form action="{{ route('admin.customer.destroy') }}" method="POST">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
                     <input type="hidden" name="customer_id" id="customer_id" value="">
-                    <span>Do you want to Delete this record?</span>
+                    <span>{{ __('portal.delete_confirm') }}</span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">Cancel</button>
-                    <input type="submit" class="btn btn-primary" value="Confirm">
+                    <button type="button" class="btn btn-secondary close-btn" data-bs-dismiss="modal">{{ __('portal.cancel') }}</button>
+                    <input type="submit" class="btn btn-primary" value="{{ __('portal.confirm') }}">
                 </div>
             </form>
         </div>
@@ -264,8 +264,8 @@ $(document).ready(function() {
         const addr = [d.address, d.city].filter(Boolean).join(', ') || '-';
         const phone = d.phone ? '+91 ' + String(d.phone).replace(/(\d{5})(\d{5})/, '$1 $2') : '-';
         let msg = '🏪 *' + (d.shop || d.name || '-') + '*\n'
-                + '👤 Owner: ' + (d.name || '-') + '\n'
-                + '📍 Address: ' + addr + '\n'
+                + '👤 {{ __("portal.owner") }}: ' + (d.name || '-') + '\n'
+                + '📍 {{ __("portal.address") }}: ' + addr + '\n'
                 + '📞 ' + phone;
         if (hasCoord) msg += '\n🗺️ Location: https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
         window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
@@ -277,16 +277,16 @@ $(document).ready(function() {
         const hasCoord = !isNaN(lat) && !isNaN(lng);
         const addr = [d.address, d.city].filter(Boolean).join(', ') || '-';
         const phone = d.phone ? '+91 ' + String(d.phone).replace(/(\d{5})(\d{5})/, '$1 $2') : '-';
-        let text = 'Shop: ' + (d.shop || d.name || '-') + '\n'
-                 + 'Owner: ' + (d.name || '-') + '\n'
-                 + 'Address: ' + addr + '\n'
-                 + 'Phone: ' + phone;
+        let text = '{{ __("portal.shop") }}: ' + (d.shop || d.name || '-') + '\n'
+                 + '{{ __("portal.owner") }}: ' + (d.name || '-') + '\n'
+                 + '{{ __("portal.address") }}: ' + addr + '\n'
+                 + '{{ __("portal.phone") }}: ' + phone;
         if (hasCoord) text += '\nLocation: https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
 
         function showCopied() {
-            $('#btn-copy-details').html('<i class="fa fa-check me-1"></i>Copied!').addClass('btn-success').removeClass('btn-secondary');
+            $('#btn-copy-details').html('<i class="fa fa-check me-1"></i>{{ __("portal.copied") }}').addClass('btn-success').removeClass('btn-secondary');
             setTimeout(function() {
-                $('#btn-copy-details').html('<i class="fa fa-copy me-1"></i>Copy').addClass('btn-secondary').removeClass('btn-success');
+                $('#btn-copy-details').html('<i class="fa fa-copy me-1"></i>{{ __("portal.copy") }}').addClass('btn-secondary').removeClass('btn-success');
             }, 2000);
         }
         function fallbackCopy(str) {

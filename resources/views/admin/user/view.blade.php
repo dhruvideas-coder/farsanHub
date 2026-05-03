@@ -3,11 +3,11 @@
         <thead style="background:#FFF7EE;">
             <tr>
                 <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">#</th>
-                <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">User Details</th>
-                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">Role</th>
-                <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">Website</th>
-                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">Created Date</th>
-                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">Action</th>
+                <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">{{ @trans('portal.user_details') }}</th>
+                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">{{ @trans('portal.role') }}</th>
+                <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">{{ @trans('portal.website') }}</th>
+                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">{{ @trans('portal.date') }}</th>
+                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">{{ @trans('portal.action') }}</th>
             </tr>
         </thead>
         <tbody>

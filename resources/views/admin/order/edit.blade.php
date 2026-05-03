@@ -35,18 +35,18 @@
 
                                 <div class="col-md-6 mb-3 d-flex align-items-end">
                                     <div>
-                                        <label class="form-label fw-semibold d-block">Order Type <span class="text-danger">*</span></label>
+                                        <label class="form-label fw-semibold d-block">{{ @trans('portal.type') }} <span class="text-danger">*</span></label>
                                         <div class="d-flex gap-4">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="type_sell" value="sell" {{ old('type', $order->type ?? 'sell') === 'sell' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="type_sell">
-                                                    <span class="badge" style="background:#d1fae5; color:#065f46; font-size:13px;">Sell</span>
+                                                    {{ @trans('portal.sell') }}
                                                 </label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="type" id="type_purchase" value="purchase" {{ old('type', $order->type) === 'purchase' ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="type_purchase">
-                                                    <span class="badge" style="background:#dbeafe; color:#1e40af; font-size:13px;">Purchase</span>
+                                                    {{ @trans('portal.purchase') }}
                                                 </label>
                                             </div>
                                         </div>
@@ -88,13 +88,13 @@
                                     <div class="mt-3" id="total-summary">
                                     <div class="d-flex flex-wrap gap-3 align-items-center px-3 py-2 rounded-3" style="background:#FFF7EE; border:1.5px solid #ffe0b2;">
                                         <div style="font-size:0.83rem; color:#64748b;">
-                                            Rate: <strong id="lbl-rate" style="color:#e07a1a;">₹{{ $order->order_price }}</strong>
+                                            {{ @trans('portal.rate')}}: <strong id="lbl-rate" style="color:#e07a1a;">₹{{ $order->order_price }}</strong>
                                         </div>
                                         <div style="font-size:0.83rem; color:#64748b;">
-                                            Qty: <strong id="lbl-qty" style="color:#e07a1a;">{{ $order->order_quantity }} {{ $currentUnit }}</strong>
+                                            {{ @trans('portal.qty')}}: <strong id="lbl-qty" style="color:#e07a1a;">{{ $order->order_quantity }} {{ $currentUnit }}</strong>
                                         </div>
                                         <div class="ms-auto" style="font-size:1rem; font-weight:700; color:#FF9933;">
-                                            Total: <span id="lbl-total">₹ {{ number_format($order->order_quantity * $order->order_price, 2) }}</span>
+                                            {{ @trans('portal.total')}}: <span id="lbl-total">₹ {{ number_format($order->order_quantity * $order->order_price, 2) }}</span>
                                         </div>
                                     </div>
                                 </div>

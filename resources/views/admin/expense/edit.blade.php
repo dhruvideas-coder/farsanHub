@@ -66,20 +66,22 @@
                             </div>
                             
                             <div class="col-md-12 mb-3">
-                                <label class="form-label">Expense Type <span class="text-danger">*</span></label>
+                                <label class="form-label">{{ @trans('portal.expense_type') }} <span class="text-danger">*</span></label>
                                 <div class="d-flex gap-4 mt-1">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="type" id="type_business" value="business"
                                             {{ old('type', $expense->type ?? 'business') === 'business' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="type_business">
-                                            <i class="fa fa-briefcase text-primary me-1"></i> Business
+                                            <!-- <i class="fa fa-briefcase text-primary me-1"></i>  -->
+                                            {{ @trans('portal.business') }}
                                         </label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="type" id="type_personal" value="personal"
                                             {{ old('type', $expense->type ?? 'business') === 'personal' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="type_personal">
-                                            <i class="fa fa-user text-success me-1"></i> Personal
+                                            <!-- <i class="fa fa-user text-success me-1"></i> -->
+                                             {{ @trans('portal.personal') }}
                                         </label>
                                     </div>
                                 </div>

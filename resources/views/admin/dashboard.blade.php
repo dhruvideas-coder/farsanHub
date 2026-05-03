@@ -287,25 +287,25 @@
         <div>
             <div class="live-badge">
                 <div class="live-dot"></div>
-                Live Analytics
+                {{ __('portal.live_analytics') }}
             </div>
-            <h1>Dashboard</h1>
-            <p class="text-muted fw-medium mb-0">Welcome back, {{ explode(' ', auth()->user()->name)[0] }}. Here is your store summary.</p>
+            <h1>{{ __('portal.dashboard') }}</h1>
+            <p class="text-muted fw-medium mb-0">{{ __('portal.welcome_back') }}, {{ explode(' ', auth()->user()->name)[0] }}. {{ __('portal.store_summary') }}</p>
         </div>
         
         <div class="d-flex flex-wrap gap-3">
             <div class="modern-filters">
                 <select id="dashFilter" class="form-select border-0 bg-transparent fw-bold text-dark" style="cursor:pointer; min-width: 140px;">
-                    <option value="today"         {{ $period['filter'] === 'today'         ? 'selected' : '' }}>Today</option>
-                    <option value="yesterday"     {{ $period['filter'] === 'yesterday'     ? 'selected' : '' }}>Yesterday</option>
-                    <option value="current_week"  {{ $period['filter'] === 'current_week'  ? 'selected' : '' }}>This Week</option>
-                    <option value="current_month" {{ $period['filter'] === 'current_month' ? 'selected' : '' }}>This Month</option>
-                    <option value="current_year"  {{ $period['filter'] === 'current_year'  ? 'selected' : '' }}>This Year</option>
+                    <option value="today"         {{ $period['filter'] === 'today'         ? 'selected' : '' }}>{{ __('portal.today') }}</option>
+                    <option value="yesterday"     {{ $period['filter'] === 'yesterday'     ? 'selected' : '' }}>{{ __('portal.yesterday') }}</option>
+                    <option value="current_week"  {{ $period['filter'] === 'current_week'  ? 'selected' : '' }}>{{ __('portal.this_week') }}</option>
+                    <option value="current_month" {{ $period['filter'] === 'current_month' ? 'selected' : '' }}>{{ __('portal.this_month') }}</option>
+                    <option value="current_year"  {{ $period['filter'] === 'current_year'  ? 'selected' : '' }}>{{ __('portal.this_year') }}</option>
                 </select>
             </div>
             <div class="modern-filters">
                 <select id="orderProductFilter" class="form-select border-0 bg-transparent fw-bold text-dark" style="cursor:pointer; min-width: 160px;">
-                    <option value="">All Products</option>
+                    <option value="">{{ __('portal.all_products') }}</option>
                     @foreach($global['products'] as $product)
                         <option value="{{ $product->id }}" {{ $period['productId'] == $product->id ? 'selected' : '' }}>{{ $product->product_name }}</option>
                     @endforeach
@@ -329,7 +329,7 @@
                 <div id="sellTrendBadge" class="kpi-badge {{ $sellDiff >= 0 ? '' : 'negative' }}">
                     {{ $sellDiff >= 0 ? '+' : '-' }}{{ $sellPct }}%
                 </div>
-                <div class="kpi-label">Sales</div>
+                <div class="kpi-label">{{ __('portal.sales') }}</div>
                 <div class="kpi-value" id="sellRevenueVal">₹{{ number_format($period['sellRevenue'], 0) }}</div>
             </div>
         </div>
@@ -347,7 +347,7 @@
                 <div id="purchaseTrendBadge" class="kpi-badge {{ $purchaseDiff <= 0 ? '' : 'negative' }}">
                     {{ $purchaseDiff <= 0 ? '-' : '+' }}{{ $purchasePct }}%
                 </div>
-                <div class="kpi-label">Purchases</div>
+                <div class="kpi-label">{{ __('portal.purchases') }}</div>
                 <div class="kpi-value" id="purchaseRevenueVal">₹{{ number_format($period['purchaseRevenue'], 0) }}</div>
             </div>
         </div>
@@ -365,7 +365,7 @@
                 <div id="expenseTrendBadge" class="kpi-badge {{ $expenseDiff <= 0 ? '' : 'negative' }}">
                     {{ $expenseDiff <= 0 ? '-' : '+' }}{{ $expensePct }}%
                 </div>
-                <div class="kpi-label">Expenses</div>
+                <div class="kpi-label">{{ __('portal.expenses') }}</div>
                 <div class="kpi-value" id="expenseVal">₹{{ number_format($period['expenses'], 0) }}</div>
             </div>
         </div>
@@ -385,7 +385,7 @@
                 <div id="netTrendBadge" class="kpi-badge {{ $netProfit >= 0 ? '' : 'negative' }}">
                     {{ $netProfit >= 0 ? '+' : '-' }}{{ $netPct }}%
                 </div>
-                <div class="kpi-label">Net Balance</div>
+                <div class="kpi-label">{{ __('portal.net_balance') }}</div>
                 <div class="kpi-value" id="netProfitVal">{{ $netProfit < 0 ? '-' : '' }}₹{{ number_format(abs($netProfit), 0) }}</div>
             </div>
         </div>
@@ -397,13 +397,13 @@
             <div class="premium-card position-relative" id="chartCardWrapper">
                 <div class="loading-overlay"><div class="spinner-border text-primary"></div></div>
                 <div class="card-header-main">
-                    <h3 class="card-title-main">Revenue Performance</h3>
+                    <h3 class="card-title-main">{{ __('portal.revenue_performance') }}</h3>
                     <div class="d-flex gap-3">
                         <div class="d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 800;">
-                            <span class="rounded-circle" style="width:8px; height:8px; background:var(--success);"></span> SALES
+                            <span class="rounded-circle" style="width:8px; height:8px; background:var(--success);"></span> {{ __('portal.sales') }}
                         </div>
                         <div class="d-flex align-items-center gap-2" style="font-size: 11px; font-weight: 800;">
-                            <span class="rounded-circle" style="width:8px; height:8px; background:var(--danger);"></span> PURCHASES
+                            <span class="rounded-circle" style="width:8px; height:8px; background:var(--danger);"></span> {{ __('portal.purchases') }}
                         </div>
                     </div>
                 </div>
@@ -415,7 +415,7 @@
         <div class="col-12 col-xl-4">
             <div class="premium-card">
                 <div class="card-header-main">
-                    <h3 class="card-title-main">Top Customers</h3>
+                    <h3 class="card-title-main">{{ __('portal.top_customers') }}</h3>
                 </div>
                 <div style="height: 250px; position: relative;">
                     <canvas id="customerPieChart"></canvas>
@@ -432,18 +432,18 @@
         <div class="col-12 col-xl-8">
             <div class="premium-card">
                 <div class="card-header-main">
-                    <h3 class="card-title-main">Recent Orders</h3>
-                    <a href="{{ route('admin.order.index') }}" class="btn btn-sm fw-bold text-primary px-3" style="background: #eff2fe; border-radius: 8px;">View All</a>
+                    <h3 class="card-title-main">{{ __('portal.recent_orders') }}</h3>
+                    <a href="{{ route('admin.order.index') }}" class="btn btn-sm fw-bold text-primary px-3" style="background: #eff2fe; border-radius: 8px;">{{ __('portal.view_all') }}</a>
                 </div>
                 <div class="table-responsive">
                     <table class="modern-table">
                         <thead>
                             <tr>
-                                <th>Client / Shop</th>
-                                <th>Date</th>
-                                <th>Item</th>
-                                <th class="text-center">Quantity</th>
-                                <th class="text-end">Billing</th>
+                                <th>{{ __('portal.client_shop') }}</th>
+                                <th>{{ __('portal.date') }}</th>
+                                <th>{{ __('portal.item') }}</th>
+                                <th class="text-center">{{ __('portal.order_quantity') }}</th>
+                                <th class="text-end">{{ __('portal.billing') }}</th>
                             </tr>
                         </thead>
                         <tbody id="recentOrdersBody">
@@ -462,7 +462,7 @@
                                 </td>
                                 <td>
                                     <div class="fw-bold text-dark" style="font-size: 13px;">{{ $order->display_date }}</div>
-                                    <div class="text-muted" style="font-size: 9px; font-weight: 800;">RECORDED</div>
+                                    <div class="text-muted" style="font-size: 9px; font-weight: 800;">{{ __('portal.recorded') }}</div>
                                 </td>
                                 <td>
                                     <div class="fw-bold text-dark" style="font-size: 13.5px;">{{ $order->product_name }}</div>
@@ -478,11 +478,11 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="fw-bold text-primary" style="font-size: 14.5px;">₹{{ number_format($order->calculated_total, 0) }}</div>
-                                    <div class="text-muted" style="font-size: 9.5px; font-weight: 700;">PROCESSED</div>
+                                    <div class="text-muted" style="font-size: 9.5px; font-weight: 700;">{{ __('portal.processed') }}</div>
                                 </td>
                             </tr>
                             @empty
-                            <tr><td colspan="5" class="text-center py-5 text-muted fw-bold">No transactions found</td></tr>
+                            <tr><td colspan="5" class="text-center py-5 text-muted fw-bold">{{ __('portal.no_transactions') }}</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -492,7 +492,7 @@
         <div class="col-12 col-xl-4">
             <div class="premium-card">
                 <div class="card-header-main">
-                    <h3 class="card-title-main">Top Customers</h3>
+                    <h3 class="card-title-main">{{ __('portal.top_customers') }}</h3>
                 </div>
                 <div id="topCustomersContainer">
                     @forelse($period['topCustomers'] as $c)
@@ -500,7 +500,7 @@
                         <div class="avatar-box">{{ strtoupper(substr($c->customer_name, 0, 1)) }}</div>
                         <div class="flex-grow-1">
                             <div class="fw-bold text-dark" style="font-size: 14px;">{{ $c->customer_name }}</div>
-                            <div class="text-muted small fw-bold">{{ number_format($c->total_kg ?? 0, 0) }}kg Volume</div>
+                            <div class="text-muted small fw-bold">{{ number_format($c->total_kg ?? 0, 0) }}{{ __('portal.kg_volume') }}</div>
                         </div>
                         <div class="text-end">
                             <div class="fw-bold text-primary" style="font-size: 14px;">{{ $c->order_count }}</div>
@@ -549,7 +549,7 @@
                 labels: globalData.chartLabels,
                 datasets: [
                     {
-                        label: 'Sales',
+                        label: '{{ __('portal.sales') }}',
                         data: globalData.chartSellRevenue,
                         borderColor: COLORS.success,
                         backgroundColor: gradientS,
@@ -689,7 +689,7 @@
                         </td>
                         <td>
                             <div class="fw-bold text-dark" style="font-size: 13px;">${o.display_date}</div>
-                            <div class="text-muted" style="font-size: 9px; font-weight: 800;">RECORDED</div>
+                            <div class="text-muted" style="font-size: 9px; font-weight: 800;">{{ __('portal.recorded') }}</div>
                         </td>
                         <td>
                             <div class="fw-bold text-dark" style="font-size: 13.5px;">${o.product_name}</div>
@@ -703,10 +703,10 @@
                         </td>
                         <td class="text-end">
                             <div class="fw-bold text-primary" style="font-size: 14.5px;">₹${Number(o.calculated_total).toLocaleString()}</div>
-                            <div class="text-muted" style="font-size: 9.5px; font-weight: 700;">PROCESSED</div>
+                            <div class="text-muted" style="font-size: 9.5px; font-weight: 700;">{{ __('portal.processed') }}</div>
                         </td>
                     </tr>
-                `).join('') : '<tr><td colspan="5" class="text-center py-5 text-muted fw-bold">No transactions found</td></tr>';
+                `).join('') : '<tr><td colspan="5" class="text-center py-5 text-muted fw-bold">{{ __("portal.no_transactions") }}</td></tr>';
 
                 // Update Top Customers
                 document.getElementById('topCustomersContainer').innerHTML = p.topCustomers.length ? p.topCustomers.map(c => `
@@ -714,7 +714,7 @@
                         <div class="avatar-box">${c.customer_name.charAt(0).toUpperCase()}</div>
                         <div class="flex-grow-1">
                             <div class="fw-bold text-dark" style="font-size: 14px;">${c.customer_name}</div>
-                            <div class="text-muted small fw-bold">${Number(c.total_kg || 0).toLocaleString()}kg Volume</div>
+                            <div class="text-muted small fw-bold">${Number(c.total_kg || 0).toLocaleString()}{{ __('portal.kg_volume') }}</div>
                         </div>
                         <div class="text-end">
                             <div class="fw-bold text-primary" style="font-size: 14px;">${c.order_count}</div>

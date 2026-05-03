@@ -9,7 +9,7 @@
         </div>
         <div class="ms-auto pageheader-btn d-none d-xl-flex d-lg-flex">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('admin.customer.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.customer.index') }}">{{ __('portal.home') }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ @trans('portal.customers') }}</li>
             </ol>
         </div>
@@ -51,7 +51,7 @@
                                     <div class="position-relative">
                                         <input type="text" class="form-control @error('shop_address') is-invalid @enderror"
                                             id="shop_address" name="shop_address"
-                                            placeholder="Type to search address..."
+                                            placeholder="{{ __('portal.type_to_search') }}"
                                             value="{{ old('shop_address', $customer->shop_address) }}" autocomplete="off">
                                     </div>
                                     {{-- Action row: [Pick on Map + badge] LEFT · [Clear] RIGHT --}}
@@ -59,17 +59,17 @@
                                         <div class="d-flex align-items-center gap-2">
                                             <button type="button" class="btn btn-secondary btn-sm" id="btn-pick-map"
                                                     data-bs-toggle="modal" data-bs-target="#mapPickerModal">
-                                                <i class="fa fa-map-marker me-1"></i>Pick on Map
+                                                <i class="fa fa-map-marker me-1"></i>{{ __('portal.pick_on_map') }}
                                             </button>
                                             <span id="location-set-badge"
                                                   class="badge bg-success {{ ($customer->latitude && $customer->longitude) ? '' : 'd-none' }}">
-                                                <i class="fa fa-check me-1"></i>Location set
+                                                <i class="fa fa-check me-1"></i>{{ __('portal.location_set') }}
                                             </span>
                                         </div>
                                         <button type="button" class="text-danger border border-danger rounded"
                                                 id="btn-clear-location"
                                                 style="{{ ($customer->latitude && $customer->longitude) ? '' : 'display:none;' }}">
-                                            <i class="fa fa-times"></i><span class="d-none d-sm-inline ms-1">Clear</span>
+                                            <i class="fa fa-times"></i><span class="d-none d-sm-inline ms-1">{{ __('portal.cancel') }}</span>
                                         </button>
                                     </div>
                                     <input type="hidden" name="latitude"  id="latitude"  value="{{ old('latitude',  $customer->latitude) }}">
@@ -86,14 +86,14 @@
                                         placeholder="XXXXXXXXXX"
                                         maxlength="10" inputmode="numeric" pattern="[0-9]{10}"
                                         value="{{ old('customer_number', $customer->customer_number) }}">
-                                    <small class="form-text text-muted">Enter 10-digit mobile number</small>
+                                    <small class="form-text text-muted">{{ __('portal.enter_10_digit') }}</small>
                                     @error('customer_number')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="customer_email" class="form-label">{{ @trans('portal.customer_email') }} <small class="text-muted fw-normal">(Optional)</small></label>
+                                    <label for="customer_email" class="form-label">{{ @trans('portal.customer_email') }} <small class="text-muted fw-normal">({{ __('portal.optional') }})</small></label>
                                     <input type="email" class="form-control @error('customer_email') is-invalid @enderror"
                                         id="customer_email" name="customer_email" value="{{ old('customer_email', $customer->customer_email) }}">
                                     @error('customer_email')
@@ -187,9 +187,9 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header py-2 d-flex align-items-center">
-                <h6 class="modal-title mb-0"><i class="fa fa-map-marker me-2 text-danger"></i>Pick Location on Map</h6>
+                <h6 class="modal-title mb-0"><i class="fa fa-map-marker me-2 text-danger"></i>{{ __('portal.pick_location') }}</h6>
                 <button type="button" class="btn btn-sm btn-info me-2 ms-auto d-flex align-items-center gap-1" id="btn-get-current-location">
-                    <i class="fa fa-crosshairs"></i> My Location
+                    <i class="fa fa-crosshairs"></i> {{ __('portal.my_location') }}
                 </button>
                 <button type="button" class="btn btn-sm btn-outline-secondary map-picker-close" data-bs-dismiss="modal">
                     <i class="fa fa-times"></i>
@@ -199,25 +199,25 @@
                 <div class="p-3 border-bottom position-relative">
                     <div class="input-group">
                         <span class="input-group-text bg-white"><i class="fa fa-search text-muted"></i></span>
-                        <input type="text" id="map-search-input" class="form-control border-start-0" placeholder="Search address on map...">
+                        <input type="text" id="map-search-input" class="form-control border-start-0" placeholder="{{ __('portal.search_address') }}">
                     </div>
                 </div>
                 <div id="map-picker-loader" class="text-center p-4">
                     <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2 text-muted small">Loading Map...</p>
+                    <p class="mt-2 text-muted small">{{ __('portal.loading_map') }}</p>
                 </div>
                 <div id="map-picker" style="display:none;"></div>
                 <div class="px-3 py-2 bg-light border-top text-muted d-flex justify-content-between align-items-center" style="font-size:12px;">
-                    <span><i class="fa fa-hand-pointer-o me-1 text-primary"></i>Drag marker to adjust &mdash; or search above</span>
+                    <span><i class="fa fa-hand-pointer-o me-1 text-primary"></i>{{ __('portal.drag_marker') }}</span>
                     <span id="picker-coord-display" class="text-success fw-bold"></span>
                 </div>
             </div>
             <div class="modal-footer py-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fa fa-times me-1"></i>Cancel
+                    <i class="fa fa-times me-1"></i>{{ __('portal.cancel') }}
                 </button>
                 <button type="button" class="btn btn-primary" id="btn-use-location" disabled>
-                    <i class="fa fa-check me-1"></i>Use this location
+                    <i class="fa fa-check me-1"></i>{{ __('portal.use_this_location') }}
                 </button>
             </div>
         </div>
@@ -386,8 +386,8 @@
         if (!navigator.geolocation) {
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
-                text: 'Geolocation is not supported by your browser or requires HTTPS.'
+                title: '{{ __('portal.location_error') }}',
+                text: '{{ __('portal.geolocation_not_supported') }}'
             });
             return;
         }
@@ -423,7 +423,7 @@
                 
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Location Error',
+                    title: '{{ __('portal.location_error') }}',
                     text: msg
                 });
             },

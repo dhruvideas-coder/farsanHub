@@ -7,7 +7,7 @@
                 <th class="text-uppercase fw-bold text-end" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.amount') }}</th>
                 <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.comment') }}</th>
                 <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.date') }}</th>
-                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap;">Type</th>
+                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.type') }}</th>
                 <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap;">{{ @trans('portal.action') }}</th>
             </tr>
         </thead>
@@ -37,11 +37,11 @@
                         <td class="text-center">
                             @if(($expense->type ?? 'business') === 'personal')
                                 <span class="badge" style="background:#dcfce7; color:#16a34a; font-size:11px; font-weight:600;">
-                                    <i class="fa fa-user me-1"></i> Personal
+                                    <i class="fa fa-user me-1"></i> {{ @trans('portal.personal') }}
                                 </span>
                             @else
                                 <span class="badge" style="background:#dbeafe; color:#2563eb; font-size:11px; font-weight:600;">
-                                    <i class="fa fa-briefcase me-1"></i> Business
+                                    <i class="fa fa-briefcase me-1"></i> {{ @trans('portal.business') }}
                                 </span>
                             @endif
                         </td>

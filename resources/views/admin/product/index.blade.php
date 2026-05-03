@@ -62,7 +62,7 @@
     </div>
     <div class="ms-auto pageheader-btn d-none d-xl-flex d-lg-flex mt-3">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('portal.home') }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ @trans('portal.products') }}</li>
         </ol>
     </div>
@@ -84,7 +84,7 @@
                         
                         {{-- Per-page --}}
                         <div class="filter-item narrow">
-                            <label class="filter-group-label">Show</label>
+                            <label class="filter-group-label">{{ __('portal.show') }}</label>
                             <select id="selected_data" onchange="reloadTable()" class="form-select custom-select w-100">
                                 <option value="8" {{ (isset($limit) && $limit == 8) ? 'selected' : '' }}>8</option>
                                 <option value="16" {{ (isset($limit) && $limit == 16) ? 'selected' : '' }}>16</option>
@@ -98,7 +98,7 @@
                         <div class="filter-item medium">
                             <label class="filter-group-label">{{ @trans('portal.customer') }}</label>
                             <select id="filter-customer" onchange="reloadTable()" class="form-select custom-select w-100">
-                                <option value="">-- All Customers --</option>
+                                <option value="">{{ __('portal.all_customers') }}</option>
                                 @foreach($customers as $c)
                                     <option value="{{ $c->id }}" {{ (isset($customerId) && $customerId == $c->id) ? 'selected' : '' }}>
                                         {{ $c->shop_name ?: $c->customer_name }}
@@ -111,7 +111,7 @@
                         <div class="filter-item medium">
                             <label class="filter-group-label">{{ @trans('portal.product') }}</label>
                             <select id="filter-product" onchange="reloadTable()" class="form-select custom-select w-100">
-                                <option value="">-- All Products --</option>
+                                <option value="">{{ __('portal.all_products') }}</option>
                                 @foreach($allProducts as $p)
                                     <option value="{{ $p->id }}" {{ (isset($productId) && $productId == $p->id) ? 'selected' : '' }}>
                                         {{ $p->product_name }}
@@ -122,13 +122,13 @@
 
                         {{-- Search --}}
                         <div class="filter-item">
-                            <label class="filter-group-label">Search</label>
+                            <label class="filter-group-label">{{ __('portal.search') }}</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0" style="border-radius:8px 0 0 8px;">
                                     <i class="fa fa-search text-muted"></i>
                                 </span>
                                 <input type="text" id="search-val" class="form-control custom-input border-start-0" 
-                                       placeholder="Search product name..." 
+                                       placeholder="{{ __('portal.search_product_name') }}" 
                                        style="border-radius:0 8px 8px 0;"
                                        onkeyup="reloadTable()"
                                        value="{{ $search ?? '' }}">
@@ -171,13 +171,13 @@
                     <div class="mb-3">
                         <i class="fa fa-exclamation-circle text-danger" style="font-size: 3.5rem;"></i>
                     </div>
-                    <h4 class="fw-bold mb-2" style="color: #1c1917;">Delete Product</h4>
-                    <p class="text-muted px-3">Are you sure you want to delete this product? This action is permanent.</p>
+                    <h4 class="fw-bold mb-2" style="color: #1c1917;">{{ __('portal.delete_product') }}</h4>
+                    <p class="text-muted px-3">{{ __('portal.delete_product_confirm') }}</p>
                     <input type="hidden" name="product_id" id="product_id" value="">
                 </div>
                 <div class="modal-footer border-top-0 justify-content-center pb-4">
-                    <button type="button" class="btn btn-light px-4 fw-bold" data-bs-dismiss="modal" style="border-radius: 8px;">Cancel</button>
-                    <button type="submit" class="btn btn-danger px-4 fw-bold" style="border-radius: 8px;">Delete Now</button>
+                    <button type="button" class="btn btn-light px-4 fw-bold" data-bs-dismiss="modal" style="border-radius: 8px;">{{ __('portal.cancel') }}</button>
+                    <button type="submit" class="btn btn-danger px-4 fw-bold" style="border-radius: 8px;">{{ __('portal.delete_now') }}</button>
                 </div>
             </form>
         </div>

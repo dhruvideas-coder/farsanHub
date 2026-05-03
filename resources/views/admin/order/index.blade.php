@@ -87,7 +87,7 @@
         <div><h1 class="page-title">{{ @trans('portal.orders') }}</h1></div>
         <div class="ms-auto pageheader-btn d-none d-xl-flex d-lg-flex mt-3">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('login') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('login') }}">{{ __('portal.home') }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ @trans('portal.orders') }}</li>
             </ol>
         </div>
@@ -106,7 +106,7 @@
                     <div class="filter-card">
                         <div class="filter-bar">
                             <div class="filter-item narrow">
-                                <label class="filter-group-label d-md-none">Show</label>
+                                <label class="filter-group-label d-md-none">{{ __('portal.show') }}</label>
                                 <select id="selected_data" onchange="reloadTable()" class="form-select custom-select w-100">
                                     <option value="4">4</option>
                                     <option value="10" selected>10</option>
@@ -118,15 +118,15 @@
                             <div class="filter-item medium">
                                 <label class="filter-group-label d-md-none">Type</label>
                                 <select id="type-filter" onchange="reloadTable()" class="form-select custom-select w-100">
-                                    <option value="">All Types</option>
-                                    <option value="sell">Sell</option>
-                                    <option value="purchase">Purchase</option>
+                                    <option value="">{{ __('portal.all_types') }}</option>
+                                    <option value="sell">{{ __('portal.sell') }}</option>
+                                    <option value="purchase">{{ __('portal.purchase') }}</option>
                                 </select>
                             </div>
                             <div class="filter-item" style="flex: 2 1 0;">
                                 <label class="filter-group-label d-md-none">Customer</label>
                                 <select id="customer-filter" onchange="reloadTable()" class="form-select custom-select w-100">
-                                    <option value="">All Customers</option>
+                                    <option value="">{{ __('portal.all_customers') }}</option>
                                     @foreach($customers as $c)
                                     <option value="{{ $c->id }}">{{ $c->customer_name }}@if($c->shop_name) ({{ $c->shop_name }})@endif</option>
                                     @endforeach
@@ -135,7 +135,7 @@
                             <div class="filter-item" style="flex: 2 1 0;">
                                 <label class="filter-group-label d-md-none">Product</label>
                                 <select id="product-filter" onchange="reloadTable()" class="form-select custom-select w-100">
-                                    <option value="">All Products</option>
+                                    <option value="">{{ __('portal.all_products') }}</option>
                                     @foreach($products as $p)
                                     <option value="{{ $p->id }}">{{ $p->product_name }} ({{ $p->unit }})</option>
                                     @endforeach
@@ -144,14 +144,14 @@
                             <div class="filter-item date-wrap">
                                 <label class="filter-group-label d-md-none">Start Date</label>
                                 <div class="position-relative">
-                                    <input type="date" name="start_date" class="form-control custom-input w-100 pr-4" id="start-date" placeholder="Start Date" data-fp-onchange="checkDatesAndReload" oninput="toggleClearBtn(this, 'clear-start')" onchange="toggleClearBtn(this, 'clear-start')">
+                                    <input type="date" name="start_date" class="form-control custom-input w-100 pr-4" id="start-date" placeholder="{{ __('portal.start_date') }}" data-fp-onchange="checkDatesAndReload" oninput="toggleClearBtn(this, 'clear-start')" onchange="toggleClearBtn(this, 'clear-start')">
                                     <i class="fa fa-times position-absolute text-muted clear-btn" style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; display: none; z-index: 10;" id="clear-start" onclick="$('#start-date').val('').trigger('change'); toggleClearBtn(document.getElementById('start-date'), 'clear-start'); reloadTable();"></i>
                                 </div>
                             </div>
                             <div class="filter-item date-wrap">
                                 <label class="filter-group-label d-md-none">End Date</label>
                                 <div class="position-relative">
-                                    <input type="date" name="end_date" class="form-control custom-input w-100 pr-4" id="end-date" placeholder="End Date" data-fp-onchange="checkDatesAndReload" oninput="toggleClearBtn(this, 'clear-end')" onchange="toggleClearBtn(this, 'clear-end')">
+                                    <input type="date" name="end_date" class="form-control custom-input w-100 pr-4" id="end-date" placeholder="{{ __('portal.end_date') }}" data-fp-onchange="checkDatesAndReload" oninput="toggleClearBtn(this, 'clear-end')" onchange="toggleClearBtn(this, 'clear-end')">
                                     <i class="fa fa-times position-absolute text-muted clear-btn" style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; display: none; z-index: 10;" id="clear-end" onclick="$('#end-date').val('').trigger('change'); toggleClearBtn(document.getElementById('end-date'), 'clear-end'); reloadTable();"></i>
                                 </div>
                             </div>
@@ -160,7 +160,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0" style="border-radius: 8px 0 0 8px;"><i class="fa fa-search text-muted"></i></span>
                                     <input type="text" name="search" class="form-control custom-input border-start-0" 
-                                        id="search-val" onkeyup="reloadTable()" placeholder="Search..."
+                                        id="search-val" onkeyup="reloadTable()" placeholder="{{ __('portal.search') }}"
                                         style="border-radius: 0 8px 8px 0;"
                                         @if (!empty($search)) value="{{ $search }}" @endif>
                                 </div>
@@ -186,7 +186,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold">Delete Order</h5>
+                    <h5 class="modal-title fw-bold">{{ __('portal.delete_order') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ route('admin.order.destroy') }}" method="POST">
@@ -197,11 +197,11 @@
                         <div class="text-center mb-3">
                             <i class="fa fa-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
                         </div>
-                        <p class="text-center mb-0">Are you sure you want to delete this order? This action cannot be undone.</p>
+                        <p class="text-center mb-0">{{ __('portal.delete_order_confirm') }}</p>
                     </div>
                     <div class="modal-footer border-0 pt-0 justify-content-center">
-                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius: 8px;">Cancel</button>
-                        <button type="submit" class="btn btn-danger px-4" style="border-radius: 8px; background: #ef4444;">Delete Permanently</button>
+                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius: 8px;">{{ __('portal.cancel') }}</button>
+                        <button type="submit" class="btn btn-danger px-4" style="border-radius: 8px; background: #ef4444;">{{ __('portal.delete_permanently') }}</button>
                     </div>
                 </form>
             </div>

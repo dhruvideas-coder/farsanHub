@@ -14,7 +14,7 @@
                                 data-bs-toggle="modal" data-bs-target="#imageModal"
                                 data-image="{{ asset('storage/' . $customer->customer_image) }}">
                         @else
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width:100px; height:100px; background-color:#FF9933; color:white; font-weight:800; font-size:36px; letter-spacing:-1px;">FH</div>
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width:100px; height:100px; background-color:#FF9933; color:white; font-weight:800; font-size:36px; letter-spacing:-1px;">{{ ucfirst(substr($customer->shop_name, 0, 2)) }}</div>
                         @endif
 
                         {{-- Title: Shop Name --}}

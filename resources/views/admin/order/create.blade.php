@@ -27,18 +27,18 @@
                             <div class="row">
 
                                 <div class="col-12 mb-3">
-                                    <label class="form-label fw-semibold">Order Type <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-semibold">{{ @trans('portal.type') }} <span class="text-danger">*</span></label>
                                     <div class="d-flex gap-4">
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="type" id="type_sell" value="sell" {{ old('type', 'sell') === 'sell' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="type_sell">
-                                                <span class="badge" style="background:#d1fae5; color:#065f46; font-size:13px;">Sell</span>
+                                                {{ @trans('portal.sell') }}
                                             </label>
                                         </div>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="type" id="type_purchase" value="purchase" {{ old('type') === 'purchase' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="type_purchase">
-                                                <span class="badge" style="background:#dbeafe; color:#1e40af; font-size:13px;">Purchase</span>
+                                                {{ @trans('portal.purchase') }}
                                             </label>
                                         </div>
                                     </div>

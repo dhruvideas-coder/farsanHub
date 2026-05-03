@@ -19,18 +19,17 @@
     {{-- Right side: language selector + profile (half-half on mobile) --}}
     <div class="d-flex align-items-center justify-content-end header-actions gap-2">
 
-        {{-- @if(request()->routeIs('admin.dashboard'))
-        <div class="lang-wrapper flex-grow-1">
-            <select class="btn btn-lang d-flex align-items-center" onchange="handleLanguageChange(this)" id="languageSelect">
+        <div class="lang-wrapper">
+            <select class="form-select form-select-sm" onchange="handleLanguageChange(this)" id="languageSelect" 
+                style="border-radius: 20px; padding-left: 15px; padding-right: 35px; cursor: pointer; border-color: #eee; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                 <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>
-                   <i class="bi bi-translate me-1"></i> <span>English</span>
+                    English
                 </option>
                 <option value="gu" {{ app()->getLocale() == 'gu' ? 'selected' : '' }}>
-                   <i class="bi bi-translate me-1"></i> <span>ગુજરાતી</span>
+                    ગુજરાતી
                 </option>
             </select>
         </div>
-        @endif --}}
 
         <div class="dropdown d-flex profile-1 justify-content-end">
             <a href="{{ route('admin.dashboard') }}" data-bs-toggle="dropdown"

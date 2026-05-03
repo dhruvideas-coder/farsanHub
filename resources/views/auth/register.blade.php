@@ -216,7 +216,7 @@
 
 <body>
     <div class="bg-shape shape-1"></div>
-    <div class="bg-shape shape-2"></div>
+    {{-- <div class="bg-shape shape-2"></div> --}}
 
     <div class="login-wrapper">
         <div class="login-card">

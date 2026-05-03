@@ -10,11 +10,11 @@
         <thead style="background:#FFF7EE;">
             <tr>
                 <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px; width:60px;">#</th>
-                <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">Image</th>
-                <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">Product Name</th>
-                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">Base Price</th>
-                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">Created Date</th>
-                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">Action</th>
+                <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">{{ @trans('portal.product_image') }}</th>
+                <th class="text-uppercase fw-bold" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">{{ @trans('portal.product') }}</th>
+                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">{{ @trans('portal.product_base_price') }}</th>
+                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">{{ @trans('portal.date') }}</th>
+                <th class="text-uppercase fw-bold text-center" style="font-size:12px; color:#92400e; white-space:nowrap; padding: 15px 20px;">{{ @trans('portal.action') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -37,13 +37,13 @@
                                     class="rounded clickable-image border shadow-sm" width="45" height="45" style="object-fit:cover;"
                                     data-image="{{ asset('storage/' . $product->product_image) }}">
                             @else
-                                <div class="rounded d-flex align-items-center justify-content-center shadow-sm" 
-                                     style="width:45px; height:45px; background: linear-gradient(135deg, #FF9933, #d35400); color:white; font-weight:800; font-size:14px;">FH</div>
+                                <div class="rounded d-flex align-items-center justify-content-center shadow-sm"
+                                    style="width:45px; height:45px; background: linear-gradient(135deg, #FF9933, #d35400); color:white; font-weight:800; font-size:14px;">{{ ucfirst(substr($product->product_name, 0, 2)) }}</div>
                             @endif
                         </td>
                         <td style="padding: 15px 20px;">
                             <div style="font-size:13px; font-weight:600; color:#1c1917;">{{ ucfirst($product->product_name ?? '-') }}</div>
-                            <div style="font-size:11px; color:#78716c;">SKU: {{ $product->sku ?? 'N/A' }}</div>
+                            <!-- <div style="font-size:11px; color:#78716c;">SKU: {{ $product->sku ?? 'N/A' }}</div> -->
                         </td>
                         <td class="text-center" style="padding: 15px 20px;">
                             <div style="font-size:14px; font-weight:700; color:#1c1917;">

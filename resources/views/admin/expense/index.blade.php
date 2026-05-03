@@ -140,7 +140,7 @@
 
                         {{-- Per-page --}}
                         <div class="filter-item narrow">
-                            <label class="filter-group-label d-md-none">Show</label>
+                            <label class="filter-group-label d-md-none">{{ @trans('portal.show') }}</label>
                             <select id="selected_data" onchange="reloadTable()" class="form-select custom-select w-100">
                                 <option value="10" selected>10</option>
                                 <option value="25">25</option>
@@ -152,7 +152,7 @@
 
                         {{-- Month picker --}}
                         <div class="filter-item medium">
-                            <label class="filter-group-label d-md-none">Month</label>
+                            <label class="filter-group-label d-md-none">{{ @trans('portal.month') }}</label>
                             <div class="month-wrap">
                                 <input type="month" id="month-filter"
                                        title="Filter by month"
@@ -166,17 +166,17 @@
 
                         {{-- Type filter --}}
                         <div class="filter-item type-w">
-                            <label class="filter-group-label d-md-none">Type</label>
+                            <label class="filter-group-label d-md-none">{{ @trans('portal.type') }}</label>
                             <select id="type-filter" onchange="reloadTable()" class="form-select custom-select w-100">
-                                <option value="">All Types</option>
-                                <option value="business">Business</option>
-                                <option value="personal">Personal</option>
+                                <option value="">{{ @trans('portal.all_types') }}</option>
+                                <option value="business">{{ @trans('portal.business') }}</option>
+                                <option value="personal">{{ @trans('portal.personal') }}</option>
                             </select>
                         </div>
 
                         {{-- Search --}}
                         <div class="filter-item">
-                            <label class="filter-group-label d-md-none">Search</label>
+                            <label class="filter-group-label d-md-none">{{ @trans('portal.search') }}</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0"
                                       style="border-radius:8px 0 0 8px;">

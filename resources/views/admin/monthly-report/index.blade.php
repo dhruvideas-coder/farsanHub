@@ -137,12 +137,12 @@
 
 <div class="page-header d-flex flex-wrap justify-content-between align-items-center my-0 mb-3">
     <div>
-        <p class="section-eyebrow mb-0">Data Export</p>
+        <!-- <p class="section-eyebrow mb-0">Data Export</p> -->
         <h1 class="page-title mb-0">{{ @trans('portal.reports') }}</h1>
     </div>
     <div class="ms-auto pageheader-btn d-none d-xl-flex d-lg-flex mt-2">
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="{{ route('admin.monthly-report.index') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.monthly-report.index') }}">{{ @trans('portal.home') }}</a></li>
             <li class="breadcrumb-item active">{{ @trans('portal.reports') }}</li>
         </ol>
     </div>
@@ -158,7 +158,7 @@
                 <div class="rpt-icon"><i class="fa fa-shopping-cart"></i></div>
                 <div>
                     <p class="rpt-title">{{ trans('portal.orders') }}</p>
-                    <p class="rpt-sub">Filter by customer &amp; month, then export</p>
+                    <p class="rpt-sub">{{ __('portal.order_report_sub') }}</p>
                 </div>
             </div>
             <hr class="rpt-divider">
@@ -188,13 +188,13 @@
                     </div>
                     <div class="rpt-btn-row">
                         <button type="button" class="rpt-btn rpt-btn-pdf exportBtn" data-type="challan">
-                            <i class="fa fa-file-pdf-o"></i> Challan
+                            <i class="fa fa-file-pdf-o"></i> {{ @trans('portal.challan') }}
                         </button>
                         <button type="button" class="rpt-btn rpt-btn-pdf exportBtn" data-type="bill">
-                            <i class="fa fa-file-pdf-o"></i> Bill
+                            <i class="fa fa-file-pdf-o"></i> {{ @trans('portal.bill') }}
                         </button>
                         <button type="button" class="rpt-btn rpt-btn-excel exportBtn" data-type="bill_image">
-                            <i class="fa fa-image"></i> Bill Image
+                            <i class="fa fa-image"></i> {{ @trans('portal.bill_image') }}
                         </button>
                     </div>
                     <input type="hidden" name="export_type" id="exportTypeInput" value="">
@@ -211,7 +211,7 @@
                 <div class="rpt-icon"><i class="fa fa-money"></i></div>
                 <div>
                     <p class="rpt-title">{{ trans('portal.expenses') }}</p>
-                    <p class="rpt-sub">Filter by month, then export</p>
+                    <p class="rpt-sub">{{ __('portal.expense_report_sub') }}</p>
                 </div>
             </div>
             <hr class="rpt-divider">
@@ -229,16 +229,16 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="rpt-label">Expense Type</label>
+                        <label class="rpt-label">{{ trans('portal.expense_type') }}</label>
                         <select name="expense_type" class="rpt-select">
-                            <option value="">— All Types —</option>
-                            <option value="business" {{ old('expense_type') == 'business' ? 'selected' : '' }}>Business</option>
-                            <option value="personal" {{ old('expense_type') == 'personal' ? 'selected' : '' }}>Personal</option>
+                            <option value="">— {{ trans('portal.select_expense_type') }} —</option>
+                            <option value="business" {{ old('expense_type') == 'business' ? 'selected' : '' }}>{{ trans('portal.business') }}</option>
+                            <option value="personal" {{ old('expense_type') == 'personal' ? 'selected' : '' }}>{{ trans('portal.personal') }}</option>
                         </select>
                     </div>
                     <div class="rpt-btn-row">
                         <button type="submit" name="export_type" value="excel" class="rpt-btn rpt-btn-excel">
-                            <i class="fa fa-file-excel-o"></i> Excel
+                            <i class="fa fa-file-excel-o"></i> {{ @trans('portal.excel') }}
                         </button>
                     </div>
                 </form>
@@ -254,18 +254,18 @@
                 <div class="rpt-icon"><i class="fa fa-users"></i></div>
                 <div>
                     <p class="rpt-title">{{ trans('portal.customers') }}</p>
-                    <p class="rpt-sub">Export your full customer list</p>
+                    <p class="rpt-sub">{{ __('portal.customer_report_sub') }}</p>
                 </div>
             </div>
             <hr class="rpt-divider">
             <div class="rpt-body">
                 <form action="{{ route('admin.monthly-report.customer') }}" method="GET">
                     <p class="text-muted mb-3" style="font-size:0.82rem;">
-                        Download all customer records including name, shop, city and contact info.
+                        {{ __('portal.customer_report_desc') }}
                     </p>
                     <div class="rpt-btn-row">
                         <button type="submit" name="export_type" value="excel" class="rpt-btn rpt-btn-excel">
-                            <i class="fa fa-file-excel-o"></i> Excel
+                            <i class="fa fa-file-excel-o"></i> {{ @trans('portal.excel') }}
                         </button>
                     </div>
                 </form>
@@ -281,18 +281,18 @@
                 <div class="rpt-icon"><i class="fa fa-cubes"></i></div>
                 <div>
                     <p class="rpt-title">{{ trans('portal.products') }}</p>
-                    <p class="rpt-sub">Export your full product catalogue</p>
+                    <p class="rpt-sub">{{ __('portal.product_report_sub') }}</p>
                 </div>
             </div>
             <hr class="rpt-divider">
             <div class="rpt-body">
                 <form action="{{ route('admin.monthly-report.product') }}" method="GET">
                     <p class="text-muted mb-3" style="font-size:0.82rem;">
-                        Download all products with name, base price, unit and status.
+                        {{ __('portal.product_report_desc') }}
                     </p>
                     <div class="rpt-btn-row">
                         <button type="submit" name="export_type" value="excel" class="rpt-btn rpt-btn-excel">
-                            <i class="fa fa-file-excel-o"></i> Excel
+                            <i class="fa fa-file-excel-o"></i> {{ @trans('portal.excel') }}
                         </button>
                     </div>
                 </form>
@@ -312,8 +312,8 @@
 
     function showDownloadLoader() {
         Swal.fire({
-            title: 'Please wait',
-            html: 'Your exported file is being generated...',
+            title: '{{ __('portal.please_wait') }}',
+            html: '{{ __('portal.export_generating') }}',
             allowOutsideClick: false,
             showConfirmButton: false,
             didOpen: () => {
@@ -334,7 +334,7 @@
             const monthYear = form.querySelector('select[name="month_year"]').value;
             
             if (!monthYear) {
-                orderWarning.fire({ icon: 'warning', text: 'Please select a month and year before exporting.' });
+                orderWarning.fire({ icon: 'warning', text: '{{ __('portal.select_month_year_error') }}' });
                 return;
             }
 
@@ -358,7 +358,7 @@
                 const monthYearInput = form.querySelector('select[name="month_year"]');
                 if (monthYearInput && !monthYearInput.value) {
                     e.preventDefault();
-                    orderWarning.fire({ icon: 'warning', text: 'Please select a month and year before exporting.' });
+                    orderWarning.fire({ icon: 'warning', text: '{{ __('portal.select_month_year_error') }}' });
                     return;
                 }
                 showDownloadLoader();
