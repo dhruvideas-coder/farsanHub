@@ -103,13 +103,8 @@
                                 <i class="fa fa-shopping-cart"></i>
                             </a>
                             <button type="button" class="btn btn-success share-customer-btn"
-                                data-name="{{ $customer->customer_name ?? '' }}"
-                                data-shop="{{ $customer->shop_name ?? '' }}"
-                                data-address="{{ $customer->shop_address ?? '' }}"
-                                data-city="{{ $customer->city ?? '' }}"
-                                data-phone="{{ $customer->customer_number ?? '' }}"
-                                data-lat="{{ $customer->latitude ?? '' }}"
-                                data-lng="{{ $customer->longitude ?? '' }}"
+                                data-customer-id="{{ $customer->id }}"
+                                data-share-url="{{ route('admin.customer.share-link', $customer->id) }}"
                                 title="Share">
                                 <i class="fa fa-share-alt"></i>
                             </button>

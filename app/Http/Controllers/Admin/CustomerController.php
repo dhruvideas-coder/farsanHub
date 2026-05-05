@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\CustomerShareToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
@@ -264,6 +266,31 @@ class CustomerController extends Controller
             Log::error('CustomerController@destroy Error: ' . $th->getMessage());
             return redirect()->back()->with('error', $th->getMessage());
         }
+    }
+
+    public function generateShareLink(Request $request, Customer $customer)
+    {
+        abort_if($customer->user_id !== auth()->id(), 403);
+
+        // Delete any existing unexpired tokens for this customer+user
+        CustomerShareToken::where('customer_id', $customer->id)
+            ->where('user_id', auth()->id())
+            ->delete();
+
+        $token = Str::random(48);
+        $expiresAt = now()->addMinutes(10);
+
+        CustomerShareToken::create([
+            'customer_id' => $customer->id,
+            'user_id'     => auth()->id(),
+            'token'       => $token,
+            'expires_at'  => $expiresAt,
+        ]);
+
+        return response()->json([
+            'url'        => route('customer.public-card', $token),
+            'expires_at' => $expiresAt->toIso8601String(),
+        ]);
     }
 
     public function customerMap()

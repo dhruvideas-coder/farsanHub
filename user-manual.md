@@ -222,6 +222,42 @@ On the Customers list page:
 
 ---
 
+### How to Share a Customer Profile Link
+
+You can share a customer's full profile — contact details, address, and live map location — as a **secure public link**. The recipient does not need a FarsanHub account to view it.
+
+1. Find the customer on the Customers list page
+2. Click the **Share icon** (green button with an arrow) on their card
+3. A popup appears — the system generates a **secure, private link** automatically
+4. The popup shows a **live countdown timer** — the link is valid for **10 minutes only**
+5. Use the action buttons in the popup:
+
+| Button | What it does |
+|--------|-------------|
+| **Copy** | Copies the link to your clipboard — paste it anywhere |
+| **Open Card** | Opens the public profile in a new browser tab |
+| **WhatsApp** | Opens WhatsApp with the link pre-filled in a message |
+
+6. Send the link to whoever needs to see the customer's details
+
+#### What the recipient sees
+
+The public profile page shows:
+- Owner photo and shop photo (tap any photo to view it full-size)
+- Shop name, owner name, phone, email, and address
+- Call and WhatsApp buttons for quick contact
+- An embedded Google Map with the shop's pinned location and "Get Directions" button
+- A live countdown showing exactly how much time is left on the link
+
+#### Important security notes
+
+> - The link works for **anyone** who has the URL — do not send it to unauthorized persons
+> - Each time you click the Share button, a **new link is generated** and the previous one is immediately cancelled
+> - After 10 minutes, the link automatically expires and shows an "Expired" message — no action needed from you
+> - Links cannot be reused or extended
+
+---
+
 ## 6. Products Module
 
 **Sidebar link:** Products
@@ -607,6 +643,7 @@ If you leave FarsanHub open in your browser without doing anything for **5 minut
 | Find any customer fast | Customers page → use the search bar |
 | Download month report | Reports → choose customer & month → Download |
 | See who owes what | Orders page → filter by customer → check totals |
+| Share a customer profile | Customers → click Share icon on card → Copy / WhatsApp the 10-min link |
 | Log out safely | Click your name (top right) → Logout |
 
 ---

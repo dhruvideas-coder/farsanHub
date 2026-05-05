@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\Auth;
 // Authentication Routes
 // Route::get('/register', [App\Http\Controllers\AuthController::class, 'showRegister'])->name('register');
 // Route::post('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register.post');
+// Public share card (no auth required, token-based with 10-min expiry)
+Route::get('/share/customer/{token}', [App\Http\Controllers\PublicController::class, 'customerCard'])->name('customer.public-card');
+
 Route::get('/admin', [App\Http\Controllers\AuthController::class, 'showLogin'])->middleware('guest')->name('login');
 Route::get('/', function () {
     if (Auth::check()) {
@@ -68,6 +71,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
 
     // Customer Routes
     Route::resource('customer', App\Http\Controllers\Admin\CustomerController::class)->except('destroy');
+    Route::post('customer/{customer}/share-link', [App\Http\Controllers\Admin\CustomerController::class, 'generateShareLink'])->name('customer.share-link');
 
     // Product Routes
     Route::resource('product', App\Http\Controllers\Admin\ProductController::class)->except('destroy');

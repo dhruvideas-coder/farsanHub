@@ -274,6 +274,21 @@ farsanhub/
 
 ---
 
+### `customer_share_tokens` ← **NEW (v1.7)**
+| Column | Type | Notes |
+|---|---|---|
+| id | BIGINT (PK) | Auto-increment |
+| customer_id | BIGINT (FK → customers) | Cascade delete |
+| user_id | BIGINT (FK → users) | Who generated the token |
+| token | VARCHAR(64) (unique) | 48-char random string |
+| expires_at | TIMESTAMP | Set to `now() + 10 minutes` on creation |
+| created_at / updated_at | TIMESTAMP | |
+
+> **Index:** Composite index on `(token, expires_at)` for fast validity lookups.
+> **Behaviour:** Generating a new link for a customer deletes all previous tokens for that customer+user pair — only one active link per customer at a time.
+
+---
+
 ## 5. Authentication & Roles
 
 FarsanHub supports two login methods: **email/password** and **Google OAuth** (via Laravel Socialite). Only users with `is_admin = true` in the `users` table can access the portal regardless of login method.
@@ -324,8 +339,10 @@ admin       → AdminMiddleware: must have is_admin = true
 | POST | `/logout` | — | `AuthController@logout` | `logout` |
 | GET | `/auth/google` | `throttle:10,1` | `AuthController@redirectToGoogle` | `auth.google` |
 | GET | `/auth/google/callback` | `throttle:10,1` | `AuthController@handleGoogleCallback` | `auth.google.callback` |
+| GET | `/share/customer/{token}` | — | `PublicController@customerCard` | `customer.public-card` | ← **NEW (v1.7)** |
 
 > **Login is rate-limited:** Email login — 5 attempts/min per IP. Google OAuth — 10 requests/min per IP.
+> **Share link:** No auth required — validated by time-limited token only. Expired or unknown tokens render the expired view.
 
 ### Admin Routes (Middleware: `auth`, `admin`)
 
@@ -352,6 +369,7 @@ admin       → AdminMiddleware: must have is_admin = true
 | Method | URI | Controller@Method | Name |
 |---|---|---|---|
 | GET | `/admin/order/products-by-customer` | `OrderController@getProductsByCustomer` | `admin.order.products-by-customer` |
+| POST | `/admin/customer/{customer}/share-link` | `CustomerController@generateShareLink` | `admin.customer.share-link` | ← **NEW (v1.7)** |
 | GET | `/admin/purchase-order/products-by-customer` | `PurchaseOrderController@getProductsByCustomer` | `admin.purchase-order.products-by-customer` ← **NEW** |
 
 #### Delete Routes
@@ -767,6 +785,7 @@ resources/views/
 - Search: name, phone, shop name, city, address
 - AJAX-powered pagination
 - Leaflet map view shows all customer locations as markers
+- **Share Profile Link (v1.7)** — admin clicks Share on a customer card → `POST /admin/customer/{id}/share-link` → `CustomerController@generateShareLink` creates a 48-char random token in `customer_share_tokens` with a 10-minute `expires_at`; returns JSON `{url, expires_at}` → modal shows URL, live countdown, Copy/Open Card/WhatsApp buttons; public URL `GET /share/customer/{token}` handled by `PublicController@customerCard` — renders standalone branded profile card with photos (full-size lightbox on tap), info rows, CTA buttons, embedded Google Map with warm custom styling and SVG pin marker; expired/invalid tokens show a dedicated expired view
 
 ### Products Module
 - Full CRUD with soft-delete
@@ -995,6 +1014,15 @@ php artisan optimize:clear
 
 ## 22. Changelog
 
+### v1.7 — May 2026
+- **NEW: Customer Share Link** — Admin clicks the Share button on any customer card → a `POST /admin/customer/{id}/share-link` request creates a 48-char cryptographically random token in the `customer_share_tokens` table with a 10-minute `expires_at`; old tokens for that customer+user are purged before creating a new one
+- **NEW: Public Customer Profile Card** — `GET /share/customer/{token}` (no auth required) renders a standalone branded profile card: orange gradient hero with owner/shop photo avatars, bilingual info grid, Call/WhatsApp CTA buttons, and an embedded Google Map with warm earth-tone custom style and SVG pin marker; expired/invalid tokens render a dedicated expired-link view
+- **NEW: Photo Lightbox** — tapping any owner or shop photo on the public card opens a full-size lightbox with spring-animation scale-in, `backdrop-filter: blur` overlay, frosted caption pill, swipe-down-to-close gesture, and Escape key handler
+- **NEW: Share Modal** — redesigned admin popup with three concentric spinner rings (CSS-only), live countdown progress bar (turns red under 2 minutes), frosted URL input, Copy/Open Card/WhatsApp action buttons with orange-gradient / green-gradient styling; entirely CSS-driven with no additional JS libraries
+- **NEW: `CustomerShareToken` model** — `app/Models/CustomerShareToken.php`; `isExpired()` helper, `scopeValid()`, `belongsTo(Customer::class)`
+- **NEW: `PublicController`** — `app/Http/Controllers/PublicController.php`; single `customerCard(string $token)` action
+- **DB: `customer_share_tokens` table** — `customer_id` (FK cascade), `user_id` (FK cascade), `token VARCHAR(64) UNIQUE`, `expires_at TIMESTAMP`, composite index on `(token, expires_at)`
+
 ### v1.6 — April 2026
 - **SECURITY: Auto-logout on inactivity** — Admin panel auto-logs out after 5 minutes of no user activity; a SweetAlert2 warning popup appears with a 30-second countdown before logout; any user interaction (click, keypress, scroll, etc.) resets the timer; logout is performed via a CSRF-safe `POST /logout` form submission (`resources/views/layouts/app.blade.php`)
 - **SECURITY: Login brute-force block** — After 5 consecutive failed login attempts for the same email+IP, the account is blocked for 1 hour; remaining attempts are shown after each failure; block duration is displayed with exact minutes/hours remaining; counter clears automatically on successful login (`AuthController::login()` using `RateLimiter`)
@@ -1060,5 +1088,5 @@ php artisan optimize:clear
 
 ---
 
-*Documentation last updated: March 2026 — FarsanHub v1.5*
+*Documentation last updated: May 2026 — FarsanHub v1.7*
 *© 2025–2026 Brahmani Khandvi & Farsan House. All rights reserved.*
