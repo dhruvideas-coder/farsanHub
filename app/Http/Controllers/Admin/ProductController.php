@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\ProductPrice;
+use App\Traits\ImageHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+    use ImageHelper;
     public function index(Request $request)
     {
         try {
@@ -78,7 +80,7 @@ class ProductController extends Controller
                 'product_name'       => 'required',
                 'product_base_price' => 'required|numeric|min:0',
                 'unit'               => 'required|in:kg,Nang',
-                'product_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+                'product_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
                 'status'             => 'required',
             ], [
                 'product_name.required'       => __('validation.required_product_name'),
@@ -157,7 +159,7 @@ class ProductController extends Controller
                 'product_name'       => 'required',
                 'product_base_price' => 'required|numeric|min:0',
                 'unit'               => 'required|in:kg,Nang',
-                'product_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+                'product_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
                 'status'             => 'required',
             ], [
                 'product_name.required'       => __('validation.required_product_name'),
@@ -187,9 +189,7 @@ class ProductController extends Controller
             ];
 
             if ($request->hasFile('product_image')) {
-                if ($product->product_image && !str_starts_with($product->product_image, 'http')) {
-                    Storage::disk('public')->delete($product->product_image);
-                }
+                $this->deleteStorageImage($product->product_image);
                 $data['product_image'] = $this->compressAndStoreImage(
                     $request->file('product_image'), 'product_images'
                 );
@@ -226,9 +226,7 @@ class ProductController extends Controller
             $productId = $request->input('product_id');
             $product = Product::where('id', $productId)->where('user_id', auth()->id())->firstOrFail();
 
-            if ($product->product_image && !str_starts_with($product->product_image, 'http')) {
-                Storage::disk('public')->delete($product->product_image);
-            }
+            $this->deleteStorageImage($product->product_image);
 
             $product->delete();
 
@@ -243,55 +241,5 @@ class ProductController extends Controller
     public function leafletMap()
     {
         return view('admin.leaflet-map', ['locations' => []]);
-    }
-
-    /**
-     * Compress and store an uploaded image using GD, returns storage path.
-     */
-    private function compressAndStoreImage($file, string $folder, int $maxWidth = 1200, int $quality = 75): string
-    {
-        $extension   = strtolower($file->getClientOriginalExtension());
-        $filename    = uniqid() . '.jpg';
-        $storagePath = $folder . '/' . $filename;
-        $fullPath    = storage_path('app/public/' . $storagePath);
-
-        if (!file_exists(dirname($fullPath))) {
-            mkdir(dirname($fullPath), 0755, true);
-        }
-
-        $tmpPath = $file->getPathname();
-
-        $src = match ($extension) {
-            'jpg', 'jpeg' => @imagecreatefromjpeg($tmpPath),
-            'png'         => @imagecreatefrompng($tmpPath),
-            'gif'         => @imagecreatefromgif($tmpPath),
-            default       => @imagecreatefromjpeg($tmpPath),
-        };
-
-        if (!$src) {
-            $file->storeAs($folder, $filename, 'public');
-            return $storagePath;
-        }
-
-        $origW = imagesx($src);
-        $origH = imagesy($src);
-
-        if ($origW > $maxWidth) {
-            $ratio = $maxWidth / $origW;
-            $newW  = $maxWidth;
-            $newH  = (int) round($origH * $ratio);
-        } else {
-            $newW = $origW;
-            $newH = $origH;
-        }
-
-        $dst = imagecreatetruecolor($newW, $newH);
-        imagecopyresampled($dst, $src, 0, 0, 0, 0, $newW, $newH, $origW, $origH);
-        imagejpeg($dst, $fullPath, $quality);
-
-        imagedestroy($src);
-        imagedestroy($dst);
-
-        return $storagePath;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\CustomerShareToken;
+use App\Traits\ImageHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -13,6 +14,7 @@ use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
+    use ImageHelper;
     public function index(Request $request)
     {
         try {
@@ -68,8 +70,8 @@ class CustomerController extends Controller
                 'customer_number' => 'required|string|size:10|regex:/^[0-9]+$/',
                 'customer_email'  => 'nullable|email',
                 'city'            => 'required',
-                'customer_image'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-                'shop_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+                'customer_image'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+                'shop_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
                 'status'          => 'required',
                 'latitude'        => 'nullable',
                 'longitude'       => 'nullable',
@@ -168,8 +170,8 @@ class CustomerController extends Controller
                 'customer_number' => 'required|string|size:10|regex:/^[0-9]+$/',
                 'customer_email'  => 'nullable|email',
                 'city'            => 'required',
-                'customer_image'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-                'shop_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+                'customer_image'  => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+                'shop_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
                 'status'          => 'required',
                 'latitude'        => 'nullable',
                 'longitude'       => 'nullable',
@@ -218,18 +220,14 @@ class CustomerController extends Controller
             }
 
             if ($request->hasFile('customer_image')) {
-                if ($customer->customer_image) {
-                    Storage::disk('public')->delete($customer->customer_image);
-                }
+                $this->deleteStorageImage($customer->customer_image);
                 $data['customer_image'] = $this->compressAndStoreImage(
                     $request->file('customer_image'), 'customer_images'
                 );
             }
 
             if ($request->hasFile('shop_image')) {
-                if ($customer->shop_image) {
-                    Storage::disk('public')->delete($customer->shop_image);
-                }
+                $this->deleteStorageImage($customer->shop_image);
                 $data['shop_image'] = $this->compressAndStoreImage(
                     $request->file('shop_image'), 'shop_images'
                 );
@@ -251,12 +249,8 @@ class CustomerController extends Controller
             $customerId = $request->input('customer_id');
             $customer = Customer::where('id', $customerId)->where('user_id', auth()->id())->firstOrFail();
 
-            if ($customer->customer_image) {
-                Storage::disk('public')->delete($customer->customer_image);
-            }
-            if ($customer->shop_image) {
-                Storage::disk('public')->delete($customer->shop_image);
-            }
+            $this->deleteStorageImage($customer->customer_image);
+            $this->deleteStorageImage($customer->shop_image);
 
             $customer->delete();
 
@@ -327,66 +321,4 @@ class CustomerController extends Controller
         return $digits;
     }
 
-    /**
-     * Compress and store an uploaded image using GD, returns storage path.
-     */
-    private function compressAndStoreImage($file, string $folder, int $maxWidth = 1200, int $quality = 75): string
-    {
-        $extension = strtolower($file->getClientOriginalExtension());
-        $filename  = uniqid() . '.jpg';
-        $storagePath = $folder . '/' . $filename;
-        $fullPath    = storage_path('app/public/' . $storagePath);
-
-        // Ensure directory exists
-        if (!file_exists(dirname($fullPath))) {
-            mkdir(dirname($fullPath), 0755, true);
-        }
-
-        // Create GD image from uploaded file
-        $tmpPath = $file->getPathname();
-
-        $src = match ($extension) {
-            'jpg', 'jpeg' => @imagecreatefromjpeg($tmpPath),
-            'png'         => @imagecreatefrompng($tmpPath),
-            'gif'         => @imagecreatefromgif($tmpPath),
-            default       => @imagecreatefromjpeg($tmpPath),
-        };
-
-        // Fallback: just store original if GD fails
-        if (!$src) {
-            $file->storeAs($folder, $filename, 'public');
-            return $storagePath;
-        }
-
-        $origW = imagesx($src);
-        $origH = imagesy($src);
-
-        // Scale down if needed
-        if ($origW > $maxWidth) {
-            $ratio  = $maxWidth / $origW;
-            $newW   = $maxWidth;
-            $newH   = (int) round($origH * $ratio);
-        } else {
-            $newW = $origW;
-            $newH = $origH;
-        }
-
-        $dst = imagecreatetruecolor($newW, $newH);
-
-        // Preserve transparency for PNG
-        if ($extension === 'png') {
-            imagealphablending($dst, false);
-            imagesavealpha($dst, true);
-            $transparent = imagecolorallocatealpha($dst, 255, 255, 255, 127);
-            imagefill($dst, 0, 0, $transparent);
-        }
-
-        imagecopyresampled($dst, $src, 0, 0, 0, 0, $newW, $newH, $origW, $origH);
-        imagejpeg($dst, $fullPath, $quality);
-
-        imagedestroy($src);
-        imagedestroy($dst);
-
-        return $storagePath;
-    }
 }

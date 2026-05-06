@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Content;
+use App\Traits\ImageHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ContentController extends Controller
 {
+    use ImageHelper;
     public function index()
     {
         $contents = Content::where('user_id', auth()->id())
@@ -28,7 +30,7 @@ class ContentController extends Controller
     {
         try {
             $rules = [
-                'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'image'       => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'upload_date' => 'required|date',
             ];
 
@@ -48,7 +50,7 @@ class ContentController extends Controller
 
             $imagePath = null;
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('content_images', 'public');
+                $imagePath = $this->compressAndStoreImage($request->file('image'), 'content_images');
             }
 
             Content::create([
@@ -78,7 +80,7 @@ class ContentController extends Controller
         abort_if($content->user_id !== auth()->id(), 403);
         try {
             $rules = [
-                'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'upload_date' => 'nullable|date',
             ];
 
@@ -99,10 +101,8 @@ class ContentController extends Controller
             ];
 
             if ($request->hasFile('image')) {
-                if ($content->image) {
-                    Storage::disk('public')->delete($content->image);
-                }
-                $data['image'] = $request->file('image')->store('content_images', 'public');
+                $this->deleteStorageImage($content->image);
+                $data['image'] = $this->compressAndStoreImage($request->file('image'), 'content_images');
             }
 
             $content->update($data);
@@ -126,9 +126,7 @@ class ContentController extends Controller
                 ->where('user_id', auth()->id())
                 ->firstOrFail();
 
-            if ($content->image) {
-                Storage::disk('public')->delete($content->image);
-            }
+            $this->deleteStorageImage($content->image);
 
             $content->delete();
 
