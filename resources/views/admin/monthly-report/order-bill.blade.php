@@ -288,9 +288,9 @@
             <td class="party-left">
                 <span class="party-label">Bill To:</span>
                 @if($customerInfo)
-                    <span class="party-title">{{ $customerInfo->getTranslation('customer_name', App::getLocale()) }}</span>
-                    <div class="party-detail">{{ $customerInfo->getTranslation('shop_name', App::getLocale()) }}</div>
-                    <div class="party-detail"><span class="label">Address:</span> {{ $customerInfo->getTranslation('shop_address', App::getLocale()) }}{{ $customerInfo->city ? ', '.$customerInfo->getTranslation('city', App::getLocale()) : '' }}</div>
+                    <span class="party-title">{{ $customerInfo->customer_name }}</span>
+                    <div class="party-detail">{{ $customerInfo->shop_name }}</div>
+                    <div class="party-detail"><span class="label">Address:</span> {{ $customerInfo->shop_address }}{{ $customerInfo->city ? ', '.$customerInfo->city : '' }}</div>
                     <div class="party-detail"><span class="label">Phone:</span> {{ $customerInfo->customer_number }}</div>
                 @else
                     <span class="party-title">All Customers</span>
@@ -308,13 +308,11 @@
     @php
         $groupedOrders = [];
         foreach($orders as $order) {
-            $type = $order->type ?? 'sell';
-            $productName = $order->product->product_name . ' (' . trans('portal.' . $type) . ')';
-            $key = $order->product->id . '_' . $type;
-            
+            $key = $order->product->id;
+
             if (!isset($groupedOrders[$key])) {
                 $groupedOrders[$key] = [
-                    'product_name' => $productName,
+                    'product_name' => $order->product->product_name,
                     'total_qty'    => 0,
                     'unit'         => $order->product->unit ?? 'kg',
                     'total_amount' => 0,
@@ -338,7 +336,7 @@
             @foreach($groupedOrders as $item)
                 <tr>
                     <td class="col-desc">{{ $item['product_name'] }}</td>
-                    <td>{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }} {{ __('portal.' . strtolower($item['unit'])) }}</td>
+                    <td>{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }} {{ ucfirst($item['unit']) }}</td>
                     <td>{{ $item['total_qty'] > 0 ? number_format($item['total_amount'] / $item['total_qty'], 2) : '0.00' }}</td>
                     <td>{{ number_format($item['total_amount'], 2) }}</td>
                 </tr>
@@ -350,10 +348,10 @@
                     GRAND TOTAL:
                     &nbsp;&nbsp;
                     @if($totalKg > 0)
-                        {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} {{ __('portal.kg') }}
+                        {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} kg
                     @endif
                     @if($totalNang > 0)
-                        &nbsp; {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} {{ __('portal.nang') }}
+                        &nbsp; {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} Nang
                     @endif
                 </td>
                 <td style="background:#fff; border:1px solid #000;"></td>

@@ -204,10 +204,10 @@ class AdminController extends Controller
                         ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$targetDate->toDateString()])
                         ->whereRaw("HOUR(created_at) = ?", [$i])
                         ->selectRaw("
-                            SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
-                            SUM(CASE WHEN type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
-                            SUM(CASE WHEN type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
+                            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
+                            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
+                            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
+                            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
                         ")->first();
                     
                     $chartSellRevenue->push((float)($stats->sell ?? 0));
@@ -226,10 +226,10 @@ class AdminController extends Controller
                     $stats = Order::where('user_id', $uid)
                         ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$day->toDateString()])
                         ->selectRaw("
-                            SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
-                            SUM(CASE WHEN type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
-                            SUM(CASE WHEN type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
+                            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
+                            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
+                            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
+                            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
                         ")->first();
                         
                     $chartSellRevenue->push((float)($stats->sell ?? 0));
@@ -248,10 +248,10 @@ class AdminController extends Controller
                     $stats = Order::where('user_id', $uid)
                         ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$day->toDateString()])
                         ->selectRaw("
-                            SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
-                            SUM(CASE WHEN type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
-                            SUM(CASE WHEN type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
+                            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
+                            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
+                            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
+                            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
                         ")->first();
                         
                     $chartSellRevenue->push((float)($stats->sell ?? 0));
@@ -271,10 +271,10 @@ class AdminController extends Controller
                     $stats = Order::where('user_id', $uid)
                         ->whereRaw("DATE_FORMAT(COALESCE(order_date, created_at), '%Y-%m') = ?", [$month->format('Y-m')])
                         ->selectRaw("
-                            SUM(CASE WHEN type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
-                            SUM(CASE WHEN type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
-                            SUM(CASE WHEN type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
+                            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
+                            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
+                            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
+                            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
                         ")->first();
                         
                     $chartSellRevenue->push((float)($stats->sell ?? 0));
@@ -291,10 +291,10 @@ class AdminController extends Controller
             ->whereRaw('COALESCE(orders.order_date, DATE(orders.created_at)) BETWEEN ? AND ?', [$start, $end])
             ->selectRaw('products.id, products.product_name, products.unit,
                          SUM(orders.order_quantity) as total_qty,
-                         SUM(CASE WHEN orders.type = \'sell\' THEN orders.order_quantity ELSE 0 END) as total_sell_qty,
-                         SUM(CASE WHEN orders.type = \'purchase\' THEN orders.order_quantity ELSE 0 END) as total_purchase_qty,
-                         SUM(CASE WHEN orders.type = \'remaining\' THEN orders.order_quantity ELSE 0 END) as total_remaining_qty,
-                         SUM(CASE WHEN orders.type = \'cash\' THEN orders.order_quantity ELSE 0 END) as total_cash_qty')
+                         SUM(CASE WHEN orders.order_type = \'sell\' THEN orders.order_quantity ELSE 0 END) as total_sell_qty,
+                         SUM(CASE WHEN orders.order_type = \'purchase\' THEN orders.order_quantity ELSE 0 END) as total_purchase_qty,
+                         SUM(CASE WHEN orders.payment_type = \'remaining\' THEN orders.order_quantity ELSE 0 END) as total_remaining_qty,
+                         SUM(CASE WHEN orders.payment_type = \'cash\' THEN orders.order_quantity ELSE 0 END) as total_cash_qty')
             ->groupBy('products.id', 'products.product_name', 'products.unit')
             ->orderByDesc('total_qty')
             ->limit(5)
@@ -336,7 +336,8 @@ class AdminController extends Controller
                 'orders.order_price',
                 'orders.order_date',
                 'orders.created_at',
-                'orders.type',
+                'orders.order_type',
+                'orders.payment_type',
                 'products.product_name',
                 'products.unit',
                 'customers.customer_name',

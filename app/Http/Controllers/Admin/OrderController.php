@@ -26,11 +26,15 @@ class OrderController extends Controller
             ])
                 ->where('user_id', auth()->id());
 
-            if ($request->start_date) {
-                $query->whereDate('orders.order_date', '>=', $request->start_date);
-            }
-            if ($request->end_date) {
-                $query->whereDate('orders.order_date', '<=', $request->end_date);
+            if ($request->order_date) {
+                $query->whereDate('orders.order_date', $request->order_date);
+            } else {
+                if ($request->start_date) {
+                    $query->whereDate('orders.order_date', '>=', $request->start_date);
+                }
+                if ($request->end_date) {
+                    $query->whereDate('orders.order_date', '<=', $request->end_date);
+                }
             }
             if ($request->customer_id) {
                 $query->where('orders.customer_id', $request->customer_id);
@@ -38,8 +42,19 @@ class OrderController extends Controller
             if ($request->product_id) {
                 $query->where('orders.product_id', $request->product_id);
             }
-            if ($request->type) {
-                $query->where('orders.type', $request->type);
+            if ($request->filled('order_type')) {
+                $orderTypes = (array) $request->order_type;
+                $orderTypes = array_filter($orderTypes);
+                if (!empty($orderTypes)) {
+                    $query->whereIn('orders.order_type', $orderTypes);
+                }
+            }
+            if ($request->filled('payment_type')) {
+                $paymentTypes = (array) $request->payment_type;
+                $paymentTypes = array_filter($paymentTypes);
+                if (!empty($paymentTypes)) {
+                    $query->whereIn('orders.payment_type', $paymentTypes);
+                }
             }
             if (!empty($search)) {
                 $query->where(function ($q) use ($search) {
@@ -163,7 +178,8 @@ class OrderController extends Controller
                 'order_quantity' => $request->order_quantity,
                 'order_price'    => $this->getEffectivePrice($product->id, $customer->id),
                 'order_date'     => $request->order_date,
-                'type'           => $request->type ?? 'sell',
+                'order_type'     => $request->order_type ?? 'sell',
+                'payment_type'   => $request->payment_type ?? 'remaining',
             ]);
 
             return redirect()->route('admin.order.index')->with('success', __('portal.order_created'));
@@ -216,7 +232,8 @@ class OrderController extends Controller
                 'order_quantity' => $request->order_quantity,
                 'order_price'    => $this->getEffectivePrice($product->id, $order->customer_id),
                 'order_date'     => $request->order_date ?: $order->order_date,
-                'type'           => $request->type ?? $order->type,
+                'order_type'     => $request->order_type ?? $order->order_type,
+                'payment_type'   => $request->payment_type ?? $order->payment_type,
             ]);
 
             return redirect()->route('admin.order.index', ['page' => $request->page])->with('success', __('portal.order_updated'));

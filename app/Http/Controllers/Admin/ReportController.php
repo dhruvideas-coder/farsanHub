@@ -95,8 +95,12 @@ class ReportController extends Controller
             $customerId = $request->input('customer_id');
             $monthYear  = $request->input('month_year');
 
+            if (!$customerId) {
+                return redirect()->back()->with('error', __('portal.select_customer_for_export'));
+            }
+
             if (!$monthYear) {
-                return redirect()->back()->with('error', 'Please select a month and year before exporting.');
+                return redirect()->back()->with('error', __('portal.select_month_year_error'));
             }
 
             // Get filtered orders using Eloquent relations
@@ -213,7 +217,7 @@ class ReportController extends Controller
             $expenseType = $request->input('expense_type'); // 'personal', 'business', or null for all
 
             if (!$monthYear) {
-                return redirect()->back()->with('error', 'Please select a month and year before exporting.');
+                return redirect()->back()->with('error', __('portal.select_month_year_error'));
             }
 
             $query = Expense::where('user_id', auth()->id())

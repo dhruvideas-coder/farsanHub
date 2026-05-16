@@ -16,7 +16,8 @@ class Order extends Model
         'order_quantity',
         'order_price',
         'order_date',
-        'type',
+        'order_type',
+        'payment_type',
         'status',
     ];
 

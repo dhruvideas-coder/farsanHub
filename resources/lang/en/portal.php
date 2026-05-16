@@ -48,6 +48,7 @@ return [
     'active' => 'Active',
     'inactive' => 'Inactive',
     'type' => 'Type',
+    'payment_type' => 'Payment Type',
 
     // Expense
     'purpose' => 'Purpose',
@@ -58,6 +59,7 @@ return [
     'sabji' => 'Sabji',
     'lightbill' => 'Lightbill',
     'rent' => 'Rent',
+    'other' => 'Other',
 
     // Customer
     'customer' => 'Customer',
@@ -237,6 +239,8 @@ return [
     'please_wait' => 'Please wait',
     'export_generating' => 'Your exported file is being generated...',
     'select_month_year_error' => 'Please select a month and year before exporting.',
+    'select_customer_for_export' => 'Please select a customer before exporting.',
+    'select_customer_for_bill_image' => 'Please select a customer to generate a bill image.',
 
     'auto_translate_note' => 'Auto-translate note to English',
     'kg' => 'kg',

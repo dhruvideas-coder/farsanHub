@@ -26,7 +26,7 @@
                             <input type="hidden" name="page" value="{{ $page }}">
                             <div class="row">
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-lg-3 col-sm-6 mb-3">
                                     <label class="form-label">{{ @trans('portal.customer_name') }}</label>
                                     @php
                                         $cust = $customers->where('id', $order->customer_id)->first();
@@ -34,36 +34,38 @@
                                     <input type="text" class="form-control" value="{{ $cust ? ($cust->shop_name ?: $cust->customer_name) : '' }}" readonly>
                                 </div>
 
-                                <div class="col-md-6 mb-3 d-flex align-items-end">
-                                    <div>
-                                        <label class="form-label fw-semibold d-block">{{ @trans('portal.type') }} <span class="text-danger">*</span></label>
-                                        <div class="d-flex gap-4">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="type" id="type_sell" value="sell" {{ old('type', $order->type ?? 'sell') === 'sell' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="type_sell">
-                                                    {{ @trans('portal.sell') }}
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="type" id="type_purchase" value="purchase" {{ old('type', $order->type) === 'purchase' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="type_purchase">
-                                                    {{ @trans('portal.purchase') }}
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="type" id="type_remaining" value="remaining" {{ old('type', $order->type) === 'remaining' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="type_remaining">
-                                                    {{ @trans('portal.remaining') }}
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="type" id="type_cash" value="cash" {{ old('type', $order->type) === 'cash' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="type_cash">
-                                                    {{ @trans('portal.cash') }}
-                                                </label>
-                                            </div>
+                                <div class="col-lg-3 col-sm-6 mb-3">
+                                    <label class="form-label fw-semibold">{{ @trans('portal.type') }} <span class="text-danger">*</span></label>
+                                    <div class="d-flex flex-wrap gap-3 pt-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="order_type" id="type_sell" value="sell" {{ old('order_type', $order->order_type ?? 'sell') === 'sell' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="type_sell">{{ @trans('portal.sell') }}</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="order_type" id="type_purchase" value="purchase" {{ old('order_type', $order->order_type) === 'purchase' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="type_purchase">{{ @trans('portal.purchase') }}</label>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-6 mb-3">
+                                    <label class="form-label fw-semibold">{{ @trans('portal.payment_type') }} <span class="text-danger">*</span></label>
+                                    <div class="d-flex flex-wrap gap-3 pt-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="payment_type" id="payment_remaining" value="remaining" {{ old('payment_type', $order->payment_type ?? 'remaining') === 'remaining' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="payment_remaining">{{ @trans('portal.remaining') }}</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="payment_type" id="payment_cash" value="cash" {{ old('payment_type', $order->payment_type ?? 'remaining') === 'cash' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="payment_cash">{{ @trans('portal.cash') }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-sm-6 mb-3">
+                                    <label for="order_date" class="form-label">{{ @trans('portal.date') }}</label>
+                                    <input type="date" class="form-control" id="order_date" name="order_date"
+                                        value="{{ old('order_date', $order->order_date ?: ($order->created_at ? $order->created_at->format('Y-m-d') : '')) }}">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -112,12 +114,6 @@
                                     </div>
                                 </div>
                                 </div> 
-
-                                <div class="col-md-6 mb-3">
-                                    <label for="order_date" class="form-label">{{ @trans('portal.date') }}</label>
-                                    <input type="date" class="form-control" id="order_date" name="order_date"
-                                        value="{{ old('order_date', $order->order_date ?: ($order->created_at ? $order->created_at->format('Y-m-d') : '')) }}">
-                                </div>
 
                                 <div class="mb-3 d-flex flex-wrap gap-2">
                                     <button type="submit" class="btn btn-primary">

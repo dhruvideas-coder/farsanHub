@@ -24,15 +24,18 @@
                 <tr>
                     <td style="font-size:13px; color:#78716c; font-weight:600;">{{ $orders->firstItem() + $index }}</td>
                     <td class="text-center">
-                        @if(($order->type ?? 'sell') === 'purchase')
-                            <span class="badge" style="background:#dbeafe; color:#1e40af; font-size:11px;">{{ __('portal.purchase') }}</span>
-                        @elseif($order->type === 'remaining')
-                            <span class="badge" style="background:#fee2e2; color:#991b1b; font-size:11px;">{{ __('portal.remaining') }}</span>
-                        @elseif($order->type === 'cash')
-                            <span class="badge" style="background:#fef3c7; color:#92400e; font-size:11px;">{{ __('portal.cash') }}</span>
-                        @else
-                            <span class="badge" style="background:#d1fae5; color:#065f46; font-size:11px;">{{ __('portal.sell') }}</span>
-                        @endif
+                        <div class="d-flex flex-column align-items-center gap-1">
+                            @if(($order->order_type ?? 'sell') === 'purchase')
+                                <span class="badge" style="background:#dbeafe; color:#1e40af; font-size:11px;">{{ __('portal.purchase') }}</span>
+                            @else
+                                <span class="badge" style="background:#d1fae5; color:#065f46; font-size:11px;">{{ __('portal.sell') }}</span>
+                            @endif
+                            @if(($order->payment_type ?? 'remaining') === 'cash')
+                                <span class="badge" style="background:#fef3c7; color:#92400e; font-size:11px;">{{ __('portal.cash') }}</span>
+                            @else
+                                <span class="badge" style="background:#fee2e2; color:#991b1b; font-size:11px;">{{ __('portal.remaining') }}</span>
+                            @endif
+                        </div>
                     </td>
                     <td>
                         <span style="font-size:13px; font-weight:600; color:#1c1917;">

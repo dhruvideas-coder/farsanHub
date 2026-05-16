@@ -511,8 +511,11 @@
                                 <td>
                                     <div class="fw-bold text-dark" style="font-size: 13.5px;">{{ $order->product_name }}</div>
                                     <div class="mt-1">
-                                        <span class="status-pill {{ $order->type }}" style="padding: 2px 8px; font-size: 9px;">
-                                            {{ strtoupper($order->type) }}
+                                        <span class="status-pill {{ $order->order_type }}" style="padding: 2px 8px; font-size: 9px;">
+                                            {{ strtoupper($order->order_type) }}
+                                        </span>
+                                        <span class="status-pill {{ $order->payment_type }}" style="padding: 2px 8px; font-size: 9px; margin-left:2px;">
+                                            {{ strtoupper($order->payment_type) }}
                                         </span>
                                     </div>
                                 </td>

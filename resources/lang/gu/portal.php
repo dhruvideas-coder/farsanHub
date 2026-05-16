@@ -47,6 +47,7 @@ return [
     'active' => 'સક્રિય',
     'inactive' => 'અસક્રિય',
     'type' => 'પ્રકાર',
+    'payment_type' => 'ચુકવણી પ્રકાર',
 
     // Expense
     'purpose' => 'હેતુ',
@@ -57,6 +58,7 @@ return [
     'sabji' => 'શાકભાજી',
     'lightbill' => 'લાઇટબીલ',
     'rent' => 'મકાન ભાડુ',
+    'other' => 'અન્ય',
 
     // Customer
     'customer' => 'દુકાનદાર',
@@ -78,7 +80,7 @@ return [
     'open_maps' => 'મેપ્સ ખોલો',
     'delete_customer' => 'ગ્રાહકને કાઢી નાખો',
     'delete_confirm' => 'શું તમે આ રેકોર્ડ કાઢી નાખવા માંગો છો?',
-    'all_customers' => '-- બધા ગ્રાહકો --',
+    'all_customers' => 'દરેક ગ્રાહકો',
 
     // Product
     'products' => 'પ્રોડક્ટ્સ',
@@ -86,7 +88,7 @@ return [
     'product_name' => 'પ્રોડક્ટનું નામ',
     'product_base_price' => 'પ્રોડક્ટની મૂળ કિંમત',
     'product_image' => 'પ્રોડક્ટનો ફોટો',
-    'all_products' => '-- બધી પ્રોડક્ટ્સ --',
+    'all_products' => 'દરેક પ્રોડક્ટ્સ',
     'search_product_name' => 'પ્રોડક્ટનું નામ શોધો...',
     'delete_product' => 'પ્રોડક્ટ કાઢી નાખો',
     'delete_product_confirm' => 'શું તમે ખરેખર આ પ્રોડક્ટ કાઢી નાખવા માંગો છો? આ ક્રિયા કાયમી છે.',
@@ -234,6 +236,8 @@ return [
     'please_wait' => 'કૃપા કરીને રાહ જુઓ',
     'export_generating' => 'તમારી નિકાસ કરેલી ફાઇલ જનરેટ થઈ રહી છે...',
     'select_month_year_error' => 'નિકાસ કરતા પહેલા કૃપા કરીને મહિનો અને વર્ષ પસંદ કરો.',
+    'select_customer_for_export' => 'નિકાસ કરતા પહેલા કૃપા કરીને દુકાનદાર પસંદ કરો.',
+    'select_customer_for_bill_image' => 'બિલ ઇમેજ બનાવવા માટે કૃપા કરીને ગ્રાહક પસંદ કરો.',
     'kg' => 'કિગ્રા',
     'nang' => 'નંગ',
 ];

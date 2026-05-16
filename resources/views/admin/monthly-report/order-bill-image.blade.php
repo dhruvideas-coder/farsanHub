@@ -10,13 +10,11 @@
     /* ── Group orders by product ── */
     $groupedOrders = [];
     foreach ($orders as $order) {
-        $type = $order->type ?? 'sell';
-        $productName = $order->product_name . ' (' . trans('portal.' . $type) . ')';
-        $key = ($order->product_id ?? $order->product_name) . '_' . $type;
-        
+        $key = $order->product_id ?? $order->product_name;
+
         if (!isset($groupedOrders[$key])) {
             $groupedOrders[$key] = [
-                'product_name' => $productName,
+                'product_name' => $order->product_name,
                 'total_qty'    => 0,
                 'unit'         => $order->unit ?? 'kg',
                 'total_amount' => 0,

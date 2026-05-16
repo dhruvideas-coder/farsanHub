@@ -98,10 +98,6 @@
         .orders-table tbody td.td-rate { text-align:right; color:#57534e; white-space:nowrap; }
         .orders-table tbody td.td-amt  { text-align:right; font-weight:bold; color:#92400e; white-space:nowrap; }
         .orders-table tbody td.td-type { text-align:center; }
-        .badge-sell     { background:#d1fae5; color:#065f46; padding:1px 6px; border-radius:20px; font-size:8px; font-weight:bold; }
-        .badge-purchase { background:#dbeafe; color:#1e40af; padding:1px 6px; border-radius:20px; font-size:8px; font-weight:bold; }
-        .badge-remaining { background:#fee2e2; color:#991b1b; padding:1px 6px; border-radius:20px; font-size:8px; font-weight:bold; }
-        .badge-cash     { background:#fef3c7; color:#92400e; padding:1px 6px; border-radius:20px; font-size:8px; font-weight:bold; }
 
         /* Grand total row */
         .orders-table tfoot tr { background:#fef3c7; }
@@ -199,10 +195,10 @@
         <tr>
             <td class="info-box">
                 <div class="info-label">Bill To</div>
-                <div class="info-value-main">{{ $customerInfo->getTranslation('customer_name', App::getLocale()) }}</div>
-                <div class="info-value-sub">{{ $customerInfo->getTranslation('shop_name', App::getLocale()) }}</div>
+                <div class="info-value-main">{{ $customerInfo->customer_name }}</div>
+                <div class="info-value-sub">{{ $customerInfo->shop_name }}</div>
                 @if($customerInfo->shop_address)
-                    <div class="info-value-small">{{ $customerInfo->getTranslation('shop_address', App::getLocale()) }}{{ $customerInfo->city ? ', '.$customerInfo->getTranslation('city', App::getLocale()) : '' }}</div>
+                    <div class="info-value-small">{{ $customerInfo->shop_address }}{{ $customerInfo->city ? ', '.$customerInfo->city : '' }}</div>
                 @endif
                 @if($customerInfo->customer_number)
                     <div class="info-value-small" style="margin-top:3px;"><strong>Phone:</strong> {{ $customerInfo->customer_number }}</div>
@@ -284,7 +280,6 @@
                 <th style="width:62px;">Qty</th>
                 <th style="width:56px;">Rate (&#8377;)</th>
                 <th style="width:70px;">Amount (&#8377;)</th>
-                <th style="width:52px;">Type</th>
             </tr>
         </thead>
         <tbody>
@@ -303,21 +298,10 @@
                 </td>
                 <td class="td-prod">{{ $order->product->product_name }}</td>
                 <td class="td-qty">{{ rtrim(rtrim(number_format($order->order_quantity, 4), '0'), '.') }}
-                    <span style="font-size:8px; font-weight:normal;">{{ __('portal.' . strtolower($order->product->unit ?? 'kg')) }}</span>
+                    <span style="font-size:8px; font-weight:normal;">{{ ucfirst($order->product->unit ?? 'kg') }}</span>
                 </td>
                 <td class="td-rate">{{ number_format($order->order_price, 2) }}</td>
                 <td class="td-amt">{{ number_format($lineAmount, 2) }}</td>
-                <td class="td-type">
-                    @if(($order->type ?? 'sell') === 'purchase')
-                        <span class="badge-purchase">{{ __('portal.purchase') }}</span>
-                    @elseif($order->type === 'remaining')
-                        <span class="badge-remaining">{{ __('portal.remaining') }}</span>
-                    @elseif($order->type === 'cash')
-                        <span class="badge-cash">{{ __('portal.cash') }}</span>
-                    @else
-                        <span class="badge-sell">{{ __('portal.sell') }}</span>
-                    @endif
-                </td>
             </tr>
             @endforeach
         </tbody>
@@ -325,12 +309,11 @@
             <tr>
                 <td colspan="4" class="ft-label">Grand Total</td>
                 <td class="ft-qty">
-                    {{ rtrim(rtrim(number_format($totalKg ?? 0, 4), '0'), '.') }} {{ __('portal.kg') }}<br>
-                    {{ rtrim(rtrim(number_format($totalNang ?? 0, 4), '0'), '.') }} {{ __('portal.nang') }}
+                    {{ rtrim(rtrim(number_format($totalKg ?? 0, 4), '0'), '.') }} kg<br>
+                    {{ rtrim(rtrim(number_format($totalNang ?? 0, 4), '0'), '.') }} Nang
                 </td>
                 <td></td>
                 <td class="ft-amt">&#8377; {{ number_format($totalOrderAmount, 2) }}</td>
-                <td></td>
             </tr>
         </tfoot>
     </table>

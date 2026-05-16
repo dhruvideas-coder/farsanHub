@@ -338,9 +338,19 @@
                 return;
             }
 
-            document.getElementById('exportTypeInput').value = this.getAttribute('data-type');
+            const exportType = this.getAttribute('data-type');
+
+            if (exportType === 'bill_image') {
+                const customerId = form.querySelector('select[name="customer_id"]')?.value;
+                if (!customerId) {
+                    orderWarning.fire({ icon: 'warning', text: '{{ __('portal.select_customer_for_bill_image') }}' });
+                    return;
+                }
+            }
+
+            document.getElementById('exportTypeInput').value = exportType;
             
-            if (this.getAttribute('data-type') === 'bill_image') {
+            if (exportType === 'bill_image') {
                 form.target = "_blank";
             } else {
                 form.target = "_self";

@@ -66,6 +66,41 @@
         flex: 0 0 auto;
         width: 130px;
     }
+    #typeFilterBtn {
+        height: 38px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        background-color: #f9fafb;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    #typeFilterBtn:focus,
+    #typeFilterBtn[aria-expanded="true"] {
+        border-color: #f97316;
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        background-color: #fff;
+        outline: none;
+    }
+    .type-filter-menu {
+        min-width: 160px;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .type-filter-menu .form-check-input:checked {
+        background-color: #f97316;
+        border-color: #f97316;
+    }
+    .type-filter-menu .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+        border-color: #f97316;
+    }
+    .type-filter-menu .form-check-label {
+        font-size: 0.875rem;
+        cursor: pointer;
+    }
     .filter-item.date-wrap {
         flex: 0 0 auto;
         width: 155px;
@@ -115,15 +150,36 @@
                                     <option value="100">100</option>
                                 </select>
                             </div>
-                            <div class="filter-item medium">
-                                <label class="filter-group-label d-md-none">Type</label>
-                                <select id="type-filter" onchange="reloadTable()" class="form-select custom-select w-100">
-                                    <option value="">{{ __('portal.all_types') }}</option>
-                                    <option value="sell">{{ __('portal.sell') }}</option>
-                                    <option value="purchase">{{ __('portal.purchase') }}</option>
-                                    <option value="remaining">{{ __('portal.remaining') }}</option>
-                                    <option value="cash">{{ __('portal.cash') }}</option>
-                                </select>
+                            <div class="filter-item" style="flex: 0 0 auto; width: 115px;">
+                                <label class="filter-group-label d-md-none">{{ __('portal.type') }} / {{ __('portal.payment_type') }}</label>
+                                <div class="dropdown">
+                                    <button type="button" class="w-100 d-flex align-items-center justify-content-between"
+                                        id="typeFilterBtn" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                        <span id="type-filter-label" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">{{ __('portal.all_types') }}</span>
+                                        <i class="fa fa-chevron-down ms-1" style="font-size:0.7rem;color:#6b7280;flex-shrink:0;"></i>
+                                    </button>
+                                    <div class="dropdown-menu type-filter-menu p-3">
+                                        <p class="filter-group-label mb-2">{{ __('portal.type') }}</p>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input order-type-cb" type="checkbox" value="sell" id="cb-sell" onchange="updateTypeLabel(); reloadTable();">
+                                            <label class="form-check-label" for="cb-sell">{{ __('portal.sell') }}</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input order-type-cb" type="checkbox" value="purchase" id="cb-purchase" onchange="updateTypeLabel(); reloadTable();">
+                                            <label class="form-check-label" for="cb-purchase">{{ __('portal.purchase') }}</label>
+                                        </div>
+                                        <hr class="my-2">
+                                        <p class="filter-group-label mb-2">{{ __('portal.payment_type') }}</p>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input payment-type-cb" type="checkbox" value="remaining" id="cb-remaining" onchange="updateTypeLabel(); reloadTable();">
+                                            <label class="form-check-label" for="cb-remaining">{{ __('portal.remaining') }}</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input payment-type-cb" type="checkbox" value="cash" id="cb-cash" onchange="updateTypeLabel(); reloadTable();">
+                                            <label class="form-check-label" for="cb-cash">{{ __('portal.cash') }}</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="filter-item" style="flex: 2 1 0;">
                                 <label class="filter-group-label d-md-none">Customer</label>
@@ -244,6 +300,14 @@
         }
     }
 
+    function updateTypeLabel() {
+        var labels = [];
+        $('.order-type-cb:checked, .payment-type-cb:checked').each(function() {
+            labels.push($('label[for="' + this.id + '"]').text().trim());
+        });
+        $('#type-filter-label').text(labels.length ? labels.join(', ') : '{{ __("portal.all_types") }}');
+    }
+
     function reloadTable() {
         var search     = $('#search-val').val();
         var limit      = $('#selected_data').val();
@@ -251,21 +315,25 @@
         var endDate    = $('#end-date').val();
         var customerId = $('#customer-filter').val();
         var productId  = $('#product-filter').val();
-        var type       = $('#type-filter').val();
+        var orderTypes = [];
+        $('.order-type-cb:checked').each(function() { orderTypes.push(this.value); });
+        var paymentTypes = [];
+        $('.payment-type-cb:checked').each(function() { paymentTypes.push(this.value); });
 
         $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 
         $.ajax({
             type: "GET",
             url: "{{ route('admin.order.index') }}",
-            data: { 
-                search: search, 
-                limit: limit, 
-                start_date: startDate, 
-                end_date: endDate, 
-                customer_id: customerId, 
+            data: {
+                search: search,
+                limit: limit,
+                start_date: startDate,
+                end_date: endDate,
+                customer_id: customerId,
                 product_id: productId,
-                type: type 
+                order_type: orderTypes,
+                payment_type: paymentTypes
             },
             beforeSend: function() {
                 $('#order-cards').css('opacity', '0.5');
