@@ -129,9 +129,11 @@ class ReportController extends Controller
                 return redirect()->back()->with('error', 'No orders found for the selected filters. Please adjust your selection and try again.');
             }
 
-            // PDF Export
-            {
+            // Force English locale for report generation
+            $previousLocale = app()->getLocale();
+            app()->setLocale('en');
 
+            try {
                 $totalOrderAmount = 0;
                 $totalOrderQuantity = 0;
                 $totalKg = 0;
@@ -187,11 +189,12 @@ class ReportController extends Controller
                 ];
 
                 if ($exportType === 'bill_image') {
+                    app()->setLocale($previousLocale);
                     return view('admin.monthly-report.order-bill-image', $data);
                 }
 
                 $viewName = $exportType === 'bill' ? 'admin.monthly-report.order-bill' : 'admin.monthly-report.order-challan';
-                
+
                 $pdf = \PDF::loadView($viewName, $data);
                 $pdf->setPaper('A4', 'portrait');
 
@@ -202,7 +205,10 @@ class ReportController extends Controller
                 $prefix = $exportType === 'bill' ? 'Order-Bill-' : 'Order-Challan-';
                 $fileName = $shopPart . $prefix . $datePart . '.pdf';
 
+                app()->setLocale($previousLocale);
                 return $pdf->download($fileName);
+            } finally {
+                app()->setLocale($previousLocale);
             }
         } catch (\Throwable $th) {
             Log::error('ReportController@orderReport Error: ' . $th->getMessage());
