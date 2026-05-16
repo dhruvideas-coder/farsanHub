@@ -134,7 +134,7 @@
         .qr-section { width:22%; vertical-align:top; text-align:center; padding-right:15px; }
         .qr-box { width:90px; height:90px; border:1px dashed #a8a29e; padding:4px; margin:0 auto; }
         .qr-box img { width:100%; height:100%; }
-        .qr-title { font-size:9.5px; font-weight:bold; color:#57534e; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
+        .qr-title { font-size:8px; font-weight:bold; color:#57534e; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
 
         .bank-section { width:48%; vertical-align:top; padding-right:15px; }
         .bank-box { background:#fafaf9; border:1px solid #e7e5e4; padding:10px 12px; }
@@ -358,7 +358,7 @@
     <table class="pay-sign-wrapper">
         <tr>
             <td class="qr-section">
-                <div class="qr-title">Scan to Pay</div>
+                <div class="qr-title">Scan with UPI App to Pay</div>
                 <div class="qr-box">
                     <img src="{{ public_path('images/scanner.webp') }}" alt="QR">
                 </div>

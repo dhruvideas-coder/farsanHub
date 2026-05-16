@@ -163,7 +163,7 @@
         }
 
         .qr-title {
-            font-size: 12px;
+            font-size: 8px;
             font-weight: 700;
             text-transform: uppercase;
             margin-bottom: 6px;
@@ -366,7 +366,7 @@
     <table class="bottom-table">
         <tr>
             <td class="qr-section">
-                <div class="qr-title">Scan to Pay</div>
+                <div class="qr-title">Scan with UPI App to Pay</div>
                 <div class="qr-box">
                     <img src="{{ public_path('images/scanner.webp') }}" alt="QR">
                 </div>

@@ -270,7 +270,7 @@ body {
 .qr-wrap { flex: 0 0 auto; text-align: center; }
 
 .qr-title {
-    font-size: 11px;
+    font-size: 8px;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -532,7 +532,7 @@ body {
     <div class="bottom-grid">
 
         <div class="qr-wrap">
-            <div class="qr-title">Scan to Pay</div>
+            <div class="qr-title">Scan with UPI App to Pay</div>
             <div class="qr-frame">
                 <img src="{{ asset('images/scanner.webp') }}" alt="QR Code">
             </div>
