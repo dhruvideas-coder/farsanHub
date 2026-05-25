@@ -43,27 +43,27 @@ class AdminController extends Controller
         $totalCustomers = Customer::where('user_id', $uid)->count();
         $totalProducts  = Product::where('user_id', $uid)->count();
         
-        $allTimeSellOrders  = Order::where('user_id', $uid)->where('type', 'sell')->count();
+        $allTimeSellOrders  = Order::where('user_id', $uid)->where('order_type', 'sell')->count();
         $allTimeSellRevenue = Order::where('user_id', $uid)
-            ->where('type', 'sell')
+            ->where('order_type', 'sell')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
-            
-        $allTimePurchaseOrders  = Order::where('user_id', $uid)->where('type', 'purchase')->count();
+
+        $allTimePurchaseOrders  = Order::where('user_id', $uid)->where('order_type', 'purchase')->count();
         $allTimePurchaseRevenue = Order::where('user_id', $uid)
-            ->where('type', 'purchase')
+            ->where('order_type', 'purchase')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
-        $allTimeRemainingOrders  = Order::where('user_id', $uid)->where('type', 'remaining')->count();
+        $allTimeRemainingOrders  = Order::where('user_id', $uid)->where('payment_type', 'remaining')->count();
         $allTimeRemainingRevenue = Order::where('user_id', $uid)
-            ->where('type', 'remaining')
+            ->where('payment_type', 'remaining')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
-        $allTimeCashOrders  = Order::where('user_id', $uid)->where('type', 'cash')->count();
+        $allTimeCashOrders  = Order::where('user_id', $uid)->where('payment_type', 'cash')->count();
         $allTimeCashRevenue = Order::where('user_id', $uid)
-            ->where('type', 'cash')
+            ->where('payment_type', 'cash')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
         
@@ -125,26 +125,26 @@ class AdminController extends Controller
             ->when($productId, fn($q) => $q->where('product_id', $productId));
 
         // Period Sell
-        $periodSellOrders = (clone $periodOrdersQuery)->where('type', 'sell')->count();
-        $periodSellRevenue = (clone $periodOrdersQuery)->where('type', 'sell')
+        $periodSellOrders = (clone $periodOrdersQuery)->where('order_type', 'sell')->count();
+        $periodSellRevenue = (clone $periodOrdersQuery)->where('order_type', 'sell')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
         // Period Purchase
-        $periodPurchaseOrders = (clone $periodOrdersQuery)->where('type', 'purchase')->count();
-        $periodPurchaseRevenue = (clone $periodOrdersQuery)->where('type', 'purchase')
+        $periodPurchaseOrders = (clone $periodOrdersQuery)->where('order_type', 'purchase')->count();
+        $periodPurchaseRevenue = (clone $periodOrdersQuery)->where('order_type', 'purchase')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
         // Period Remaining
-        $periodRemainingOrders = (clone $periodOrdersQuery)->where('type', 'remaining')->count();
-        $periodRemainingRevenue = (clone $periodOrdersQuery)->where('type', 'remaining')
+        $periodRemainingOrders = (clone $periodOrdersQuery)->where('payment_type', 'remaining')->count();
+        $periodRemainingRevenue = (clone $periodOrdersQuery)->where('payment_type', 'remaining')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
         // Period Cash
-        $periodCashOrders = (clone $periodOrdersQuery)->where('type', 'cash')->count();
-        $periodCashRevenue = (clone $periodOrdersQuery)->where('type', 'cash')
+        $periodCashOrders = (clone $periodOrdersQuery)->where('payment_type', 'cash')->count();
+        $periodCashRevenue = (clone $periodOrdersQuery)->where('payment_type', 'cash')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
@@ -158,23 +158,23 @@ class AdminController extends Controller
             ->whereRaw('COALESCE(order_date, DATE(created_at)) BETWEEN ? AND ?', [$pStart, $pEnd])
             ->when($productId, fn($q) => $q->where('product_id', $productId));
 
-        $prevPeriodSellOrders = (clone $prevPeriodQuery)->where('type', 'sell')->count();
-        $prevPeriodSellRevenue = (clone $prevPeriodQuery)->where('type', 'sell')
+        $prevPeriodSellOrders = (clone $prevPeriodQuery)->where('order_type', 'sell')->count();
+        $prevPeriodSellRevenue = (clone $prevPeriodQuery)->where('order_type', 'sell')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
-        $prevPeriodPurchaseOrders = (clone $prevPeriodQuery)->where('type', 'purchase')->count();
-        $prevPeriodPurchaseRevenue = (clone $prevPeriodQuery)->where('type', 'purchase')
+        $prevPeriodPurchaseOrders = (clone $prevPeriodQuery)->where('order_type', 'purchase')->count();
+        $prevPeriodPurchaseRevenue = (clone $prevPeriodQuery)->where('order_type', 'purchase')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
-        $prevPeriodRemainingOrders = (clone $prevPeriodQuery)->where('type', 'remaining')->count();
-        $prevPeriodRemainingRevenue = (clone $prevPeriodQuery)->where('type', 'remaining')
+        $prevPeriodRemainingOrders = (clone $prevPeriodQuery)->where('payment_type', 'remaining')->count();
+        $prevPeriodRemainingRevenue = (clone $prevPeriodQuery)->where('payment_type', 'remaining')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
-        $prevPeriodCashOrders = (clone $prevPeriodQuery)->where('type', 'cash')->count();
-        $prevPeriodCashRevenue = (clone $prevPeriodQuery)->where('type', 'cash')
+        $prevPeriodCashOrders = (clone $prevPeriodQuery)->where('payment_type', 'cash')->count();
+        $prevPeriodCashRevenue = (clone $prevPeriodQuery)->where('payment_type', 'cash')
             ->selectRaw('SUM(order_quantity * order_price) as total')
             ->value('total') ?? 0;
 
