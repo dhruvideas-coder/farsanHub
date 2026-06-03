@@ -455,7 +455,7 @@ body {
                  FH
             </div>
             <div>
-                <div class="brand-name">BHRAMANI KHANDVI HOUSE</div>
+                <div class="brand-name">SHREE BHRAMANI KHANDVI HOUSE</div>
                 <div class="brand-sub">Premium Snacks &amp; Catering &nbsp;·&nbsp; Vadodara, Gujarat</div>
             </div>
         </div>
@@ -588,7 +588,7 @@ body {
                      style="height:60px; max-width:180px; object-fit:contain; display:block;
                             mix-blend-mode:multiply;">
             </div>
-            <div class="sign-line">For BHRAMANI KHANDVI HOUSE</div>
+            <div class="sign-line">For SHREE BHRAMANI KHANDVI HOUSE</div>
             <div class="sign-sub">Authorized Signatory</div>
         </div>
         <div class="sign-box" style="margin-top: 66px;">

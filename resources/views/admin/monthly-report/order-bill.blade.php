@@ -260,7 +260,7 @@
         </tr>
     </table>
 
-    <div class="brand-title">BHRAMANI KHANDVI HOUSE</div>
+    <div class="brand-title">SHREE BHRAMANI KHANDVI HOUSE</div>
 
     {{-- ── BUSINESS INFO ── --}}
     <table class="info-table">
@@ -427,7 +427,7 @@
             <td style="width:200px; vertical-align:bottom; padding-bottom:0;"></td>
         </tr>
         <tr>
-            <td class="sign-cell">For BHRAMANI KHANDVI HOUSE</td>
+            <td class="sign-cell">For SHREE BHRAMANI KHANDVI HOUSE</td>
             <td class="sign-gap"></td>
             <td class="sign-cell">Customer Signature</td>
         </tr>
