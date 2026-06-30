@@ -256,11 +256,11 @@
         <tr>
             <td style="text-align:left; font-size:11px; font-weight:700; text-transform:uppercase;">Jay Ma Bhramani</td>
             <td style="text-align:center; font-size:16px; font-weight:800; text-transform:uppercase; letter-spacing:1px;">Invoice</td>
-            <td style="text-align:right; font-size:11px; font-weight:700; text-transform:uppercase;">Jay Shree Krishna</td>
+            <td style="text-align:right; font-size:11px; font-weight:700; text-transform:uppercase;">Jay SHRI Krishna</td>
         </tr>
     </table>
 
-    <div class="brand-title">SHREE BHRAMANI KHANDVI HOUSE</div>
+    <div class="brand-title">SHRI BHRAMANI KHANDVI HOUSE</div>
 
     {{-- ── BUSINESS INFO ── --}}
     <table class="info-table">
@@ -427,7 +427,7 @@
             <td style="width:200px; vertical-align:bottom; padding-bottom:0;"></td>
         </tr>
         <tr>
-            <td class="sign-cell">For SHREE BHRAMANI KHANDVI HOUSE</td>
+            <td class="sign-cell">For SHRI BHRAMANI KHANDVI HOUSE</td>
             <td class="sign-gap"></td>
             <td class="sign-cell">Customer Signature</td>
         </tr>
