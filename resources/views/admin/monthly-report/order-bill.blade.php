@@ -304,63 +304,129 @@
         </tr>
     </table>
 
-    {{-- ── ITEMS TABLE ── --}}
+    {{-- ── GROUP ORDERS BY TYPE (SELL / PURCHASE), THEN BY PRODUCT ── --}}
     @php
-        $groupedOrders = [];
-        foreach($orders as $order) {
-            $key = $order->product->id;
+        $buildGroups = function ($items) {
+            $groups   = [];
+            $totalAmt = 0;
+            $totalKg  = 0;
+            $totalNang = 0;
 
-            if (!isset($groupedOrders[$key])) {
-                $groupedOrders[$key] = [
-                    'product_name' => $order->product->product_name,
-                    'total_qty'    => 0,
-                    'unit'         => $order->product->unit ?? 'kg',
-                    'total_amount' => 0,
-                ];
+            foreach ($items as $order) {
+                $key = $order->product->id;
+
+                if (!isset($groups[$key])) {
+                    $groups[$key] = [
+                        'product_name' => $order->product->product_name,
+                        'total_qty'    => 0,
+                        'unit'         => $order->product->unit ?? 'kg',
+                        'total_amount' => 0,
+                    ];
+                }
+
+                $qty = (float) $order->order_quantity;
+                $amt = $qty * (float) $order->order_price;
+
+                $groups[$key]['total_qty']    += $qty;
+                $groups[$key]['total_amount'] += $amt;
+                $totalAmt += $amt;
+
+                if (strtolower($order->product->unit ?? 'kg') === 'nang') {
+                    $totalNang += $qty;
+                } else {
+                    $totalKg += $qty;
+                }
             }
-            $groupedOrders[$key]['total_qty']    += (float) $order->order_quantity;
-            $groupedOrders[$key]['total_amount'] += (float) $order->order_quantity * (float) $order->order_price;
-        }
+
+            return [
+                'groups'       => $groups,
+                'total_amount' => $totalAmt,
+                'total_kg'     => $totalKg,
+                'total_nang'   => $totalNang,
+            ];
+        };
+
+        $sell     = $buildGroups($orders->filter(fn($o) => ($o->order_type ?? 'sell') !== 'purchase'));
+        $purchase = $buildGroups($orders->filter(fn($o) => ($o->order_type ?? 'sell') === 'purchase'));
     @endphp
 
-    <table class="items-table">
-        <thead>
-            <tr>
-                <th style="width:42%;">Item Description</th>
-                <th style="width:20%;">Qty / Weight</th>
-                <th style="width:17%;">Unit Price</th>
-                <th style="width:21%;">Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($groupedOrders as $item)
+    {{-- ── SELL DETAILS ── --}}
+    @if(!empty($sell['groups']))
+        <div style="font-size:13px; font-weight:800; text-transform:uppercase; margin-bottom:6px;">Sell Details</div>
+        <table class="items-table">
+            <thead>
                 <tr>
-                    <td class="col-desc">{{ $item['product_name'] }}</td>
-                    <td>{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }} {{ ucfirst($item['unit']) }}</td>
-                    <td>{{ $item['total_qty'] > 0 ? number_format($item['total_amount'] / $item['total_qty'], 2) : '0.00' }}</td>
-                    <td>{{ number_format($item['total_amount'], 2) }}</td>
+                    <th style="width:52%;">Product</th>
+                    <th style="width:24%;">Total Quantity</th>
+                    <th style="width:24%;">Total Amount</th>
                 </tr>
-            @endforeach
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="2" style="text-align:right; font-weight:800; font-size:13px; padding:10px;">
-                    GRAND TOTAL:
-                    &nbsp;&nbsp;
-                    @if($totalKg > 0)
-                        {{ rtrim(rtrim(number_format($totalKg, 4), '0'), '.') }} kg
-                    @endif
-                    @if($totalNang > 0)
-                        &nbsp; {{ rtrim(rtrim(number_format($totalNang, 4), '0'), '.') }} Nang
-                    @endif
-                </td>
-                <td style="background:#fff; border:1px solid #000;"></td>
-                <td style="text-align:center; font-weight:800; font-size:15px; padding:10px;">
-                    {{ number_format($totalOrderAmount, 2) }}
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+            </thead>
+            <tbody>
+                @foreach($sell['groups'] as $item)
+                    <tr>
+                        <td class="col-desc">{{ $item['product_name'] }}</td>
+                        <td>{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }} {{ ucfirst($item['unit']) }}</td>
+                        <td>{{ number_format($item['total_amount'], 2) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td style="text-align:right; font-weight:800; font-size:13px; padding:10px;">TOTAL:</td>
+                    <td style="font-weight:800;">
+                        @if($sell['total_kg'] > 0)
+                            {{ rtrim(rtrim(number_format($sell['total_kg'], 4), '0'), '.') }} kg
+                        @endif
+                        @if($sell['total_nang'] > 0)
+                            &nbsp; {{ rtrim(rtrim(number_format($sell['total_nang'], 4), '0'), '.') }} Nang
+                        @endif
+                    </td>
+                    <td style="text-align:center; font-weight:800; font-size:15px; padding:10px;">
+                        {{ number_format($sell['total_amount'], 2) }}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    @endif
+
+    {{-- ── PURCHASE DETAILS ── --}}
+    @if(!empty($purchase['groups']))
+        <div style="font-size:13px; font-weight:800; text-transform:uppercase; margin-bottom:6px;">Purchase Details</div>
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width:52%;">Product</th>
+                    <th style="width:24%;">Total Quantity</th>
+                    <th style="width:24%;">Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($purchase['groups'] as $item)
+                    <tr>
+                        <td class="col-desc">{{ $item['product_name'] }}</td>
+                        <td>{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }} {{ ucfirst($item['unit']) }}</td>
+                        <td>{{ number_format($item['total_amount'], 2) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td style="text-align:right; font-weight:800; font-size:13px; padding:10px;">TOTAL:</td>
+                    <td style="font-weight:800;">
+                        @if($purchase['total_kg'] > 0)
+                            {{ rtrim(rtrim(number_format($purchase['total_kg'], 4), '0'), '.') }} kg
+                        @endif
+                        @if($purchase['total_nang'] > 0)
+                            &nbsp; {{ rtrim(rtrim(number_format($purchase['total_nang'], 4), '0'), '.') }} Nang
+                        @endif
+                    </td>
+                    <td style="text-align:center; font-weight:800; font-size:15px; padding:10px;">
+                        {{ number_format($purchase['total_amount'], 2) }}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    @endif
 
     {{-- ── BOTTOM: QR + BANK + TOTAL ── --}}
     <table class="bottom-table">
@@ -397,20 +463,28 @@
                     @php
                         if (class_exists('NumberFormatter')) {
                             $f = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
-                            $words = ucwords($f->format((int) $totalOrderAmount));
+                            $words = ucwords($f->format((int) $sell['total_amount']));
                         } else {
-                            $words = (string)(int) $totalOrderAmount;
+                            $words = (string)(int) $sell['total_amount'];
                         }
                     @endphp
-                    Amount in Words: <strong>Rupees {{ $words }} Only</strong>
+                    Sell Amount in Words: <strong>Rupees {{ $words }} Only</strong>
                 </div>
 
                 <div class="total-box-grand">
                     <table>
-                        <tr>
-                            <td>Total Amount</td>
-                            <td style="text-align:right;"> {{ number_format($totalOrderAmount, 2) }}</td>
-                        </tr>
+                        @if(!empty($sell['groups']))
+                            <tr>
+                                <td>Total Sell Amount</td>
+                                <td style="text-align:right;"> {{ number_format($sell['total_amount'], 2) }}</td>
+                            </tr>
+                        @endif
+                        @if(!empty($purchase['groups']))
+                            <tr>
+                                <td>Total Purchase Amount</td>
+                                <td style="text-align:right;"> {{ number_format($purchase['total_amount'], 2) }}</td>
+                            </tr>
+                        @endif
                     </table>
                 </div>
             </td>
