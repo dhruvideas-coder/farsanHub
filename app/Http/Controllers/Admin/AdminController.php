@@ -43,29 +43,25 @@ class AdminController extends Controller
         $totalCustomers = Customer::where('user_id', $uid)->count();
         $totalProducts  = Product::where('user_id', $uid)->count();
         
-        $allTimeSellOrders  = Order::where('user_id', $uid)->where('order_type', 'sell')->count();
-        $allTimeSellRevenue = Order::where('user_id', $uid)
-            ->where('order_type', 'sell')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
+        $allTime = Order::where('user_id', $uid)->selectRaw("
+            SUM(CASE WHEN order_type = 'sell' THEN 1 ELSE 0 END) as sell_count,
+            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell_rev,
+            SUM(CASE WHEN order_type = 'purchase' THEN 1 ELSE 0 END) as purchase_count,
+            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase_rev,
+            SUM(CASE WHEN payment_type = 'remaining' THEN 1 ELSE 0 END) as remaining_count,
+            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining_rev,
+            SUM(CASE WHEN payment_type = 'cash' THEN 1 ELSE 0 END) as cash_count,
+            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash_rev
+        ")->first();
 
-        $allTimePurchaseOrders  = Order::where('user_id', $uid)->where('order_type', 'purchase')->count();
-        $allTimePurchaseRevenue = Order::where('user_id', $uid)
-            ->where('order_type', 'purchase')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
-
-        $allTimeRemainingOrders  = Order::where('user_id', $uid)->where('payment_type', 'remaining')->count();
-        $allTimeRemainingRevenue = Order::where('user_id', $uid)
-            ->where('payment_type', 'remaining')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
-
-        $allTimeCashOrders  = Order::where('user_id', $uid)->where('payment_type', 'cash')->count();
-        $allTimeCashRevenue = Order::where('user_id', $uid)
-            ->where('payment_type', 'cash')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
+        $allTimeSellOrders       = (int)($allTime->sell_count ?? 0);
+        $allTimeSellRevenue      = $allTime->sell_rev ?? 0;
+        $allTimePurchaseOrders   = (int)($allTime->purchase_count ?? 0);
+        $allTimePurchaseRevenue  = $allTime->purchase_rev ?? 0;
+        $allTimeRemainingOrders  = (int)($allTime->remaining_count ?? 0);
+        $allTimeRemainingRevenue = $allTime->remaining_rev ?? 0;
+        $allTimeCashOrders       = (int)($allTime->cash_count ?? 0);
+        $allTimeCashRevenue      = $allTime->cash_rev ?? 0;
         
         $products = Product::where('user_id', $uid)
             ->orderBy('product_name->' . app()->getLocale())
@@ -124,29 +120,26 @@ class AdminController extends Controller
             ->whereRaw('COALESCE(order_date, DATE(created_at)) BETWEEN ? AND ?', [$start, $end])
             ->when($productId, fn($q) => $q->where('product_id', $productId));
 
-        // Period Sell
-        $periodSellOrders = (clone $periodOrdersQuery)->where('order_type', 'sell')->count();
-        $periodSellRevenue = (clone $periodOrdersQuery)->where('order_type', 'sell')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
+        // Counts + revenues for every type/payment bucket in a single query
+        $statSums = "
+            SUM(CASE WHEN order_type = 'sell' THEN 1 ELSE 0 END) as sell_count,
+            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell_rev,
+            SUM(CASE WHEN order_type = 'purchase' THEN 1 ELSE 0 END) as purchase_count,
+            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase_rev,
+            SUM(CASE WHEN payment_type = 'remaining' THEN 1 ELSE 0 END) as remaining_count,
+            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining_rev,
+            SUM(CASE WHEN payment_type = 'cash' THEN 1 ELSE 0 END) as cash_count,
+            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash_rev";
 
-        // Period Purchase
-        $periodPurchaseOrders = (clone $periodOrdersQuery)->where('order_type', 'purchase')->count();
-        $periodPurchaseRevenue = (clone $periodOrdersQuery)->where('order_type', 'purchase')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
-
-        // Period Remaining
-        $periodRemainingOrders = (clone $periodOrdersQuery)->where('payment_type', 'remaining')->count();
-        $periodRemainingRevenue = (clone $periodOrdersQuery)->where('payment_type', 'remaining')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
-
-        // Period Cash
-        $periodCashOrders = (clone $periodOrdersQuery)->where('payment_type', 'cash')->count();
-        $periodCashRevenue = (clone $periodOrdersQuery)->where('payment_type', 'cash')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
+        $periodStats = (clone $periodOrdersQuery)->selectRaw($statSums)->first();
+        $periodSellOrders       = (int)($periodStats->sell_count ?? 0);
+        $periodSellRevenue      = $periodStats->sell_rev ?? 0;
+        $periodPurchaseOrders   = (int)($periodStats->purchase_count ?? 0);
+        $periodPurchaseRevenue  = $periodStats->purchase_rev ?? 0;
+        $periodRemainingOrders  = (int)($periodStats->remaining_count ?? 0);
+        $periodRemainingRevenue = $periodStats->remaining_rev ?? 0;
+        $periodCashOrders       = (int)($periodStats->cash_count ?? 0);
+        $periodCashRevenue      = $periodStats->cash_rev ?? 0;
 
         // Expenses are usually not product-linked, but we keep them filtered by date
         $periodExpenses = Expense::where('user_id', $uid)
@@ -158,25 +151,15 @@ class AdminController extends Controller
             ->whereRaw('COALESCE(order_date, DATE(created_at)) BETWEEN ? AND ?', [$pStart, $pEnd])
             ->when($productId, fn($q) => $q->where('product_id', $productId));
 
-        $prevPeriodSellOrders = (clone $prevPeriodQuery)->where('order_type', 'sell')->count();
-        $prevPeriodSellRevenue = (clone $prevPeriodQuery)->where('order_type', 'sell')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
-
-        $prevPeriodPurchaseOrders = (clone $prevPeriodQuery)->where('order_type', 'purchase')->count();
-        $prevPeriodPurchaseRevenue = (clone $prevPeriodQuery)->where('order_type', 'purchase')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
-
-        $prevPeriodRemainingOrders = (clone $prevPeriodQuery)->where('payment_type', 'remaining')->count();
-        $prevPeriodRemainingRevenue = (clone $prevPeriodQuery)->where('payment_type', 'remaining')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
-
-        $prevPeriodCashOrders = (clone $prevPeriodQuery)->where('payment_type', 'cash')->count();
-        $prevPeriodCashRevenue = (clone $prevPeriodQuery)->where('payment_type', 'cash')
-            ->selectRaw('SUM(order_quantity * order_price) as total')
-            ->value('total') ?? 0;
+        $prevStats = (clone $prevPeriodQuery)->selectRaw($statSums)->first();
+        $prevPeriodSellOrders       = (int)($prevStats->sell_count ?? 0);
+        $prevPeriodSellRevenue      = $prevStats->sell_rev ?? 0;
+        $prevPeriodPurchaseOrders   = (int)($prevStats->purchase_count ?? 0);
+        $prevPeriodPurchaseRevenue  = $prevStats->purchase_rev ?? 0;
+        $prevPeriodRemainingOrders  = (int)($prevStats->remaining_count ?? 0);
+        $prevPeriodRemainingRevenue = $prevStats->remaining_rev ?? 0;
+        $prevPeriodCashOrders       = (int)($prevStats->cash_count ?? 0);
+        $prevPeriodCashRevenue      = $prevStats->cash_rev ?? 0;
 
         $prevPeriodExpenses = Expense::where('user_id', $uid)
             ->whereBetween('date', [$pStart, $pEnd])
@@ -191,97 +174,96 @@ class AdminController extends Controller
         $chartOrders          = collect();
         $chartQuantity        = collect();
         
+        // Conditional-aggregate columns shared by every chart bucket
+        $bucketSums = "
+            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
+            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
+            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
+            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash";
+
+        // Given an ordered map of [bucketKey => label] and a keyed result set,
+        // push each bucket's label + revenues (0 when the bucket has no rows).
+        $fillChart = function (array $buckets, $rows) use (
+            &$chartLabels, &$chartSellRevenue, &$chartPurchaseRevenue, &$chartRemainingRevenue, &$chartCashRevenue
+        ) {
+            foreach ($buckets as $key => $label) {
+                $r = $rows[$key] ?? null;
+                $chartLabels->push($label);
+                $chartSellRevenue->push((float)($r->sell ?? 0));
+                $chartPurchaseRevenue->push((float)($r->purchase ?? 0));
+                $chartRemainingRevenue->push((float)($r->remaining ?? 0));
+                $chartCashRevenue->push((float)($r->cash ?? 0));
+            }
+        };
+
         switch ($filter) {
             case 'today':
             case 'yesterday':
-                // Hourly data for the specific day
+                // Hourly data for the specific day (one grouped query)
                 $targetDate = ($filter === 'today') ? Carbon::today() : Carbon::yesterday();
+                $rows = Order::where('user_id', $uid)
+                    ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$targetDate->toDateString()])
+                    ->selectRaw("HOUR(created_at) as bucket, $bucketSums")
+                    ->groupByRaw("HOUR(created_at)")
+                    ->get()->keyBy('bucket');
+
+                $buckets = [];
                 for ($i = 0; $i < 24; $i++) {
-                    $hour = str_pad($i, 2, '0', STR_PAD_LEFT);
-                    $chartLabels->push($hour . ':00');
-                    
-                    $stats = Order::where('user_id', $uid)
-                        ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$targetDate->toDateString()])
-                        ->whereRaw("HOUR(created_at) = ?", [$i])
-                        ->selectRaw("
-                            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
-                            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
-                            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
-                        ")->first();
-                    
-                    $chartSellRevenue->push((float)($stats->sell ?? 0));
-                    $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
-                    $chartRemainingRevenue->push((float)($stats->remaining ?? 0));
-                    $chartCashRevenue->push((float)($stats->cash ?? 0));
+                    $buckets[$i] = str_pad($i, 2, '0', STR_PAD_LEFT) . ':00';
                 }
+                $fillChart($buckets, $rows);
                 break;
 
             case 'current_week':
-                // Last 7 days
+                // Last 7 days (one grouped query)
+                $rows = Order::where('user_id', $uid)
+                    ->whereRaw("DATE(COALESCE(order_date, created_at)) BETWEEN ? AND ?",
+                        [Carbon::now()->subDays(6)->toDateString(), Carbon::now()->toDateString()])
+                    ->selectRaw("DATE(COALESCE(order_date, created_at)) as bucket, $bucketSums")
+                    ->groupByRaw("DATE(COALESCE(order_date, created_at))")
+                    ->get()->keyBy('bucket');
+
+                $buckets = [];
                 for ($i = 6; $i >= 0; $i--) {
                     $day = Carbon::now()->subDays($i);
-                    $chartLabels->push($day->format('D d M'));
-                    
-                    $stats = Order::where('user_id', $uid)
-                        ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$day->toDateString()])
-                        ->selectRaw("
-                            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
-                            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
-                            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
-                        ")->first();
-                        
-                    $chartSellRevenue->push((float)($stats->sell ?? 0));
-                    $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
-                    $chartRemainingRevenue->push((float)($stats->remaining ?? 0));
-                    $chartCashRevenue->push((float)($stats->cash ?? 0));
+                    $buckets[$day->toDateString()] = $day->format('D d M');
                 }
+                $fillChart($buckets, $rows);
                 break;
 
             case 'current_month':
-                // Days of the month (or last 30 days for better visual)
+                // Last 30 days (one grouped query)
+                $rows = Order::where('user_id', $uid)
+                    ->whereRaw("DATE(COALESCE(order_date, created_at)) BETWEEN ? AND ?",
+                        [Carbon::now()->subDays(29)->toDateString(), Carbon::now()->toDateString()])
+                    ->selectRaw("DATE(COALESCE(order_date, created_at)) as bucket, $bucketSums")
+                    ->groupByRaw("DATE(COALESCE(order_date, created_at))")
+                    ->get()->keyBy('bucket');
+
+                $buckets = [];
                 for ($i = 29; $i >= 0; $i--) {
                     $day = Carbon::now()->subDays($i);
-                    $chartLabels->push($day->format('d M'));
-                    
-                    $stats = Order::where('user_id', $uid)
-                        ->whereRaw("DATE(COALESCE(order_date, created_at)) = ?", [$day->toDateString()])
-                        ->selectRaw("
-                            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
-                            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
-                            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
-                        ")->first();
-                        
-                    $chartSellRevenue->push((float)($stats->sell ?? 0));
-                    $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
-                    $chartRemainingRevenue->push((float)($stats->remaining ?? 0));
-                    $chartCashRevenue->push((float)($stats->cash ?? 0));
+                    $buckets[$day->toDateString()] = $day->format('d M');
                 }
+                $fillChart($buckets, $rows);
                 break;
 
             case 'current_year':
             default:
-                // Last 12 months
+                // Last 12 months (one grouped query)
+                $rows = Order::where('user_id', $uid)
+                    ->whereRaw("DATE_FORMAT(COALESCE(order_date, created_at), '%Y-%m') BETWEEN ? AND ?",
+                        [Carbon::now()->subMonths(11)->format('Y-m'), Carbon::now()->format('Y-m')])
+                    ->selectRaw("DATE_FORMAT(COALESCE(order_date, created_at), '%Y-%m') as bucket, $bucketSums")
+                    ->groupByRaw("DATE_FORMAT(COALESCE(order_date, created_at), '%Y-%m')")
+                    ->get()->keyBy('bucket');
+
+                $buckets = [];
                 for ($i = 11; $i >= 0; $i--) {
                     $month = Carbon::now()->subMonths($i);
-                    $chartLabels->push($month->format('M Y'));
-                    
-                    $stats = Order::where('user_id', $uid)
-                        ->whereRaw("DATE_FORMAT(COALESCE(order_date, created_at), '%Y-%m') = ?", [$month->format('Y-m')])
-                        ->selectRaw("
-                            SUM(CASE WHEN order_type = 'sell' THEN order_quantity * order_price ELSE 0 END) as sell,
-                            SUM(CASE WHEN order_type = 'purchase' THEN order_quantity * order_price ELSE 0 END) as purchase,
-                            SUM(CASE WHEN payment_type = 'remaining' THEN order_quantity * order_price ELSE 0 END) as remaining,
-                            SUM(CASE WHEN payment_type = 'cash' THEN order_quantity * order_price ELSE 0 END) as cash
-                        ")->first();
-                        
-                    $chartSellRevenue->push((float)($stats->sell ?? 0));
-                    $chartPurchaseRevenue->push((float)($stats->purchase ?? 0));
-                    $chartRemainingRevenue->push((float)($stats->remaining ?? 0));
-                    $chartCashRevenue->push((float)($stats->cash ?? 0));
+                    $buckets[$month->format('Y-m')] = $month->format('M Y');
                 }
+                $fillChart($buckets, $rows);
                 break;
         }
 
