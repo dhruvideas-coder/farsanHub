@@ -185,7 +185,6 @@ return [
     'processed' => 'પ્રોસેસ થયેલ',
     'no_transactions' => 'કોઈ વ્યવહાર મળ્યા નથી',
     'no_partnerships' => 'ભાગીદારીનો કોઈ ડેટા નથી',
-    'kg_volume' => ' કિલો વોલ્યુમ',
     'orders_count' => 'ઓર્ડર',
     'net_balance' => 'ચોખ્ખું સંતુલન',
     'sales' => 'વેચાણ',

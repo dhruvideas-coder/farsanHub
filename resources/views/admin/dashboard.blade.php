@@ -547,7 +547,7 @@
                         <div class="avatar-box">{{ strtoupper(substr($c->customer_name, 0, 1)) }}</div>
                         <div class="flex-grow-1">
                             <div class="fw-bold text-dark" style="font-size: 14px;">{{ $c->customer_name }}</div>
-                            <div class="text-muted small fw-bold">{{ number_format($c->total_kg ?? 0, 0) }}{{ __('portal.kg_volume') }}</div>
+                            <div class="text-muted small fw-bold">{{ number_format($c->total_kg ?? 0, 0) }}{{ __('portal.kg') }}</div>
                         </div>
                         <div class="text-end">
                             <div class="fw-bold text-primary" style="font-size: 14px;">{{ $c->order_count }}</div>
@@ -758,7 +758,7 @@
                         <td>
                             <div class="fw-bold text-dark" style="font-size: 13.5px;">${o.product_name}</div>
                             <div class="mt-1">
-                                <span class="status-pill ${o.type}" style="padding: 2px 8px; font-size: 9px;">${o.type.toUpperCase()}</span>
+                                <span class="status-pill ${o.order_type}" style="padding: 2px 8px; font-size: 9px;">${o.order_type.toUpperCase()}</span>
                             </div>
                         </td>
                         <td class="text-center">
@@ -778,7 +778,7 @@
                         <div class="avatar-box">${c.customer_name.charAt(0).toUpperCase()}</div>
                         <div class="flex-grow-1">
                             <div class="fw-bold text-dark" style="font-size: 14px;">${c.customer_name}</div>
-                            <div class="text-muted small fw-bold">${Number(c.total_kg || 0).toLocaleString()}{{ __('portal.kg_volume') }}</div>
+                            <div class="text-muted small fw-bold">${Number(c.total_kg || 0).toLocaleString()}{{ __('portal.kg') }}</div>
                         </div>
                         <div class="text-end">
                             <div class="fw-bold text-primary" style="font-size: 14px;">${c.order_count}</div>

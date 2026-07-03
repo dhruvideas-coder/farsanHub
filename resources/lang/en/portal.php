@@ -188,7 +188,6 @@ return [
     'processed' => 'PROCESSED',
     'no_transactions' => 'No transactions found',
     'no_partnerships' => 'No partnerships data',
-    'kg_volume' => 'kg Volume',
     'orders_count' => 'ORDERS',
     'net_balance' => 'Net Balance',
     'sales' => 'Sales',
