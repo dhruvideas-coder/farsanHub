@@ -174,6 +174,7 @@ return [
     'yesterday' => 'ગઈકાલે',
     'this_week' => 'આ અઠવાડિયે',
     'this_month' => 'આ મહિને',
+    'last_month' => 'ગયા મહિને',
     'this_year' => 'આ વર્ષે',
     'revenue_performance' => 'આવક પ્રદર્શન',
     'top_customers' => 'ટોચના ગ્રાહકો',

@@ -93,6 +93,13 @@ class AdminController extends Controller
                 $prevEnd     = Carbon::now()->subMonth()->endOfMonth();
                 $filterLabel = 'This Month';
                 break;
+            case 'last_month':
+                $startDate   = Carbon::now()->subMonth()->startOfMonth();
+                $endDate     = Carbon::now()->subMonth()->endOfMonth();
+                $prevStart   = Carbon::now()->subMonths(2)->startOfMonth();
+                $prevEnd     = Carbon::now()->subMonths(2)->endOfMonth();
+                $filterLabel = 'Last Month';
+                break;
             case 'current_year':
                 $startDate   = Carbon::now()->startOfYear();
                 $endDate     = Carbon::now()->endOfYear();
@@ -243,6 +250,26 @@ class AdminController extends Controller
                 $buckets = [];
                 for ($i = 29; $i >= 0; $i--) {
                     $day = Carbon::now()->subDays($i);
+                    $buckets[$day->toDateString()] = $day->format('d M');
+                }
+                $fillChart($buckets, $rows);
+                break;
+
+            case 'last_month':
+                // All days of last calendar month
+                $lmStart = Carbon::now()->subMonth()->startOfMonth();
+                $lmEnd   = Carbon::now()->subMonth()->endOfMonth();
+                $rows = Order::where('user_id', $uid)
+                    ->whereRaw("DATE(COALESCE(order_date, created_at)) BETWEEN ? AND ?",
+                        [$lmStart->toDateString(), $lmEnd->toDateString()])
+                    ->selectRaw("DATE(COALESCE(order_date, created_at)) as bucket, $bucketSums")
+                    ->groupByRaw("DATE(COALESCE(order_date, created_at))")
+                    ->get()->keyBy('bucket');
+
+                $buckets = [];
+                $daysInLastMonth = $lmStart->daysInMonth;
+                for ($i = 0; $i < $daysInLastMonth; $i++) {
+                    $day = $lmStart->copy()->addDays($i);
                     $buckets[$day->toDateString()] = $day->format('d M');
                 }
                 $fillChart($buckets, $rows);

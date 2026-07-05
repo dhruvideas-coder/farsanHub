@@ -177,6 +177,7 @@ return [
     'yesterday' => 'Yesterday',
     'this_week' => 'This Week',
     'this_month' => 'This Month',
+    'last_month' => 'Last Month',
     'this_year' => 'This Year',
     'revenue_performance' => 'Revenue Performance',
     'top_customers' => 'Top Customers',

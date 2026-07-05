@@ -302,6 +302,7 @@
                     <option value="yesterday"     {{ $period['filter'] === 'yesterday'     ? 'selected' : '' }}>{{ __('portal.yesterday') }}</option>
                     <option value="current_week"  {{ $period['filter'] === 'current_week'  ? 'selected' : '' }}>{{ __('portal.this_week') }}</option>
                     <option value="current_month" {{ $period['filter'] === 'current_month' ? 'selected' : '' }}>{{ __('portal.this_month') }}</option>
+                    <option value="last_month"    {{ $period['filter'] === 'last_month'    ? 'selected' : '' }}>{{ __('portal.last_month') }}</option>
                     <option value="current_year"  {{ $period['filter'] === 'current_year'  ? 'selected' : '' }}>{{ __('portal.this_year') }}</option>
                 </select>
             </div>
