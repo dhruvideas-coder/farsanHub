@@ -510,7 +510,6 @@
     <div class="terms">
         * This is a computer-generated invoice. Goods once sold will not be taken back. Subject to Vadodara jurisdiction.
     </div>
-
 </div>
 </body>
 </html>
