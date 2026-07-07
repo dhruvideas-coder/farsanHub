@@ -267,123 +267,62 @@
         </tr>
     </table>
 
-    {{-- GROUP ORDERS BY TYPE (SELL / PURCHASE), THEN BY PRODUCT --}}
+    {{-- ORDERS TABLE (Date x Product grid) --}}
+    <div class="section-title">Order Details &mdash; {{ $monthName ?? 'All Orders' }}</div>
+
     @php
-        $buildGroups = function ($items) {
-            $groups   = [];
-            $totalAmt = 0;
-            $sumKg    = 0;
-            $sumNang  = 0;
+        // Distinct products (columns), keeping first-seen order
+        $products = $orders->map(function ($o) { return $o->product; })
+                           ->filter()
+                           ->unique('id')
+                           ->values();
 
-            foreach ($items as $order) {
-                $key = $order->product->id;
-
-                if (!isset($groups[$key])) {
-                    $groups[$key] = [
-                        'product_name' => $order->product->product_name,
-                        'total_qty'    => 0,
-                        'unit'         => $order->product->unit ?? 'kg',
-                        'total_amount' => 0,
-                    ];
-                }
-
-                $qty = (float) $order->order_quantity;
-                $amt = $qty * (float) $order->order_price;
-
-                $groups[$key]['total_qty']    += $qty;
-                $groups[$key]['total_amount'] += $amt;
-                $totalAmt += $amt;
-
-                if (strtolower($order->product->unit ?? 'kg') === 'nang') {
-                    $sumNang += $qty;
-                } else {
-                    $sumKg += $qty;
-                }
-            }
-
-            return [
-                'groups'       => $groups,
-                'total_amount' => $totalAmt,
-                'total_kg'     => $sumKg,
-                'total_nang'   => $sumNang,
-            ];
-        };
-
-        $sell     = $buildGroups($orders->filter(fn($o) => ($o->order_type ?? 'sell') !== 'purchase'));
-        $purchase = $buildGroups($orders->filter(fn($o) => ($o->order_type ?? 'sell') === 'purchase'));
+        // Rows grouped by order date
+        $byDate = $orders->groupBy(function ($o) {
+                    return $o->order_date ?: date('Y-m-d', strtotime($o->created_at));
+                 })->sortKeys();
     @endphp
-
-    {{-- SELL DETAILS --}}
-    @if(!empty($sell['groups']))
-    <div class="section-title">Sell Details &mdash; {{ $monthName ?? 'All Orders' }}</div>
-
-    <table class="orders-table" style="margin-bottom:18px;">
-        <thead>
-            <tr>
-                <th class="th-left">Product</th>
-                <th style="width:120px;">Total Quantity</th>
-                <th style="width:120px;">Total Amount (&#8377;)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($sell['groups'] as $i => $item)
-            <tr class="{{ $loop->even ? 'row-even' : 'row-odd' }}">
-                <td class="td-prod">{{ $item['product_name'] }}</td>
-                <td class="td-qty">{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }}
-                    <span style="font-size:8px; font-weight:normal;">{{ ucfirst($item['unit']) }}</span>
-                </td>
-                <td class="td-amt">{{ number_format($item['total_amount'], 2) }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-        <tfoot>
-            <tr>
-                <td class="ft-label">Sell Total</td>
-                <td class="ft-qty">
-                    {{ rtrim(rtrim(number_format($sell['total_kg'], 4), '0'), '.') }} kg<br>
-                    {{ rtrim(rtrim(number_format($sell['total_nang'], 4), '0'), '.') }} Nang
-                </td>
-                <td class="ft-amt">&#8377; {{ number_format($sell['total_amount'], 2) }}</td>
-            </tr>
-        </tfoot>
-    </table>
-    @endif
-
-    {{-- PURCHASE DETAILS --}}
-    @if(!empty($purchase['groups']))
-    <div class="section-title">Purchase Details &mdash; {{ $monthName ?? 'All Orders' }}</div>
 
     <table class="orders-table">
         <thead>
             <tr>
-                <th class="th-left">Product</th>
-                <th style="width:120px;">Total Quantity</th>
-                <th style="width:120px;">Total Amount (&#8377;)</th>
+                <th class="th-left" style="width:70px;">Date</th>
+                @foreach($products as $p)
+                    <th>{{ $p->product_name }}</th>
+                @endforeach
             </tr>
         </thead>
         <tbody>
-            @foreach($purchase['groups'] as $i => $item)
+            @foreach($byDate as $date => $dayOrders)
             <tr class="{{ $loop->even ? 'row-even' : 'row-odd' }}">
-                <td class="td-prod">{{ $item['product_name'] }}</td>
-                <td class="td-qty">{{ rtrim(rtrim(number_format($item['total_qty'], 4), '0'), '.') }}
-                    <span style="font-size:8px; font-weight:normal;">{{ ucfirst($item['unit']) }}</span>
-                </td>
-                <td class="td-amt">{{ number_format($item['total_amount'], 2) }}</td>
+                <td class="td-date">{{ date('d-m-Y', strtotime($date)) }}</td>
+                @foreach($products as $p)
+                    @php $cellQty = $dayOrders->where('product_id', $p->id)->sum('order_quantity'); @endphp
+                    <td class="td-qty">
+                        @if($cellQty > 0)
+                            {{ rtrim(rtrim(number_format($cellQty, 4), '0'), '.') }}
+                            <span style="font-size:8px; font-weight:normal;">{{ ucfirst($p->unit ?? 'kg') }}</span>
+                        @else
+                            <span style="color:#d6d3d1;">&mdash;</span>
+                        @endif
+                    </td>
+                @endforeach
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
-                <td class="ft-label">Purchase Total</td>
-                <td class="ft-qty">
-                    {{ rtrim(rtrim(number_format($purchase['total_kg'], 4), '0'), '.') }} kg<br>
-                    {{ rtrim(rtrim(number_format($purchase['total_nang'], 4), '0'), '.') }} Nang
-                </td>
-                <td class="ft-amt">&#8377; {{ number_format($purchase['total_amount'], 2) }}</td>
+                <td class="ft-label">Total</td>
+                @foreach($products as $p)
+                    @php $colTotal = $orders->where('product_id', $p->id)->sum('order_quantity'); @endphp
+                    <td class="ft-qty">
+                        {{ rtrim(rtrim(number_format($colTotal, 4), '0'), '.') }}
+                        <span style="font-size:8px; font-weight:normal;">{{ ucfirst($p->unit ?? 'kg') }}</span>
+                    </td>
+                @endforeach
             </tr>
         </tfoot>
     </table>
-    @endif
 
     {{-- TOTALS SECTION --}}
     <table class="totals-wrapper">
@@ -401,18 +340,17 @@
                         <td class="t-label">Total Orders</td>
                         <td class="t-value">{{ $orders->count() }}</td>
                     </tr>
-                    @if(!empty($sell['groups']))
                     <tr>
-                        <td class="t-label">Total Sell Amount</td>
-                        <td class="t-value">&#8377; {{ number_format($sell['total_amount'], 2) }}</td>
+                        <td class="t-label">Total Quantity</td>
+                        <td class="t-value">
+                            {{ rtrim(rtrim(number_format($totalKg ?? 0, 4), '0'), '.') }} kg<br>
+                            {{ rtrim(rtrim(number_format($totalNang ?? 0, 4), '0'), '.') }} Nang
+                        </td>
                     </tr>
-                    @endif
-                    @if(!empty($purchase['groups']))
                     <tr>
-                        <td class="t-label">Total Purchase Amount</td>
-                        <td class="t-value">&#8377; {{ number_format($purchase['total_amount'], 2) }}</td>
+                        <td class="t-label">Grand Total Amount</td>
+                        <td class="t-value">&#8377; {{ number_format($totalOrderAmount, 2) }}</td>
                     </tr>
-                    @endif
                     <tr class="grand-row">
                         <td class="grand-label">Grand Total</td>
                         <td class="grand-value">&#8377; {{ number_format($totalOrderAmount, 2) }}</td>
