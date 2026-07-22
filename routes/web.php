@@ -87,6 +87,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('monthly-report/customer', [App\Http\Controllers\Admin\ReportController::class, 'customerReport'])->name('monthly-report.customer');
     Route::get('monthly-report/product', [App\Http\Controllers\Admin\ReportController::class, 'productReport'])->name('monthly-report.product');
     Route::get('monthly-report/order', [App\Http\Controllers\Admin\ReportController::class, 'orderReport'])->name('monthly-report.order');
+    Route::get('monthly-report/summary', [App\Http\Controllers\Admin\ReportController::class, 'summaryReport'])->name('monthly-report.summary');
 
     // Users
     Route::middleware(['super_admin'])->group(function () {

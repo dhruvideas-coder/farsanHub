@@ -50,11 +50,18 @@ class ReportController extends Controller
             ->orderByRaw("DATE_FORMAT(COALESCE(date, DATE(created_at)), '%Y-%m') DESC")
             ->get();
 
+        // Combined months for the date-wise summary report (orders + expenses)
+        $summaryMonths = $orderMonths->concat($expenseMonths)
+            ->unique('value')
+            ->sortByDesc('value')
+            ->values();
+
         return view('admin.monthly-report.index', compact(
             'selectedMonthYear',
             'customers',
             'orderMonths',
-            'expenseMonths'
+            'expenseMonths',
+            'summaryMonths'
         ));
     }
 
@@ -243,6 +250,93 @@ class ReportController extends Controller
         } catch (\Throwable $th) {
             Log::error('ReportController@expenseReport Error: ' . $th->getMessage());
             return redirect()->back()->with('error', 'Could not export expenses. Please try again.');
+        }
+    }
+
+    /**
+     * Date-wise monthly summary: one row per date, with order (sell / purchase)
+     * and expense (business / personal) totals side by side.
+     */
+    public function summaryReport(Request $request)
+    {
+        try {
+            $monthYear = $request->input('month_year');
+
+            if (!$monthYear) {
+                return redirect()->back()->with('error', __('portal.select_month_year_error'));
+            }
+
+            $userId = auth()->id();
+
+            // Order totals per date, split by order type — use order_date when set, fall back to created_at
+            $orderTotals = Order::selectRaw("COALESCE(order_date, DATE(created_at)) as row_date, order_type, SUM(order_quantity * order_price) as total_amount")
+                ->where('user_id', $userId)
+                ->whereRaw("DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%Y-%m') = ?", [$monthYear])
+                ->groupByRaw("COALESCE(order_date, DATE(created_at)), order_type")
+                ->get();
+
+            // Expense totals per date, split by expense type — use manual date when set, fall back to created_at
+            $expenseTotals = Expense::selectRaw("COALESCE(date, DATE(created_at)) as row_date, type, SUM(amount) as total_amount")
+                ->where('user_id', $userId)
+                ->whereRaw("DATE_FORMAT(COALESCE(date, DATE(created_at)), '%Y-%m') = ?", [$monthYear])
+                ->groupByRaw("COALESCE(date, DATE(created_at)), type")
+                ->get();
+
+            if ($orderTotals->isEmpty() && $expenseTotals->isEmpty()) {
+                return redirect()->back()->with('error', __('portal.no_summary_data'));
+            }
+
+            // Merge both sides into one date-keyed grid
+            $rows = [];
+            $blank = ['sell' => 0, 'purchase' => 0, 'business' => 0, 'personal' => 0];
+
+            foreach ($orderTotals as $row) {
+                $date = (string) $row->row_date;
+                $rows[$date] = $rows[$date] ?? $blank;
+                $rows[$date][$row->order_type] = (float) $row->total_amount;
+            }
+
+            foreach ($expenseTotals as $row) {
+                $date = (string) $row->row_date;
+                $rows[$date] = $rows[$date] ?? $blank;
+                $rows[$date][$row->type] = (float) $row->total_amount;
+            }
+
+            ksort($rows);
+
+            $totals = $blank;
+            foreach ($rows as $row) {
+                foreach ($blank as $key => $ignored) {
+                    $totals[$key] += $row[$key];
+                }
+            }
+
+            // Force English locale for report generation (DomPDF's bundled font has no Gujarati glyphs)
+            $previousLocale = app()->getLocale();
+            app()->setLocale('en');
+
+            try {
+                $data = [
+                    'rows'       => $rows,
+                    'totals'     => $totals,
+                    'monthYear'  => $monthYear,
+                    'monthName'  => Carbon::parse($monthYear . '-01')->format('F Y'),
+                    'reportDate' => now()->format('d M Y, h:i A'),
+                    'logoPath'   => public_path('images/logo.png'),
+                ];
+
+                $pdf = \PDF::loadView('admin.monthly-report.summary', $data);
+                $pdf->setPaper('A4', 'portrait');
+
+                $fileName = 'Monthly-Summary-' . Carbon::parse($monthYear . '-01')->format('F-Y') . '.pdf';
+
+                return $pdf->download($fileName);
+            } finally {
+                app()->setLocale($previousLocale);
+            }
+        } catch (\Throwable $th) {
+            Log::error('ReportController@summaryReport Error: ' . $th->getMessage());
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 }

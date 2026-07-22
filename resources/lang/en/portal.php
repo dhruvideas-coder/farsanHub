@@ -164,6 +164,7 @@ return [
     'bill' => 'Bill',
     'challan' => 'Challan',
     'excel' => 'Excel',
+    'pdf' => 'PDF',
     'expense_type' => 'Expense Type',
     'select_expense_type' => 'Select Expense Type',
     'business' => 'Business',
@@ -241,6 +242,13 @@ return [
     'select_month_year_error' => 'Please select a month and year before exporting.',
     'select_customer_for_export' => 'Please select a customer before exporting.',
     'select_customer_for_bill_image' => 'Please select a customer to generate a bill image.',
+
+    'monthly_summary' => 'Monthly Summary',
+    'summary_report_sub' => 'Date-wise order & expense totals',
+    'summary_report_desc' => 'Download a date-wise table of sell, purchase, business and personal totals.',
+    'grand_total' => 'Grand Total',
+    'generated_on' => 'Generated On',
+    'no_summary_data' => 'No orders or expenses found for the selected month.',
 
     'auto_translate_note' => 'Auto-translate note to English',
     'kg' => 'kg',

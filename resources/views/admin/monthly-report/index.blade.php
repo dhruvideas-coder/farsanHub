@@ -246,6 +246,44 @@
         </div>
     </div>
 
+    {{-- DATE-WISE MONTHLY SUMMARY --}}
+    <div class="col-12 col-lg-4">
+        <div class="card rpt-card">
+            <div class="rpt-stripe"></div>
+            <div class="rpt-head">
+                <div class="rpt-icon"><i class="fa fa-table"></i></div>
+                <div>
+                    <p class="rpt-title">{{ trans('portal.monthly_summary') }}</p>
+                    <p class="rpt-sub">{{ __('portal.summary_report_sub') }}</p>
+                </div>
+            </div>
+            <hr class="rpt-divider">
+            <div class="rpt-body">
+                <form action="{{ route('admin.monthly-report.summary') }}" method="GET">
+                    <div class="mb-3">
+                        <label class="rpt-label">{{ trans('portal.select_month_year') }}</label>
+                        <select name="month_year" class="rpt-select">
+                            <option value="">— {{ trans('portal.select_month_year') }} —</option>
+                            @foreach ($summaryMonths as $month)
+                                <option value="{{ $month['value'] }}" {{ old('month_year') == $month['value'] ? 'selected' : '' }}>
+                                    {{ $month['label'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <p class="text-muted mb-3" style="font-size:0.82rem;">
+                        {{ __('portal.summary_report_desc') }}
+                    </p>
+                    <div class="rpt-btn-row">
+                        <button type="submit" class="rpt-btn rpt-btn-pdf">
+                            <i class="fa fa-file-pdf-o"></i> {{ @trans('portal.pdf') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     {{-- CUSTOMERS --}}
     <div class="col-12 col-lg-2">
         <div class="card rpt-card">
