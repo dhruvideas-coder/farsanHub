@@ -250,6 +250,11 @@ return [
     'generated_on' => 'Generated On',
     'no_summary_data' => 'No orders or expenses found for the selected month.',
 
+    'customer_summary' => 'Customer Summary',
+    'customer_summary_sub' => 'Date & customer wise purchase / sell',
+    'customer_summary_desc' => 'Download a date and customer wise table of purchase, sell and the difference between them.',
+    'no_customer_summary_data' => 'No orders found for the selected month.',
+
     'auto_translate_note' => 'Auto-translate note to English',
     'kg' => 'kg',
     'nang' => 'Nang',

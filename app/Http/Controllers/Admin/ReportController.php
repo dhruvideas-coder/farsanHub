@@ -339,4 +339,110 @@ class ReportController extends Controller
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
+
+    /**
+     * Read a translatable attribute in English, whatever the current locale is.
+     * Falls back to the locale-resolved value when no English translation exists.
+     */
+    private function englishName(?Customer $model, string $attribute): string
+    {
+        if (!$model) {
+            return '';
+        }
+
+        return $model->getTranslation($attribute, 'en') ?: (string) ($model->{$attribute} ?? '');
+    }
+
+    /**
+     * Date + customer wise order totals: purchase and sell side by side,
+     * with the difference (purchase - sell) as the row total.
+     */
+    public function customerSummaryReport(Request $request)
+    {
+        try {
+            $monthYear = $request->input('month_year');
+
+            if (!$monthYear) {
+                return redirect()->back()->with('error', __('portal.select_month_year_error'));
+            }
+
+            $userId = auth()->id();
+
+            // Order totals per date + customer, split by order type
+            $orderTotals = Order::selectRaw("COALESCE(order_date, DATE(created_at)) as row_date, customer_id, order_type, SUM(order_quantity * order_price) as total_amount")
+                ->where('user_id', $userId)
+                ->whereRaw("DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%Y-%m') = ?", [$monthYear])
+                ->groupByRaw("COALESCE(order_date, DATE(created_at)), customer_id, order_type")
+                ->get();
+
+            if ($orderTotals->isEmpty()) {
+                return redirect()->back()->with('error', __('portal.no_customer_summary_data'));
+            }
+
+            $customers = Customer::whereIn('id', $orderTotals->pluck('customer_id')->unique())
+                ->get()
+                ->keyBy('id');
+
+            // One row per date + customer
+            $grid = [];
+            foreach ($orderTotals as $row) {
+                $key = $row->row_date . '|' . $row->customer_id;
+
+                if (!isset($grid[$key])) {
+                    $customer = $customers->get($row->customer_id);
+                    $grid[$key] = [
+                        'date'          => (string) $row->row_date,
+                        'shop_name'     => $this->englishName($customer, 'shop_name'),
+                        'customer_name' => $this->englishName($customer, 'customer_name'),
+                        'purchase'      => 0,
+                        'sell'          => 0,
+                    ];
+                }
+
+                $grid[$key][$row->order_type] = (float) $row->total_amount;
+            }
+
+            // Date first, then customer within the same date
+            uasort($grid, function ($a, $b) {
+                return [$a['date'], $a['shop_name'], $a['customer_name']]
+                   <=> [$b['date'], $b['shop_name'], $b['customer_name']];
+            });
+
+            $totals = ['purchase' => 0, 'sell' => 0, 'total' => 0];
+            foreach ($grid as $key => $row) {
+                $grid[$key]['total'] = $row['purchase'] - $row['sell'];
+
+                $totals['purchase'] += $row['purchase'];
+                $totals['sell']     += $row['sell'];
+                $totals['total']    += $grid[$key]['total'];
+            }
+
+            // Force English locale for report generation (DomPDF's bundled font has no Gujarati glyphs)
+            $previousLocale = app()->getLocale();
+            app()->setLocale('en');
+
+            try {
+                $data = [
+                    'rows'       => $grid,
+                    'totals'     => $totals,
+                    'monthYear'  => $monthYear,
+                    'monthName'  => Carbon::parse($monthYear . '-01')->format('F Y'),
+                    'reportDate' => now()->format('d M Y, h:i A'),
+                    'logoPath'   => public_path('images/logo.png'),
+                ];
+
+                $pdf = \PDF::loadView('admin.monthly-report.customer-summary', $data);
+                $pdf->setPaper('A4', 'portrait');
+
+                $fileName = 'Customer-Summary-' . Carbon::parse($monthYear . '-01')->format('F-Y') . '.pdf';
+
+                return $pdf->download($fileName);
+            } finally {
+                app()->setLocale($previousLocale);
+            }
+        } catch (\Throwable $th) {
+            Log::error('ReportController@customerSummaryReport Error: ' . $th->getMessage());
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+    }
 }
