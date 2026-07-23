@@ -142,8 +142,9 @@
                 @else
                     <td class="td-zero">&mdash;</td>
                 @endif
-                <td class="td-total {{ $row['total'] < 0 ? 'is-negative' : '' }}">
-                    &#8377; {{ number_format($row['total'], 2) }}
+                @php $rowTotal = $row['purchase'] > 0 ? $row['total'] : abs($row['total']); @endphp
+                <td class="td-total {{ $rowTotal < 0 ? 'is-negative' : '' }}">
+                    &#8377; {{ number_format($rowTotal, 2) }}
                 </td>
             </tr>
             @endforeach
@@ -153,8 +154,9 @@
                 <td class="ft-label">{{ trans('portal.grand_total') }}</td>
                 <td class="ft-amt">&#8377; {{ number_format($totals['purchase'], 2) }}</td>
                 <td class="ft-amt">&#8377; {{ number_format($totals['sell'], 2) }}</td>
-                <td class="ft-amt {{ $totals['total'] < 0 ? 'is-negative' : '' }}">
-                    &#8377; {{ number_format($totals['total'], 2) }}
+                @php $grandTotal = $totals['purchase'] > 0 ? $totals['total'] : abs($totals['total']); @endphp
+                <td class="ft-amt {{ $grandTotal < 0 ? 'is-negative' : '' }}">
+                    &#8377; {{ number_format($grandTotal, 2) }}
                 </td>
             </tr>
         </tfoot>
