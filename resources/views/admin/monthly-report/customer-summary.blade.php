@@ -117,17 +117,15 @@
     <table class="sum-table">
         <thead>
             <tr>
-                <th style="width:15%;">{{ trans('portal.date') }}</th>
-                <th class="th-left" style="width:33%;">{{ trans('portal.customer') }}</th>
-                <th style="width:17%;">{{ trans('portal.purchase') }}</th>
-                <th style="width:17%;">{{ trans('portal.sell') }}</th>
-                <th style="width:18%;">{{ trans('portal.total') }}</th>
+                <th class="th-left" style="width:44%;">{{ trans('portal.customer') }}</th>
+                <th style="width:18%;">{{ trans('portal.purchase') }}</th>
+                <th style="width:18%;">{{ trans('portal.sell') }}</th>
+                <th style="width:20%;">{{ trans('portal.total') }}</th>
             </tr>
         </thead>
         <tbody>
             @foreach($rows as $row)
             <tr class="{{ $loop->even ? 'row-even' : 'row-odd' }}">
-                <td class="td-date">{{ date('d-m-Y', strtotime($row['date'])) }}</td>
                 <td class="td-shop">
                     {{ $row['shop_name'] ?: '—' }}
                     @if($row['customer_name'])
@@ -152,7 +150,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td class="ft-label" colspan="2">{{ trans('portal.grand_total') }}</td>
+                <td class="ft-label">{{ trans('portal.grand_total') }}</td>
                 <td class="ft-amt">&#8377; {{ number_format($totals['purchase'], 2) }}</td>
                 <td class="ft-amt">&#8377; {{ number_format($totals['sell'], 2) }}</td>
                 <td class="ft-amt {{ $totals['total'] < 0 ? 'is-negative' : '' }}">

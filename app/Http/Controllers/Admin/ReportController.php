@@ -368,11 +368,11 @@ class ReportController extends Controller
 
             $userId = auth()->id();
 
-            // Order totals per date + customer, split by order type
-            $orderTotals = Order::selectRaw("COALESCE(order_date, DATE(created_at)) as row_date, customer_id, order_type, SUM(order_quantity * order_price) as total_amount")
+            // Monthly order totals per customer, split by order type
+            $orderTotals = Order::selectRaw("customer_id, order_type, SUM(order_quantity * order_price) as total_amount")
                 ->where('user_id', $userId)
                 ->whereRaw("DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%Y-%m') = ?", [$monthYear])
-                ->groupByRaw("COALESCE(order_date, DATE(created_at)), customer_id, order_type")
+                ->groupByRaw("customer_id, order_type")
                 ->get();
 
             if ($orderTotals->isEmpty()) {
@@ -383,15 +383,14 @@ class ReportController extends Controller
                 ->get()
                 ->keyBy('id');
 
-            // One row per date + customer
+            // One row per customer for the whole month
             $grid = [];
             foreach ($orderTotals as $row) {
-                $key = $row->row_date . '|' . $row->customer_id;
+                $key = $row->customer_id;
 
                 if (!isset($grid[$key])) {
                     $customer = $customers->get($row->customer_id);
                     $grid[$key] = [
-                        'date'          => (string) $row->row_date,
                         'shop_name'     => $this->englishName($customer, 'shop_name'),
                         'customer_name' => $this->englishName($customer, 'customer_name'),
                         'purchase'      => 0,
@@ -402,10 +401,10 @@ class ReportController extends Controller
                 $grid[$key][$row->order_type] = (float) $row->total_amount;
             }
 
-            // Date first, then customer within the same date
+            // Sort by shop, then customer name
             uasort($grid, function ($a, $b) {
-                return [$a['date'], $a['shop_name'], $a['customer_name']]
-                   <=> [$b['date'], $b['shop_name'], $b['customer_name']];
+                return [$a['shop_name'], $a['customer_name']]
+                   <=> [$b['shop_name'], $b['customer_name']];
             });
 
             $totals = ['purchase' => 0, 'sell' => 0, 'total' => 0];
