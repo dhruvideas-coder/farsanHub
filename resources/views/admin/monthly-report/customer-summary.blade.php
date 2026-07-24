@@ -51,18 +51,19 @@
             white-space:nowrap;
         }
         .sum-table thead th.th-left { text-align:left; }
+        .sum-table thead th.th-group { background:#fde68a; font-size:9px; }
 
         .sum-table tbody tr.row-even { background:#fafaf9; }
         .sum-table tbody tr.row-odd  { background:#ffffff; }
         .sum-table tbody td {
-            padding:6px 7px;
+            padding:6px 5px;
             border:1px solid #f0efee;
-            font-size:9.5px;
+            font-size:8.5px;
             vertical-align:middle;
         }
         .sum-table tbody td.td-date { text-align:center; color:#57534e; white-space:nowrap; }
         .sum-table tbody td.td-shop { font-weight:600; color:#1c1917; }
-        .sum-table tbody td.td-shop .cust-name { display:block; font-size:8.5px; font-weight:normal; color:#78716c; }
+        .sum-table tbody td.td-shop .cust-name { display:block; font-size:7.5px; font-weight:normal; color:#78716c; }
         .sum-table tbody td.td-amt  { text-align:right; color:#292524; white-space:nowrap; }
         .sum-table tbody td.td-zero { text-align:right; color:#d6d3d1; }
         .sum-table tbody td.td-total { text-align:right; font-weight:bold; color:#92400e; white-space:nowrap; }
@@ -71,9 +72,9 @@
         /* Grand total row */
         .sum-table tfoot tr { background:#fef3c7; }
         .sum-table tfoot td {
-            padding:9px 7px;
+            padding:9px 5px;
             border:1px solid #fcd34d;
-            font-size:10px;
+            font-size:8.5px;
             font-weight:bold;
             color:#92400e;
         }
@@ -113,14 +114,20 @@
 
     <hr class="divider">
 
-    {{-- DATE + CUSTOMER WISE TABLE --}}
+    {{-- CUSTOMER WISE TABLE --}}
     <table class="sum-table">
         <thead>
             <tr>
-                <th class="th-left" style="width:44%;">{{ trans('portal.customer') }}</th>
-                <th style="width:18%;">{{ trans('portal.purchase') }}</th>
-                <th style="width:18%;">{{ trans('portal.sell') }}</th>
-                <th style="width:20%;">{{ trans('portal.total') }}</th>
+                <th class="th-left" rowspan="2" style="width:30%;">{{ trans('portal.customer') }}</th>
+                <th class="th-group" colspan="2">{{ trans('portal.purchase') }}</th>
+                <th class="th-group" colspan="2">{{ trans('portal.sell') }}</th>
+                <th rowspan="2" style="width:16%;">{{ trans('portal.total') }}</th>
+            </tr>
+            <tr>
+                <th style="width:13.5%;">{{ trans('portal.cash') }}</th>
+                <th style="width:13.5%;">{{ trans('portal.remaining') }}</th>
+                <th style="width:13.5%;">{{ trans('portal.cash') }}</th>
+                <th style="width:13.5%;">{{ trans('portal.remaining') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -132,16 +139,13 @@
                         <span class="cust-name">{{ $row['customer_name'] }}</span>
                     @endif
                 </td>
-                @if($row['purchase'] > 0)
-                    <td class="td-amt">&#8377; {{ number_format($row['purchase'], 2) }}</td>
-                @else
-                    <td class="td-zero">&mdash;</td>
-                @endif
-                @if($row['sell'] > 0)
-                    <td class="td-amt">&#8377; {{ number_format($row['sell'], 2) }}</td>
-                @else
-                    <td class="td-zero">&mdash;</td>
-                @endif
+                @foreach(['purchase_cash', 'purchase_remaining', 'sell_cash', 'sell_remaining'] as $column)
+                    @if($row[$column] > 0)
+                        <td class="td-amt">&#8377; {{ number_format($row[$column], 2) }}</td>
+                    @else
+                        <td class="td-zero">&mdash;</td>
+                    @endif
+                @endforeach
                 @php $rowTotal = $row['purchase'] > 0 ? $row['total'] : abs($row['total']); @endphp
                 <td class="td-total {{ $rowTotal < 0 ? 'is-negative' : '' }}">
                     &#8377; {{ number_format($rowTotal, 2) }}
@@ -152,8 +156,9 @@
         <tfoot>
             <tr>
                 <td class="ft-label">{{ trans('portal.grand_total') }}</td>
-                <td class="ft-amt">&#8377; {{ number_format($totals['purchase'], 2) }}</td>
-                <td class="ft-amt">&#8377; {{ number_format($totals['sell'], 2) }}</td>
+                @foreach(['purchase_cash', 'purchase_remaining', 'sell_cash', 'sell_remaining'] as $column)
+                    <td class="ft-amt">&#8377; {{ number_format($totals[$column], 2) }}</td>
+                @endforeach
                 @php $grandTotal = $totals['purchase'] > 0 ? $totals['total'] : abs($totals['total']); @endphp
                 <td class="ft-amt {{ $grandTotal < 0 ? 'is-negative' : '' }}">
                     &#8377; {{ number_format($grandTotal, 2) }}

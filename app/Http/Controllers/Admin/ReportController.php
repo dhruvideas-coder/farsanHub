@@ -368,11 +368,11 @@ class ReportController extends Controller
 
             $userId = auth()->id();
 
-            // Monthly order totals per customer, split by order type
-            $orderTotals = Order::selectRaw("customer_id, order_type, SUM(order_quantity * order_price) as total_amount")
+            // Monthly order totals per customer, split by order type and payment type
+            $orderTotals = Order::selectRaw("customer_id, order_type, payment_type, SUM(order_quantity * order_price) as total_amount")
                 ->where('user_id', $userId)
                 ->whereRaw("DATE_FORMAT(COALESCE(order_date, DATE(created_at)), '%Y-%m') = ?", [$monthYear])
-                ->groupByRaw("customer_id, order_type")
+                ->groupByRaw("customer_id, order_type, payment_type")
                 ->get();
 
             if ($orderTotals->isEmpty()) {
@@ -391,14 +391,18 @@ class ReportController extends Controller
                 if (!isset($grid[$key])) {
                     $customer = $customers->get($row->customer_id);
                     $grid[$key] = [
-                        'shop_name'     => $this->englishName($customer, 'shop_name'),
-                        'customer_name' => $this->englishName($customer, 'customer_name'),
-                        'purchase'      => 0,
-                        'sell'          => 0,
+                        'shop_name'          => $this->englishName($customer, 'shop_name'),
+                        'customer_name'      => $this->englishName($customer, 'customer_name'),
+                        'purchase_cash'      => 0,
+                        'purchase_remaining' => 0,
+                        'sell_cash'          => 0,
+                        'sell_remaining'     => 0,
                     ];
                 }
 
-                $grid[$key][$row->order_type] = (float) $row->total_amount;
+                // payment_type defaults to 'remaining' when not set on the order
+                $paymentType = $row->payment_type ?: 'remaining';
+                $grid[$key][$row->order_type . '_' . $paymentType] = (float) $row->total_amount;
             }
 
             // Sort by shop, then customer name
@@ -407,12 +411,19 @@ class ReportController extends Controller
                    <=> [$b['shop_name'], $b['customer_name']];
             });
 
-            $totals = ['purchase' => 0, 'sell' => 0, 'total' => 0];
-            foreach ($grid as $key => $row) {
-                $grid[$key]['total'] = $row['purchase'] - $row['sell'];
+            $columns = ['purchase_cash', 'purchase_remaining', 'sell_cash', 'sell_remaining'];
+            $totals  = array_fill_keys(array_merge($columns, ['purchase', 'sell', 'total']), 0);
 
-                $totals['purchase'] += $row['purchase'];
-                $totals['sell']     += $row['sell'];
+            foreach ($grid as $key => $row) {
+                $grid[$key]['purchase'] = $row['purchase_cash'] + $row['purchase_remaining'];
+                $grid[$key]['sell']     = $row['sell_cash'] + $row['sell_remaining'];
+                $grid[$key]['total']    = $grid[$key]['purchase'] - $grid[$key]['sell'];
+
+                foreach ($columns as $column) {
+                    $totals[$column] += $row[$column];
+                }
+                $totals['purchase'] += $grid[$key]['purchase'];
+                $totals['sell']     += $grid[$key]['sell'];
                 $totals['total']    += $grid[$key]['total'];
             }
 
