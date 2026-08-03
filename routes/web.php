@@ -56,6 +56,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::delete('expense', [App\Http\Controllers\Admin\ExpenseController::class, 'destroy'])->name('expense.destroy');
     Route::delete('customer', [App\Http\Controllers\Admin\CustomerController::class, 'destroy'])->name('customer.destroy');
     Route::delete('product', [App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('product.destroy');
+    Route::delete('recipe-item', [App\Http\Controllers\Admin\RecipeItemController::class, 'destroy'])->name('recipe-item.destroy');
     Route::delete('order', [App\Http\Controllers\Admin\OrderController::class, 'destroy'])->name('order.destroy');
 
     Route::get('customer-map', [App\Http\Controllers\Admin\CustomerController::class, 'customerMap'])->name('customer-map');
@@ -75,6 +76,16 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
 
     // Product Routes
     Route::resource('product', App\Http\Controllers\Admin\ProductController::class)->except('destroy');
+
+    // Recipe Item Routes (raw materials per product)
+    Route::get('recipe-item', [App\Http\Controllers\Admin\RecipeItemController::class, 'index'])->name('recipe-item.index');
+    Route::get('recipe-item/create', [App\Http\Controllers\Admin\RecipeItemController::class, 'create'])->name('recipe-item.create');
+    Route::post('recipe-item', [App\Http\Controllers\Admin\RecipeItemController::class, 'store'])->name('recipe-item.store');
+    Route::get('recipe-item/{product}/edit', [App\Http\Controllers\Admin\RecipeItemController::class, 'edit'])->name('recipe-item.edit');
+    Route::put('recipe-item/{product}', [App\Http\Controllers\Admin\RecipeItemController::class, 'update'])->name('recipe-item.update');
+
+    // Raw Material Requirement Report (scales a day's orders into material needs)
+    Route::get('requirement-report', [App\Http\Controllers\Admin\RequirementReportController::class, 'index'])->name('requirement-report.index');
 
     // Order Routes
     Route::get('order/check-duplicate', [App\Http\Controllers\Admin\OrderController::class, 'checkDuplicateOrder'])->name('order.check-duplicate');
