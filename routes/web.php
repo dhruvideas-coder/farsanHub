@@ -100,6 +100,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('monthly-report/order', [App\Http\Controllers\Admin\ReportController::class, 'orderReport'])->name('monthly-report.order');
     Route::get('monthly-report/summary', [App\Http\Controllers\Admin\ReportController::class, 'summaryReport'])->name('monthly-report.summary');
     Route::get('monthly-report/customer-summary', [App\Http\Controllers\Admin\ReportController::class, 'customerSummaryReport'])->name('monthly-report.customer-summary');
+    Route::get('monthly-report/customer-payment-sheet', [App\Http\Controllers\Admin\ReportController::class, 'customerPaymentSheetReport'])->name('monthly-report.customer-payment-sheet');
 
     // Users
     Route::middleware(['super_admin'])->group(function () {

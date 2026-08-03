@@ -255,6 +255,13 @@ return [
     'customer_summary_desc' => 'Download a date and customer wise table of purchase, sell and the difference between them.',
     'no_customer_summary_data' => 'No orders found for the selected month.',
 
+    'customer_payment_sheet' => 'Customer Payment Sheet',
+    'customer_payment_sheet_sub' => 'Blank payment entry sheet for the CA',
+    'customer_payment_sheet_desc' => 'Download a customer wise sheet with blank payment date, account and transaction id columns to fill in by hand after printing.',
+    'payment_date' => 'Payment Date',
+    'account' => 'Account',
+    'transaction_id' => 'Transaction ID',
+
     'auto_translate_note' => 'Auto-translate note to English',
     'kg' => 'kg',
     'nang' => 'Nang',
