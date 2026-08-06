@@ -55,15 +55,29 @@
         .sum-table tbody tr.row-even { background:#fafaf9; }
         .sum-table tbody tr.row-odd  { background:#ffffff; }
         .sum-table tbody td {
-            padding:9px 5px;
+            padding:7px 5px;
             border:1px solid #e7e5e4;
             font-size:8.5px;
             vertical-align:middle;
         }
         .sum-table tbody td.td-shop { font-weight:600; color:#1c1917; }
         .sum-table tbody td.td-shop .cust-name { display:block; font-size:7.5px; font-weight:normal; color:#78716c; }
-        /* Left blank on purpose — filled in by hand on the printed copy */
-        .sum-table tbody td.td-blank { }
+        .sum-table tbody td.td-date { text-align:center; color:#292524; white-space:nowrap; }
+        .sum-table tbody td.td-text { color:#292524; }
+        .sum-table tbody td.td-amt  { text-align:right; color:#292524; white-space:nowrap; }
+        .sum-table tbody td.td-empty { text-align:center; color:#d6d3d1; }
+
+        /* Grand total row */
+        .sum-table tfoot tr { background:#fef3c7; }
+        .sum-table tfoot td {
+            padding:9px 5px;
+            border:1px solid #fcd34d;
+            font-size:8.5px;
+            font-weight:bold;
+            color:#92400e;
+        }
+        .sum-table tfoot td.ft-label { text-align:left; text-transform:uppercase; letter-spacing:0.5px; }
+        .sum-table tfoot td.ft-amt   { text-align:right; background:#fde68a; white-space:nowrap; }
 
         /* ── FOOTER ─── */
         .footer-table { width:100%; border-collapse:collapse; margin-top:10px; }
@@ -97,14 +111,15 @@
 
     <hr class="divider">
 
-    {{-- CUSTOMER WISE BLANK PAYMENT SHEET --}}
+    {{-- CUSTOMER WISE PAYMENT SHEET --}}
     <table class="sum-table">
         <thead>
             <tr>
-                <th class="th-left" style="width:37%;">{{ trans('portal.customer') }}</th>
-                <th style="width:18%;">{{ trans('portal.payment_date') }}</th>
-                <th style="width:23%;">{{ trans('portal.account') }}</th>
-                <th style="width:22%;">{{ trans('portal.transaction_id') }}</th>
+                <th class="th-left" style="width:31%;">{{ trans('portal.customer') }}</th>
+                <th style="width:15%;">{{ trans('portal.payment_date') }}</th>
+                <th style="width:16%;">{{ trans('portal.amount') }}</th>
+                <th style="width:20%;">{{ trans('portal.account') }}</th>
+                <th style="width:18%;">{{ trans('portal.transaction_id') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -116,12 +131,30 @@
                         <span class="cust-name">{{ $row['customer_name'] }}</span>
                     @endif
                 </td>
-                <td class="td-blank">&nbsp;</td>
-                <td class="td-blank">&nbsp;</td>
-                <td class="td-blank">&nbsp;</td>
+                @if($row['payment_date'])
+                    <td class="td-date">{{ \Illuminate\Support\Carbon::parse($row['payment_date'])->format('d M Y') }}</td>
+                @else
+                    <td class="td-empty">&mdash;</td>
+                @endif
+                @if($row['payment_amount'] !== null)
+                    <td class="td-amt">&#8377; {{ number_format($row['payment_amount'], 2) }}</td>
+                @else
+                    <td class="td-empty">&mdash;</td>
+                @endif
+                <td class="{{ $row['account'] ? 'td-text' : 'td-empty' }}">{{ $row['account'] ?: '—' }}</td>
+                <td class="{{ $row['transaction_id'] ? 'td-text' : 'td-empty' }}">{{ $row['transaction_id'] ?: '—' }}</td>
             </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td class="ft-label">{{ trans('portal.grand_total') }}</td>
+                <td></td>
+                <td class="ft-amt">&#8377; {{ number_format($amountTotal, 2) }}</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
     </table>
 
     <div class="bottom-bar"></div>

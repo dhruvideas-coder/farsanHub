@@ -100,7 +100,11 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('monthly-report/order', [App\Http\Controllers\Admin\ReportController::class, 'orderReport'])->name('monthly-report.order');
     Route::get('monthly-report/summary', [App\Http\Controllers\Admin\ReportController::class, 'summaryReport'])->name('monthly-report.summary');
     Route::get('monthly-report/customer-summary', [App\Http\Controllers\Admin\ReportController::class, 'customerSummaryReport'])->name('monthly-report.customer-summary');
-    Route::get('monthly-report/customer-payment-sheet', [App\Http\Controllers\Admin\ReportController::class, 'customerPaymentSheetReport'])->name('monthly-report.customer-payment-sheet');
+
+    // Monthly Payments (customer wise payment entry + PDF sheet for the accountant)
+    Route::get('monthly-payment', [App\Http\Controllers\Admin\MonthlyPaymentController::class, 'index'])->name('monthly-payment.index');
+    Route::post('monthly-payment', [App\Http\Controllers\Admin\MonthlyPaymentController::class, 'store'])->name('monthly-payment.store');
+    Route::get('monthly-payment/pdf', [App\Http\Controllers\Admin\MonthlyPaymentController::class, 'pdf'])->name('monthly-payment.pdf');
 
     // Users
     Route::middleware(['super_admin'])->group(function () {

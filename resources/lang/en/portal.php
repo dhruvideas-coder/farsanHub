@@ -255,9 +255,15 @@ return [
     'customer_summary_desc' => 'Download a date and customer wise table of purchase, sell and the difference between them.',
     'no_customer_summary_data' => 'No orders found for the selected month.',
 
+    // Monthly Payments module
+    'monthly_payments' => 'Monthly Payments',
     'customer_payment_sheet' => 'Customer Payment Sheet',
-    'customer_payment_sheet_sub' => 'Blank payment entry sheet for the CA',
-    'customer_payment_sheet_desc' => 'Download a customer wise sheet with blank payment date, account and transaction id columns to fill in by hand after printing.',
+    'monthly_payments_desc' => 'Select a month to list the customers who ordered in it, then enter each payment date, account and transaction id.',
+    'monthly_payments_save_hint' => 'Save your changes before downloading the PDF. Clearing every field of a row (date, amount, account, transaction id) and saving removes that entry.',
+    'monthly_payment_saved' => 'Payment details saved successfully.',
+    'select_month_to_start' => 'Select a month above to start entering payment details.',
+    'no_payment_data_to_export' => 'Enter and save at least one payment before downloading the PDF.',
+    'show_customers' => 'Show Customers',
     'payment_date' => 'Payment Date',
     'account' => 'Account',
     'transaction_id' => 'Transaction ID',
