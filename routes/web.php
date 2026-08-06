@@ -111,3 +111,11 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('changePassword', [App\Http\Controllers\Admin\AdminController::class, 'changePassword'])->name('changePassword');
     Route::post('changePassword', [App\Http\Controllers\Admin\AdminController::class, 'changePasswordPost'])->name('changePassword.save');
 });
+
+// Fallback for uploaded images when public/storage is not a symlink.
+// Shared hosting disables PHP's symlink(), so storage:link cannot run there.
+// Apache only reaches this route when public/storage does not exist, so the
+// symlink (local) still wins when it is present. Keep it last.
+Route::get('storage/{path}', [App\Http\Controllers\StorageFileController::class, 'show'])
+    ->where('path', '.*')
+    ->name('storage.file');
