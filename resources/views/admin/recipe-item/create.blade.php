@@ -66,7 +66,8 @@
                                 </div>
                             </div>
 
-                            <h4 class="mb-3 text-danger border-bottom pb-2">{{ __('portal.raw_materials') }}</h4>
+                            <h4 class="mb-1 text-danger border-bottom pb-2">{{ __('portal.raw_materials') }}</h4>
+                            <small class="text-muted d-block mb-3"><i class="fa fa-info-circle"></i> {{ __('portal.qty_format_hint') }}</small>
 
                             <div id="material-rows">
                                 @php $oldNames = old('material_name', ['']); @endphp

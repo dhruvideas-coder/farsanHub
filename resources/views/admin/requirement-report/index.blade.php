@@ -114,8 +114,7 @@
                                                     <td>{{ $i + 1 }}</td>
                                                     <td>{{ $t['name'] }}</td>
                                                     <td class="text-end text-nowrap">
-                                                        <span class="qty-strong">{{ rtrim(rtrim(number_format($t['qty'], 3), '0'), '.') }}</span>
-                                                        <span class="text-muted">{{ $t['unit'] }}</span>
+                                                        <span class="qty-strong">{{ formatQtyHuman($t['qty'], $t['unit']) }}</span>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -141,11 +140,11 @@
                                             <tr>
                                                 <td class="fw-bold">{{ $row['product'] }}</td>
                                                 <td>{{ $row['customer'] ?: '-' }}</td>
-                                                <td class="text-end text-nowrap">{{ rtrim(rtrim(number_format($row['order_qty'], 3), '0'), '.') }} {{ $row['unit'] }}</td>
+                                                <td class="text-end text-nowrap">{{ formatQtyHuman($row['order_qty'], $row['unit']) }}</td>
                                                 <td>
                                                     @foreach($row['materials'] as $m)
                                                         <span class="badge bg-light text-dark border me-1 mb-1">
-                                                            {{ $m['name'] }}: {{ rtrim(rtrim(number_format($m['qty'], 3), '0'), '.') }} {{ $m['unit'] }}
+                                                            {{ $m['name'] }}: {{ formatQtyHuman($m['qty'], $m['unit']) }}
                                                         </span>
                                                     @endforeach
                                                 </td>
@@ -174,7 +173,7 @@
         $shareLines[] = '*' . __('portal.total_required') . ':*';
         foreach ($totals as $i => $t) {
             $shareLines[] = ($i + 1) . '. ' . $t['name'] . ' - '
-                . rtrim(rtrim(number_format($t['qty'], 3), '0'), '.') . ' ' . $t['unit'];
+                . formatQtyHuman($t['qty'], $t['unit']);
         }
     }
     $shareLines[] = '';

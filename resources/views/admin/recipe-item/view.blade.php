@@ -19,7 +19,7 @@
                         @php $baseYield = optional($product->recipeItems->first())->base_yield_quantity; @endphp
                         @if($baseYield)
                             <span class="material-badge">
-                                {{ __('portal.for') }} {{ rtrim(rtrim(number_format($baseYield, 3), '0'), '.') }} {{ $product->unit }}
+                                {{ __('portal.for') }} {{ formatQty($baseYield, $product->unit) }} {{ $product->unit }}
                             </span>
                         @endif
                         <div class="ms-auto d-flex gap-1">
@@ -49,7 +49,7 @@
                                         <td>{{ $i + 1 }}</td>
                                         <td>{{ $item->material_name }}</td>
                                         <td class="text-end text-nowrap">
-                                            {{ rtrim(rtrim(number_format($item->quantity, 3), '0'), '.') }}
+                                            {{ formatQty($item->quantity, $item->unit) }}
                                             <span class="text-muted">{{ $item->unit }}</span>
                                         </td>
                                     </tr>

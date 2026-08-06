@@ -45,6 +45,56 @@ if (!function_exists('formattedAmount')) {
     }
 }
 
+// Format a recipe quantity for display.
+// Weight (kg) and volume (litre) always show 3 decimals so grams/ml stay visible
+// (e.g. 1.200 = 1 kg 200 g, 0.200 = 200 g). Piece/Nang trim trailing zeros.
+if (!function_exists('formatQty')) {
+    function formatQty($qty, $unit = null)
+    {
+        $qty = (float) $qty;
+        if (in_array($unit, ['kg', 'litre'])) {
+            return number_format($qty, 3, '.', '');
+        }
+        return rtrim(rtrim(number_format($qty, 3, '.', ''), '0'), '.');
+    }
+}
+
+// Human-readable quantity for the requirement report (view + share only).
+// kg    -> "1 kg 200 gram" / "200 gram" / "1 kg"
+// litre -> "1 litre 200 ml" / "200 ml" / "1 litre"
+// piece / Nang / other -> plain number + unit ("5 piece", "20 Nang")
+if (!function_exists('formatQtyHuman')) {
+    function formatQtyHuman($qty, $unit = null)
+    {
+        $qty = (float) $qty;
+
+        if ($unit === 'kg' || $unit === 'litre') {
+            $big   = $unit === 'kg' ? __('portal.unit_kg')   : __('portal.unit_litre');
+            $small = $unit === 'kg' ? __('portal.unit_gram') : __('portal.unit_ml');
+
+            $totalSmall = (int) round($qty * 1000); // grams or millilitres
+            $whole      = intdiv($totalSmall, 1000);
+            $rem        = $totalSmall % 1000;
+
+            $parts = [];
+            if ($whole > 0) {
+                $parts[] = $whole . ' ' . $big;
+            }
+            if ($rem > 0) {
+                $parts[] = $rem . ' ' . $small;
+            }
+            if (empty($parts)) {
+                $parts[] = '0 ' . $small;
+            }
+
+            return implode(' ', $parts);
+        }
+
+        // piece / Nang / other counts
+        return formatQty($qty, $unit) . ($unit ? ' ' . $unit : '');
+    }
+}
+
 // format number by count of groups
 if (!function_exists('formatByGroups')) {
     function formatByGroups($number = '', $group = 5)

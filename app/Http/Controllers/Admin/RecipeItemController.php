@@ -12,8 +12,9 @@ use Illuminate\Support\Facades\Validator;
 
 class RecipeItemController extends Controller
 {
-    /** Units offered in the material dropdown. */
-    private array $units = ['kg', 'gram', 'litre', 'ml', 'piece'];
+    /** Units offered in the material dropdown. Weight lives in kg (grams as decimals),
+     *  volume in litre (ml as decimals), plus piece for counted items. */
+    private array $units = ['kg', 'litre', 'piece'];
 
     public function index(Request $request)
     {

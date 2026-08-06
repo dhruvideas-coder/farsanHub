@@ -47,7 +47,7 @@
                                     <div class="input-group">
                                         <input type="number" step="0.001" min="0.001" class="form-control @error('base_yield') is-invalid @enderror"
                                                id="base_yield" name="base_yield"
-                                               value="{{ old('base_yield', optional($items->first())->base_yield_quantity ? rtrim(rtrim(number_format($items->first()->base_yield_quantity, 3, '.', ''), '0'), '.') : '') }}"
+                                               value="{{ old('base_yield', optional($items->first())->base_yield_quantity ? formatQty($items->first()->base_yield_quantity, $product->unit) : '') }}"
                                                placeholder="{{ __('portal.eg') }} 20">
                                         <span class="input-group-text">{{ $product->unit }}</span>
                                         @error('base_yield')
@@ -58,7 +58,8 @@
                                 </div>
                             </div>
 
-                            <h4 class="mb-3 text-danger border-bottom pb-2">{{ __('portal.raw_materials') }}</h4>
+                            <h4 class="mb-1 text-danger border-bottom pb-2">{{ __('portal.raw_materials') }}</h4>
+                            <small class="text-muted d-block mb-3"><i class="fa fa-info-circle"></i> {{ __('portal.qty_format_hint') }}</small>
 
                             <div id="material-rows">
                                 @php $rows = old('material_name') ? array_keys(old('material_name')) : $items->keys()->all(); @endphp
@@ -108,7 +109,7 @@
                                                 </div>
                                                 <div class="col-6 col-md-3">
                                                     <label class="form-label mb-1">{{ __('portal.quantity') }}</label>
-                                                    <input type="number" step="0.001" min="0" class="form-control" name="quantity[]" value="{{ rtrim(rtrim(number_format($item->quantity, 3, '.', ''), '0'), '.') }}" placeholder="0">
+                                                    <input type="number" step="0.001" min="0" class="form-control" name="quantity[]" value="{{ formatQty($item->quantity, $item->unit) }}" placeholder="0">
                                                 </div>
                                                 <div class="col-12 col-md-1 d-grid">
                                                     <button type="button" class="btn btn-outline-danger remove-row" title="{{ __('portal.remove') }}">
