@@ -87,7 +87,7 @@
                                     <label for="product_image" class="form-label">{{ @trans('portal.product_image') }}</label>
                                     <div class="mb-2">
                                         <img id="product_image_preview"
-                                            src="{{ $product->product_image ? Storage::url($product->product_image) : '#' }}"
+                                            src="{{ $product->product_image ? imageUrl($product->product_image) : '#' }}"
                                             alt="{{ $product->product_name }}" class="img-thumbnail {{ $product->product_image ? '' : 'd-none' }}" style="max-width: 200px;">
                                     </div>
                                     <input type="file" class="form-control @error('product_image') is-invalid @enderror"

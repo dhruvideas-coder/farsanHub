@@ -631,9 +631,9 @@
                 <div class="avatar-slot">
                     @if($customer->customer_image)
                     <div class="zoom-wrap" style="border-radius:50%;"
-                         onclick="openLightbox('{{ Storage::url($customer->customer_image) }}','Owner Photo','fa-user')">
+                         onclick="openLightbox('{{ imageUrl($customer->customer_image) }}','Owner Photo','fa-user')">
                         <div class="avatar-frame owner-frame zoomable">
-                            <img src="{{ Storage::url($customer->customer_image) }}" alt="Owner">
+                            <img src="{{ imageUrl($customer->customer_image) }}" alt="Owner">
                         </div>
                         <div class="zoom-hint" style="border-radius:50%;">
                             <div class="zh-icon"><i class="fa fa-search-plus"></i></div>
@@ -649,9 +649,9 @@
                 <div class="avatar-slot">
                     @if($customer->shop_image)
                     <div class="zoom-wrap" style="border-radius:24px;"
-                         onclick="openLightbox('{{ Storage::url($customer->shop_image) }}','Shop Photo','fa-store')">
+                         onclick="openLightbox('{{ imageUrl($customer->shop_image) }}','Shop Photo','fa-store')">
                         <div class="avatar-frame shop-frame zoomable">
-                            <img src="{{ Storage::url($customer->shop_image) }}" alt="Shop">
+                            <img src="{{ imageUrl($customer->shop_image) }}" alt="Shop">
                         </div>
                         <div class="zoom-hint" style="border-radius:24px;">
                             <div class="zh-icon"><i class="fa fa-search-plus"></i></div>

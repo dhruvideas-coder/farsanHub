@@ -3,8 +3,34 @@
 use App\Models\PortalActivities;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 use Jenssegers\Agent\Facades\Agent;
 use Illuminate\Support\Facades\Hash;
+
+// Public URL for an image path stored on the "public" disk.
+// Some rows hold a full URL instead of a relative path (an old placeholder
+// default wrote asset('images/logo.png') straight into the column), so those are
+// returned untouched — passing them to Storage::url() would prefix them with
+// /storage/ a second time and produce /storage/https://site/images/logo.png.
+// Empty values return the $fallback asset, or null so the view's own placeholder
+// (initial-letter avatar) takes over.
+if (!function_exists('imageUrl')) {
+    function imageUrl(?string $path, ?string $fallback = null): ?string
+    {
+        if (empty($path)) {
+            return $fallback ? asset($fallback) : null;
+        }
+
+        // Already usable as-is: http(s)://, //cdn, /images/logo.png, data:
+        if (preg_match('#^(https?:)?//#i', $path) || str_starts_with($path, '/') || str_starts_with($path, 'data:')) {
+            return $path;
+        }
+
+        // disk('public') explicitly — the bare Storage::url() would use the default
+        // disk from FILESYSTEM_DISK, which differs between local and live
+        return Storage::disk('public')->url($path);
+    }
+}
 
 if (!function_exists('convertYmdToMdy')) {
     function convertYmdToMdy($date)

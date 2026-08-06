@@ -94,7 +94,10 @@ class ProductController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            $productimagePath = asset('images/logo.png');
+            // Keep null when nothing is uploaded — the listing renders its own
+            // initial-letter placeholder. Storing a full asset() URL here breaks
+            // Storage::url() on display.
+            $productimagePath = null;
             if ($request->hasFile('product_image')) {
                 $productimagePath = $this->compressAndStoreImage(
                     $request->file('product_image'), 'product_images'

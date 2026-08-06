@@ -38,7 +38,7 @@
                             <label for="image" class="form-label">{{ @trans('portal.poster') }}</label>
                             @if($content->image)
                                 <div class="mb-2">
-                                    <img src="{{ asset('storage/' . $content->image) }}"
+                                    <img src="{{ imageUrl($content->image) }}"
                                          alt="{{ $content->name }}"
                                          class="img-thumbnail"
                                          style="max-width: 200px;">

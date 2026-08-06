@@ -37,7 +37,7 @@
             <td>{{ $contents->firstItem() + $index }}</td>
             <td>
                 @if($content->image)
-                <img src="{{ asset('storage/' . $content->image) }}"
+                <img src="{{ imageUrl($content->image) }}"
                     alt="Profile" width="40px" style="border-radius: 4px; padding-right: 2px; padding-bottom: 4px;">
                 <span class="eye-icon" id="eyeIcon" data-bs-toggle="modal" data-bs-target="#imageModal">👁️</span>
                 @else

@@ -151,7 +151,7 @@
                                     <label for="customer_image" class="form-label">{{ @trans('portal.customer_image') }}</label>
                                     <div class="mb-2">
                                         <img id="customer_image_preview"
-                                            src="{{ $customer->customer_image ? Storage::url($customer->customer_image) : '#' }}"
+                                            src="{{ $customer->customer_image ? imageUrl($customer->customer_image) : '#' }}"
                                             alt="{{ $customer->customer_name }}" class="img-thumbnail {{ $customer->customer_image ? '' : 'd-none' }}" style="max-width: 200px;">
                                     </div>
                                     <input type="file" class="form-control @error('customer_image') is-invalid @enderror"
@@ -167,7 +167,7 @@
                                     <label for="shop_image" class="form-label">{{ @trans('portal.shop_image') }}</label>
                                     <div class="mb-2">
                                         <img id="shop_image_preview"
-                                            src="{{ $customer->shop_image ? Storage::url($customer->shop_image) : '#' }}"
+                                            src="{{ $customer->shop_image ? imageUrl($customer->shop_image) : '#' }}"
                                             alt="{{ $customer->customer_name }}" class="img-thumbnail {{ $customer->shop_image ? '' : 'd-none' }}" style="max-width: 200px;">
                                     </div>
                                     <input type="file" class="form-control @error('shop_image') is-invalid @enderror"
